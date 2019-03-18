@@ -3,9 +3,6 @@
 
 #include <algorithm>
 
-
-
-
 template <unsigned int N>
 class vector_t
 {
@@ -13,7 +10,7 @@ public:
 	vector_t() {};
 	~vector_t() {};
 
-private:
+public:
 	double x[N]; // Components
 
 public:
@@ -57,10 +54,11 @@ public:
 	}
 
 	template <unsigned int N>
-	vector_t<N> operator[](const vector_t<N> &other)
+	vector_t<N> operator[](size_t i)
 	{
-
+		return x[i];
 	}
+
 };
 
 typedef vector_t<2> Vector2;
