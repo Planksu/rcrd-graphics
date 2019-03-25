@@ -5,9 +5,6 @@
 
 namespace math
 {
-	//template<typename... Ts> struct make_void { typedef void type; };
-	//template<typename... Ts> using void_t = typename make_void<Ts...>::type;
-
 	template <unsigned int N>
 	class vector_t
 	{
@@ -16,7 +13,8 @@ namespace math
 		~vector_t() {};
 
 	public:
-		double data[N]; // Components
+		// Components
+		double data[N]; 
 
 		// Typedefs
 		typedef math::vector_t<2> Vector2;
@@ -26,30 +24,71 @@ namespace math
 
 	public:
 
-		void normalize();
-		float magnitude();
-		vector_t<N> cross(const vector_t<N> &first, const vector_t<N> &other);
-
-		// Overloaded operators
-		vector_t<N>& operator=(vector_t<N> other)
+		template<unsigned int N> void normalize()
 		{
-			std::swap(this->data, &other->x);
-			return *this;
+			float norm = 0.0f;
+
+			// Calculate the sum of components power of two
+			for (size_t i = 0; i < N; i++)
+			{
+				norm += data[i] * data[i];
+			}
+
+			// Apply the calculated norm to the vector components
+			norm = 1.0f / sqrt(norm);
+			for (size_t i = 0; i < N; i++)
+			{
+				data[i] *= norm;
+			}
+		}
+
+		template<unsigned int N> float magnitude()
+		{
+			float length = 0.0f;
+			for (size_t i = 0; i < N; i++)
+			{
+				length += pow(data[i],2);
+			}
+
+			// Calculate the square root here to do it only once, save cpu time
+			return sqrt(length);
+		}
+
+		template<unsigned int N = 3> vector_t<N> cross(const vector_t<3> other)
+		{
+			vector_t<3> crossResult;
+
+			crossResult.data[0] = (this->data[1] * other.data[2]) - (this->data[2] * other.data[1]);
+			crossResult.data[1] = (this->data[2] * other.data[0]) - (this->data[0] * other.data[2]);
+			crossResult.data[2] = (this->data[0] * other.data[1]) - (this->data[1] * other.data[0]);
+
+			return crossResult;
+		}
+
+		template<unsigned int N = 2> float cross2x2(const vector_t<2> &other)
+		{
+			return this.data[0] * other.data[1] - this.data[1] * other.data[0];
 		}
 
 		template <unsigned int N>
 		vector_t<N> operator+(const vector_t<N> &other)
 		{
-			const vector_t<N> copy = this;
-			copy += other;
+			vector_t<N> copy = *this;
+			for (size_t i = 0; i < N; i++)
+			{
+				copy.data[i] = copy.data[i] + other.data[i];
+			}
 			return copy;
 		}
 
 		template <unsigned int N>
 		vector_t<N> operator-(const vector_t<N> &other)
 		{
-			const vector_t<N> copy = this;
-			copy -= other;
+			vector_t<N> copy = *this;
+			for (size_t i = 0; i < N; i++)
+			{
+				copy.data[i] = copy.data[i] - other.data[i];
+			}
 			return copy;
 		}
 
@@ -72,7 +111,7 @@ namespace math
 
 	};
 
-
+	// Specializations (dont work)
 
 	//template <unsigned int N> class vector_t<2, void_t<typename std::enable_if<std::is_integral<N>::value>::type>
 	//{
@@ -101,8 +140,6 @@ namespace math
 	//	};
 
 	//};
-
-
 }
 
 
