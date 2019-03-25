@@ -2,14 +2,13 @@
 #define _VECTOR_T_H_
 
 #include <algorithm>
-#include <type_traits>
 
 namespace math
 {
-	template<typename... Ts> struct make_void { typedef void type; };
-	template<typename... Ts> using void_t = typename make_void<Ts...>::type;
+	//template<typename... Ts> struct make_void { typedef void type; };
+	//template<typename... Ts> using void_t = typename make_void<Ts...>::type;
 
-	template <unsigned int N, typename = void>
+	template <unsigned int N>
 	class vector_t
 	{
 	public:
@@ -75,33 +74,33 @@ namespace math
 
 
 
-	template <unsigned int N> class vector_t<2, void_t<typename std::enable_if<std::is_integral<N>::value>::type>
-	{
-		union
-		{
-			double data[2];
-			struct { public: double x, y; };
-		};
-	};
+	//template <unsigned int N> class vector_t<2, void_t<typename std::enable_if<std::is_integral<N>::value>::type>
+	//{
+	//	union
+	//	{
+	//		double data[2];
+	//		struct { public: double x, y; };
+	//	};
+	//};
 
-	template <> class vector_t<3>
-	{
-		union
-		{
-			double data[3];
-			struct { double x, y, z; };
-		};
-	};
+	//template <> class vector_t<3>
+	//{
+	//	union
+	//	{
+	//		double data[3];
+	//		struct { double x, y, z; };
+	//	};
+	//};
 
-	template <> class vector_t<4>
-	{
-		union
-		{
-			double data[4];
-			struct { public: double x, y, z, w; };
-		};
+	//template <> class vector_t<4>
+	//{
+	//	union
+	//	{
+	//		double data[4];
+	//		struct { public: double x, y, z, w; };
+	//	};
 
-	};
+	//};
 
 
 }
