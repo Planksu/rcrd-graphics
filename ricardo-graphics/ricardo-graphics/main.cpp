@@ -1,4 +1,5 @@
 #include "vector_t.h"
+#include "matrix_txt.h"
 #include <iostream>
 
 void printvec(const char* name, const math::vector_t<3> v)
@@ -27,6 +28,11 @@ int main(int argc, char** argv)
 	printvec("first - second", first - second);
 
 	printvec("first cross second", first.cross(second));
+
+	math::matrix_txt<4> m;
+	m.Init(5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5);
+
+	printf("%f", m.det(m));
 
 
 	return 0;
