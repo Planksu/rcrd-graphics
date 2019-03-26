@@ -22,9 +22,11 @@ namespace math
 			double x1y2,
 			double x2y2)
 		{
-			data = { { x1y1, x2y1 },
-			{ x1y2, x2y2 }
-			};
+			double data1[2] = { x1y1, x2y1 };
+			double data2[2] = { x1y2, x2y2 };
+
+			std::copy(data1, data1 + 2, data[0]);
+			std::copy(data1, data1 + 2, data[1]);
 		}
 
 		template<unsigned int N = 3>
@@ -42,10 +44,9 @@ namespace math
 			double data2[3] = { x1y2, x2y2, x3y2 };
 			double data3[3] = { x1y3, x2y3, x3y3 };
 
-			std::copy(data1, data1 + 4, data[0]);
-			std::copy(data2, data2 + 4, data[1]);
-			std::copy(data3, data3 + 4, data[2]);
-			std::copy(data4, data4 + 4, data[3]);
+			std::copy(data1, data1 + 3, data[0]);
+			std::copy(data2, data2 + 3, data[1]);
+			std::copy(data3, data3 + 3, data[2]);
 		}
 
 		template<unsigned int N = 4>
@@ -77,53 +78,44 @@ namespace math
 			std::copy(data4, data4 + 4, data[3]);
 		}
 
-
-		float det2x2(matrix_txt<2> m)
+		template <unsigned int N = 4> float det()
 		{
-			return ((m.data[0][0] * m.data[1][1]) - (m.data[1][0] * m.data[0][1]));
+			return 
+				data[0][3] * data[1][2] * data[2][1] * data[3][0] - data[0][2] * data[1][3] * data[2][1] * data[3][0] -
+				data[0][3] * data[1][1] * data[2][2] * data[3][0] + data[0][1] * data[1][3] * data[2][2] * data[3][0] +
+				data[0][2] * data[1][1] * data[2][3] * data[3][0] - data[0][1] * data[1][2] * data[2][3] * data[3][0] -
+				data[0][3] * data[1][2] * data[2][0] * data[3][1] + data[0][2] * data[1][3] * data[2][0] * data[3][1] +
+				data[0][3] * data[1][0] * data[2][2] * data[3][1] - data[0][0] * data[1][3] * data[2][2] * data[3][1] -
+				data[0][2] * data[1][0] * data[2][3] * data[3][1] + data[0][0] * data[1][2] * data[2][3] * data[3][1] +
+				data[0][3] * data[1][1] * data[2][0] * data[3][2] - data[0][1] * data[1][3] * data[2][0] * data[3][2] -
+				data[0][3] * data[1][0] * data[2][1] * data[3][2] + data[0][0] * data[1][3] * data[2][1] * data[3][2] +
+				data[0][1] * data[1][0] * data[2][3] * data[3][2] - data[0][0] * data[1][1] * data[2][3] * data[3][2] -
+				data[0][2] * data[1][1] * data[2][0] * data[3][3] + data[0][1] * data[1][2] * data[2][0] * data[3][3] +
+				data[0][2] * data[1][0] * data[2][1] * data[3][3] - data[0][0] * data[1][2] * data[2][1] * data[3][3] -
+				data[0][1] * data[1][0] * data[2][2] * data[3][3] + data[0][0] * data[1][1] * data[2][2] * data[3][3];
 		}
 
-		
-		template <unsigned int N = 4> float det(matrix_txt<N> A)
+		template<unsigned int N = 4> void transpose()
 		{
-			matrix_txt<N> minor;
-			int i, j, k, c1, c2;
-			float determinant;
-			int c[N];
-			int O = 1;
+			double dataT[N][N];
 
-			determinant = 0;
-			if (N == 2)
+			for (size_t i = 0; i < N; i++)
 			{
-				determinant = ((data[0][0] * data[1][1]) - (data[1][0] * data[0][1]));
-			}
-			else
-			{
-				for (size_t i = 0; i < N; i++)
+				for (size_t j = 0; j < N; j++)
 				{
-					c1 = 0;
-					c2 = 0;
-					for (size_t j = 0; j < N; j++)
-					{
-						for (size_t k = 0; k < N; k++)
-						{
-							if (j != 0 && k != i)
-							{
-								minor.data[c1][c2] = A.data[j][k];
-								c2++;
-								if (c2 > N - 2)
-								{
-									c1++;
-									c2 = 0;
-								}
-							}
-						}
-					}
-					determinant = determinant + O * (A.data[0][i] * this->det(minor));
-					O = -1 * O;
+					dataT[j][i] = data[i][j];
 				}
 			}
-			return determinant;
+
+			for (size_t i = 0; i < N; i++)
+			{
+				std::copy(dataT[i], dataT[i] + N, data[i]);
+			}
+		}
+
+		template<unsigned int N = 4> void inverse()
+		{
+
 		}
 	};
 
