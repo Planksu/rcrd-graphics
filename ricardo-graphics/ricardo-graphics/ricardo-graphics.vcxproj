@@ -124,9 +124,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="matrix_4.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="matrix_txt.h" />
+    <ClInclude Include="matrix_4.h" />
     <ClInclude Include="vector_t.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
