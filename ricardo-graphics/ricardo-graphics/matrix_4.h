@@ -35,7 +35,7 @@ namespace math
 
 
 	public:
-		void inverse();
+		matrix_4 inverse();
 		void transpose();
 		double determinant();
 
@@ -53,6 +53,19 @@ namespace math
 				result.data[i] = cell;
 			}
 
+			return result;
+		}
+
+		matrix_4 operator*(const matrix_4 &other)
+		{
+			matrix_4 result;
+			for (size_t i = 0; i < 4; i++)
+			{
+				for (size_t j = 0; j < 4; j++)
+				{
+					result.data[i][j] = this->data[i][j] * other.data[i][j];
+				}
+			}
 			return result;
 		}
 		

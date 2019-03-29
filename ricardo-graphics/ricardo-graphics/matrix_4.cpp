@@ -173,7 +173,7 @@ namespace math
 		}
 	}
 
-	void matrix_4::inverse()
+	matrix_4 matrix_4::inverse()
 	{
 		// Transform our matrix into double[4][4] form
 		double contents[4][4];
@@ -191,21 +191,26 @@ namespace math
 
 		if (det == 0)
 		{
+			matrix_4 empty;
 			printf("Can't find inverse as determinant is 0");
-			return;
+			return empty;
 		}
 
 		// Find adjointed matrix
 		double adj[4][4];
 		adjoint(contents, adj, 4);
 
+		matrix_4 inverse;
+
 		// Set the inverse matrix data to this matrix's data
 		for (size_t i = 0; i < 4; i++)
 		{
 			for (size_t j = 0; j < 4; j++)
 			{
-				data[i][j] = adj[i][j] / det;
+				inverse.data[i][j] = adj[i][j] / det;
 			}
 		}
+
+		return inverse;
 	}
 }
