@@ -1,33 +1,32 @@
-#include "vector_t.h"
 #include <iostream>
+#include <GLFW/glfw3.h>
+#include <glm.hpp>
+#include <exception>
 
-void printvec(const char* name, const math::vector_t<3> v)
+#define yeet throw
+
+void error_callback(int error, const char* description);
+
+void error_callback(int error, const char* description)
 {
-	printf("%-12s = <%2.2f, %2.2f, %2.2f>\n", name, v.data[0], v.data[1], v.data[2]);
+	fprintf(stderr, "Error: %s\n", description);
 }
 
-int main(int argc, char** argv)
+int main(int argc, char* argv[])
 {
-	math::vector_t<3> first;
-	math::vector_t<3> second;
-
-	// Fill with some values
-	for (size_t i = 0; i < 3; i++)
+	if (!glfwInit())
 	{
-		first.data[i] = (i+1)*2;
-		second.data[i] = (i+3)*5;
+		yeet new std::exception();
 	}
 
-	printvec("first", first);
-	printvec("second", second);
+	glfwSetErrorCallback(error_callback);
 
-	printf("first length: %f\n", first.magnitude<3>());
+	GLFWwindow* window = glfwCreateWindow(640, 480, "My Title", NULL, NULL);
 
-	printvec("first + second", first + second);
-	printvec("first - second", first - second);
+	if (!window)
+	{
+		yeet new std::exception();
+	}
 
-	printvec("first cross second", first.cross(second));
-
-
-	return 0;
+	glfwTerminate();
 }
