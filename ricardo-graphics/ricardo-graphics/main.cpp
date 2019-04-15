@@ -2,6 +2,7 @@
 #include <GLFW/glfw3.h>
 #include <glm.hpp>
 #include <exception>
+#include "Loader.h"
 
 #define yeet throw
 
@@ -27,6 +28,11 @@ int main(int argc, char* argv[])
 	{
 		yeet new std::exception();
 	}
+
+	std::cout << "This code is being executed" << std::endl;
+
+	Loader loader;
+	loader.LoadOBJ("C://Users//anttonjok//Documents//ricardo-graphics//Cube.obj");
 
 	glfwTerminate();
 }
