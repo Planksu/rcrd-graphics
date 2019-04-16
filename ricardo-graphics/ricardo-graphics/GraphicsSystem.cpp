@@ -114,7 +114,7 @@ void GraphicsSystem::CreateShaderObject(char* vShaderSrc, char* fShaderSrc, GLui
 		return;
 	}
 
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glClearColor(0.2f, 0.2f, 0.2f, 0.0f);
 	return;
 }
 
@@ -142,8 +142,8 @@ void GraphicsSystem::InitGLFW(const char* title)
 
 	glfwSetErrorCallback(&error_callback);
 
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	//glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	//glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 
 	window = glfwCreateWindow(width, height, title, NULL, NULL);
 
@@ -190,7 +190,7 @@ void GraphicsSystem::Draw()
 		glBindVertexArray(this->VAO);
 		for (size_t i = 0; i < objects.size(); i++)
 		{
-			glDrawArrays(GL_TRIANGLES, 0, objects[i]->meshVertices.size());
+			glDrawArrays(GL_TRIANGLES, 0, objects[i].meshVertices.size());
 		}
 		glBindVertexArray(0);
 
@@ -203,7 +203,7 @@ void GraphicsSystem::LoadOBJ(const char* path)
 {
 	Object newObject;
 	newObject.LoadOBJ(path);
-	objects.push_back(&newObject);
+	objects.push_back(newObject);
 	GenerateGLBuffers();
 }
 

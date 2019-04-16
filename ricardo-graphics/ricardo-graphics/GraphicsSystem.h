@@ -39,7 +39,7 @@ private:
 
 	int width, height;
 
-	std::vector<Object*> objects;
+	std::vector<Object> objects;
 
 };
 
