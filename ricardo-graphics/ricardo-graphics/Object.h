@@ -1,31 +1,34 @@
-#ifndef _LOADER_HEADER_
-#define _LOADER_HEADER_
+#ifndef _OBJECT_HEADER_
+#define _OBJECT_HEADER_
 
 #include <iostream>
 #include <string>
 #include <fstream>
 #include <sstream>
 #include <vector>
-#include <GLFW/glfw3.h>
-#include <glm.hpp>
+#include <glm/glm.hpp>
 
-class Loader
+class Object
 {
 public:
 
-	Loader();
-	~Loader();
+	Object();
+	~Object();
 	void LoadOBJ(const char* path);
+	void Draw();
 
 public:
 
 	std::vector<glm::vec3> vertices;
 	std::vector<glm::vec2> texture;
+	std::vector<glm::vec3> normals;
 	std::vector<int> faceIndex;
 	std::vector<int> textureIndex;
+	std::vector<int> normalIndex;
 
 	std::vector<glm::vec3> meshVertices;
 	std::vector<glm::vec2> texCoord;
+	std::vector<glm::vec3> meshNormals;
 };
 
 #endif
