@@ -5,7 +5,9 @@
 #include <GL/glew.h>
 
 // GLFW
-#include <GLFW/glfw3.h>
+//#include <GLFW/glfw3.h>
+//#include <glfw3.h>
+#include <include/glfw/glfw3.h>
 
 // GLM
 #include <glm/glm.hpp>
