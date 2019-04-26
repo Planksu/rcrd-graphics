@@ -14,7 +14,7 @@ int main(int argc, char* argv[])
 	Batch* cubeBatch = graphics.LoadObject("fill in windows path");
 	#elif defined __linux__
 	Batch* cubeBatch = graphics.CreateBatch();
-	cubeBatch->LoadObject("/home/antton/Documents/ricardo-graphics/Cube_tex.obj");
+	cubeBatch->LoadObject("/home/antton/Documents/ricardo-graphics/mill.obj");
 	#endif
 
 	graphics.Draw();

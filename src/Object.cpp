@@ -88,6 +88,7 @@ void Object::LoadOBJ(const char* path)
 	std::cout << "Beginning the setting of vertice lists..." << std::endl;
 
 	std::cout << "Size of face indexes: " << faceIndex.size() << std::endl;
+	std::cout << "Size of vertices: " << vertices.size() << std::endl;
 	for (size_t i = 0; i < faceIndex.size(); i++)
 	{
 		glm::vec3 meshData;
@@ -115,7 +116,10 @@ void Object::LoadOBJ(const char* path)
 	std::cout << "Size of texCoord: " << texCoord.size() << std::endl;
 	std::cout << "Size of meshNormals: " << meshNormals.size() << std::endl;
 
-
+	for(size_t i = 0; i < meshVertices.size(); i++)
+	{
+		std::cout << meshVertices[i].x << " " << meshVertices[i].y << " " << meshVertices[i].z << std::endl;
+	}
 	std::cout << "Finished the setting of vertice lists..." << std::endl;
 }
 

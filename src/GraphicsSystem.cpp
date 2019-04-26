@@ -1,4 +1,8 @@
 #include "GraphicsSystem.h"
+#include <glm/glm/gtx/string_cast.hpp>
+
+#define GLM_ENABLE_EXPERIMENTAL
+
 
 GraphicsSystem::GraphicsSystem(int w, int h, const char* title)
 {
@@ -87,7 +91,7 @@ void GraphicsSystem::CreateShaderObject(char* vShaderSrc, char* fShaderSrc, GLui
 
 	glAttachShader(*object, vertexShader);
 	glAttachShader(*object, fragmentShader);
-	glBindAttribLocation(*object, 0, "inVertexPosition");
+	glBindAttribLocation(*object, 0, "position");
 	glLinkProgram(*object);
 	glGetProgramiv(*object, GL_LINK_STATUS, &linked);
 
@@ -111,7 +115,7 @@ void GraphicsSystem::CreateShaderObject(char* vShaderSrc, char* fShaderSrc, GLui
 		return;
 	}
 
-	glClearColor(0.2f, 0.2f, 0.2f, 0.0f);
+
 	return;
 }
 
@@ -139,8 +143,10 @@ void GraphicsSystem::InitGLFW(const char* title)
 
 	glfwSetErrorCallback(&error_callback);
 
-	//glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	//glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	window = glfwCreateWindow(width, height, title, NULL, NULL);
 
@@ -162,6 +168,8 @@ void GraphicsSystem::InitGL()
 {
 	glfwGetFramebufferSize(window, &width, &height);
 	glViewport(0, 0, width, height);
+	std::cout << "GL VERSION\n" << std::endl;
+	std::cout << glGetString(GL_VERSION) << std::endl;
 }
 
 void GraphicsSystem::Draw()
@@ -169,26 +177,48 @@ void GraphicsSystem::Draw()
 	std::cout << "Beginning the draw method..." << std::endl;
 	while (!glfwWindowShouldClose(window))
 	{
+		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		std::cout << "Batches size: " << batches.size() << std::endl;
 		glUseProgram(program);
+
+		// Make some kind of angles to use in rotating
+		static float r = 0;
+		r += 0.00016f * 90;
+
+		//glm::mat4 mvp = glm::ortho(0.f, (float)width, (float)height, 0.f, -1.f, 1.f);
+		glm::mat4 model = glm::mat4(1.0f);
+
+		// Translate a bit forward
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -5.0f));
+		// and the rotation
+		model = glm::rotate(model, r, glm::vec3(0.0f, 1.0f, 0.0f));
+
+		glm::mat4 view = glm::mat4(1.0f);
+		glm::mat4 projection = glm::perspective(45.f, (float)width / (float)height, 1.0f, 10.0f);
+		glm::mat4 mvp = projection * view * model;
+		glUniformMatrix4fv(glGetUniformLocation(program, "mvp"), 1, GL_FALSE, (const GLfloat*)&mvp[0]);
+
 		for (size_t i = 0; i < batches.size(); i++)
 		{
-			glBindVertexArray(batches[i].VAO);
+			std::cout << "Objects size: " << batches[i]->objects.size() << std::endl;
+
+			glBindVertexArray(batches[i]->VAO);
 
 			// Need to find the total amount of vertices in a batch
 			int numVertices = 0;
-			for(size_t j = 0; j < batches[i].objects.size(); j++)
+			for(size_t j = 0; j < batches[i]->objects.size(); j++)
 			{
-				numVertices += batches[i].objects[j].meshVertices.size();
+				numVertices += batches[i]->objects[j].meshVertices.size();
 			}
-
-			glBindBuffer(GL_ARRAY_BUFFER, batches[i].VBO);
-			glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * batches[i].objects[i].meshVertices.size(), &batches[i].objects[i].meshVertices[0], GL_DYNAMIC_DRAW);
-
 			// Then call drawarrays with that amount
+			std::cout << "Right before draw call" << std::endl;
+			std::cout << "Number of vertices: " << numVertices << std::endl;
 			glDrawArrays(GL_TRIANGLES, 0, numVertices);
+
+			glBindVertexArray(0);
 		}
-		//glBindVertexArray(0);
-		//glUseProgram(0);
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
@@ -198,7 +228,7 @@ void GraphicsSystem::Draw()
 Batch* GraphicsSystem::CreateBatch()
 {
 	Batch* newBatch = new Batch();
-	batches.push_back(*(newBatch));
+	batches.push_back(newBatch);
 	std::cout << "New batch created, amount of batches currently: " << batches.size() << std::endl;
 	return newBatch;
 }

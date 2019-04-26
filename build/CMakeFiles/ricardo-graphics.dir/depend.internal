@@ -162,22 +162,6 @@ CMakeFiles/ricardo-graphics.dir/src/Batch.cpp.o
  /home/antton/Documents/ricardo-graphics/src/Object.h
 CMakeFiles/ricardo-graphics.dir/src/GraphicsSystem.cpp.o
  ../include/GLFW/glfw3.h
- ../include/glm/glm/./detail/setup.hpp
- ../include/glm/glm/./detail/type_mat2x2.hpp
- ../include/glm/glm/./detail/type_mat2x2.inl
- ../include/glm/glm/./detail/type_mat2x3.hpp
- ../include/glm/glm/./detail/type_mat2x3.inl
- ../include/glm/glm/./detail/type_mat2x4.hpp
- ../include/glm/glm/./detail/type_mat2x4.inl
- ../include/glm/glm/./detail/type_mat3x2.hpp
- ../include/glm/glm/./detail/type_mat3x2.inl
- ../include/glm/glm/./detail/type_mat3x4.hpp
- ../include/glm/glm/./detail/type_mat3x4.inl
- ../include/glm/glm/./detail/type_mat4x2.hpp
- ../include/glm/glm/./detail/type_mat4x2.inl
- ../include/glm/glm/./detail/type_mat4x3.hpp
- ../include/glm/glm/./detail/type_mat4x3.inl
- ../include/glm/glm/./detail/type_vec2.hpp
  ../include/glm/glm/./ext/matrix_double2x2.hpp
  ../include/glm/glm/./ext/matrix_double2x2_precision.hpp
  ../include/glm/glm/./ext/matrix_double2x3.hpp
@@ -273,8 +257,22 @@ CMakeFiles/ricardo-graphics.dir/src/GraphicsSystem.cpp.o
  ../include/glm/glm/detail/type_float.hpp
  ../include/glm/glm/detail/type_half.hpp
  ../include/glm/glm/detail/type_half.inl
+ ../include/glm/glm/detail/type_mat2x2.hpp
+ ../include/glm/glm/detail/type_mat2x2.inl
+ ../include/glm/glm/detail/type_mat2x3.hpp
+ ../include/glm/glm/detail/type_mat2x3.inl
+ ../include/glm/glm/detail/type_mat2x4.hpp
+ ../include/glm/glm/detail/type_mat2x4.inl
+ ../include/glm/glm/detail/type_mat3x2.hpp
+ ../include/glm/glm/detail/type_mat3x2.inl
  ../include/glm/glm/detail/type_mat3x3.hpp
  ../include/glm/glm/detail/type_mat3x3.inl
+ ../include/glm/glm/detail/type_mat3x4.hpp
+ ../include/glm/glm/detail/type_mat3x4.inl
+ ../include/glm/glm/detail/type_mat4x2.hpp
+ ../include/glm/glm/detail/type_mat4x2.inl
+ ../include/glm/glm/detail/type_mat4x3.hpp
+ ../include/glm/glm/detail/type_mat4x3.inl
  ../include/glm/glm/detail/type_mat4x4.hpp
  ../include/glm/glm/detail/type_mat4x4.inl
  ../include/glm/glm/detail/type_mat4x4_simd.inl
@@ -313,6 +311,8 @@ CMakeFiles/ricardo-graphics.dir/src/GraphicsSystem.cpp.o
  ../include/glm/glm/ext/quaternion_trigonometric.inl
  ../include/glm/glm/ext/scalar_constants.hpp
  ../include/glm/glm/ext/scalar_constants.inl
+ ../include/glm/glm/ext/scalar_int_sized.hpp
+ ../include/glm/glm/ext/scalar_uint_sized.hpp
  ../include/glm/glm/ext/vector_bool1.hpp
  ../include/glm/glm/ext/vector_bool1_precision.hpp
  ../include/glm/glm/ext/vector_double1.hpp
@@ -337,9 +337,15 @@ CMakeFiles/ricardo-graphics.dir/src/GraphicsSystem.cpp.o
  ../include/glm/glm/gtc/quaternion.hpp
  ../include/glm/glm/gtc/quaternion.inl
  ../include/glm/glm/gtc/quaternion_simd.inl
+ ../include/glm/glm/gtc/type_precision.hpp
+ ../include/glm/glm/gtc/type_precision.inl
  ../include/glm/glm/gtc/type_ptr.hpp
  ../include/glm/glm/gtc/type_ptr.inl
  ../include/glm/glm/gtc/vec1.hpp
+ ../include/glm/glm/gtx/dual_quaternion.hpp
+ ../include/glm/glm/gtx/dual_quaternion.inl
+ ../include/glm/glm/gtx/string_cast.hpp
+ ../include/glm/glm/gtx/string_cast.inl
  ../include/glm/glm/integer.hpp
  ../include/glm/glm/mat2x2.hpp
  ../include/glm/glm/mat2x3.hpp

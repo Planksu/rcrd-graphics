@@ -38,7 +38,8 @@ public:
 private:
 	GLFWwindow* window;
 	GLuint program;
-	std::vector<Batch> batches;
+	std::vector<Batch*> batches;
+
 
 	int width, height;
 
