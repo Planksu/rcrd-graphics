@@ -16,8 +16,7 @@ public:
     void LoadObject(const char* path);
 
 public:
-    std::vector<Object> objects;
-    GLuint currentVAOIndex;
+    std::vector<Model> models;
     GLuint VAO, VBO, EBO;
 
 
