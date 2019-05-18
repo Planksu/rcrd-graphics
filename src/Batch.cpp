@@ -28,19 +28,14 @@ void Batch::GenerateBuffers()
 		glGenBuffers(1, &this->VBO);
 		glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
 
-		int vertCount;
-		for(size_t j = 0; j < models[i].modelObjects.size(); j++)
-		{
-			vertCount += models[i].modelObjects[i]->meshVertices.size();
-		}  
+		std::cout << "Buffer data generated" << std::endl;
 
-		glBufferData(GL_ARRAY_BUFFER, models[i].meshVertices.size() * sizeof(float) * 3, &models[i].meshVertices[0], GL_STATIC_DRAW);
-
+		glBufferData(GL_ARRAY_BUFFER, models[i].vertexes.size() * sizeof(Vertex), &models[i].vertexes[0], GL_STATIC_DRAW);
 		//glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
 		//glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * objects[i].meshVertices.size(), &objects[i].meshVertices[0], GL_DYNAMIC_DRAW);
 
 		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, nullptr);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), nullptr);
 
 		// Unbind
 		glBindVertexArray(0);

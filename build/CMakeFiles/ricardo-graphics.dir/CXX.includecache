@@ -1445,6 +1445,8 @@ detail/func_vector_relational.inl
 /home/antton/Documents/ricardo-graphics/src/Batch.h
 GL/glew.h
 -
+glm/glm/glm.hpp
+-
 Model.h
 /home/antton/Documents/ricardo-graphics/src/Model.h
 vector

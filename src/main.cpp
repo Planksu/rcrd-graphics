@@ -16,7 +16,7 @@ int main(int argc, char* argv[])
 	Batch* cubeBatch = graphics.CreateBatch();
 	Batch* millBatch = graphics.CreateBatch();
 	millBatch->LoadObject("/home/antton/Documents/ricardo-graphics/mill.obj");
-	cubeBatch->LoadObject("/home/antton/Documents/ricardo-graphics/Cube_tex.obj");
+	//cubeBatch->LoadObject("/home/antton/Documents/ricardo-graphics/Cube_tex.obj");
 	#endif
 
 	graphics.Draw();

@@ -3,6 +3,7 @@
 
 // GLEW
 #include <GL/glew.h>
+#include <glm/glm/glm.hpp>
 
 
 #include "Model.h"

@@ -26,7 +26,6 @@ void Model::LoadModel(const char* path)
 
 	while (std::getline(in, line))
 	{
-        std::cout << "Reading line..." << std::endl;
         std::string input = line.substr(0,2);
         if(input == "v ")
         {
@@ -156,43 +155,48 @@ void Model::MatchDataToIndex()
         {
             std::cout << "FaceIndex in this object:" << modelObjects[i]->faceIndex[j] << std::endl;
         }*/
-        
+
+        glm::vec3 meshData;
+        glm::vec2 texData;
+        glm::vec3 meshNormal;
+
 
         for (size_t j = 0; j < modelObjects[i]->faceIndex.size(); j++)
         {
-            glm::vec3 meshData;
             meshData = glm::vec3(vertices[modelObjects[i]->faceIndex[j]].x, vertices[modelObjects[i]->faceIndex[j]].y, vertices[modelObjects[i]->faceIndex[j]].z);
-            std::cout << "Set mesh data: " << meshData.x << ", " << meshData.y << ", " << meshData.z << std::endl;
-            //modelObjects[i]->meshVertices.push_back(meshData);
-            meshVertices.push_back(meshData);
+            //std::cout << "Set mesh data: " << meshData.x << ", " << meshData.y << ", " << meshData.z << std::endl;
+
+            // Create a new vert struct to hold the vertex information
+            Vertex newVer = Vertex();
+            newVer.vert = meshData;
+            vertexes.push_back(newVer);
         }
 
         std::cout << "Size of texture indexes: " << modelObjects[i]->textureIndex.size() << std::endl;
         for(size_t j = 0; j < modelObjects[i]->textureIndex.size(); j++)
         {
-            glm::vec2 texData;
             texData = glm::vec2(texture[modelObjects[i]->textureIndex[j]].x, texture[modelObjects[i]->textureIndex[j]].y);
-            //modelObjects[i]->texCoord.push_back(texData);
-            texCoord.push_back(texData);
+
+            // After we created a new vertex struct in the first loop, we can access it with the same indexes here
+            vertexes[i].texCoord = texData;
         }
         
         std::cout << "Size of normal indexes: " << modelObjects[i]->normalIndex.size() << std::endl;
         for(size_t j = 0; j < modelObjects[i]->normalIndex.size(); j++)
         {
-            glm::vec3 meshNormal;
             meshNormal = glm::vec3(normals[modelObjects[i]->normalIndex[j]].x, normals[modelObjects[i]->normalIndex[j]].y, normals[modelObjects[i]->normalIndex[j]].z);
-            //modelObjects[i]->meshNormals.push_back(meshNormal);
-            meshNormals.push_back(meshNormal);
+
+            // Same thing here
+            vertexes[i].norm = meshNormal;
+        }
+
+        for(size_t j = 0; j < modelObjects[i]->faceIndex.size(); j++)
+        {
+            std::cout << "Vertexes content: " << vertexes[j].vert.x << ", " << vertexes[j].vert.y << ", " << vertexes[j].vert.z << std::endl;
         }
         
-        std::cout << "Size of meshVertices: " << modelObjects[i]->meshVertices.size() << std::endl;
-        std::cout << "Size of texCoord: " << modelObjects[i]->texCoord.size() << std::endl;
-        std::cout << "Size of meshNormals: " << modelObjects[i]->meshNormals.size() << std::endl;
 
-        for(size_t j = 0; j < modelObjects[i]->meshVertices.size(); j++)
-        {
-            std::cout << modelObjects[i]->meshVertices[j].x << " " << modelObjects[i]->meshVertices[j].y << " " << modelObjects[i]->meshVertices[j].z << std::endl;
-        }
+        std::cout << "Size of vertexes: " << vertexes.size() << std::endl;
         std::cout << "Finished the setting of vertice lists..." << std::endl;
     }	
 }

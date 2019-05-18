@@ -208,7 +208,7 @@ void GraphicsSystem::Draw()
 			int numVertices = 0;
 			for(size_t j = 0; j < batches[i]->models.size(); j++)
 			{
-				numVertices += batches[i]->models[j].meshVertices.size();
+				numVertices += batches[i]->models[j].vertexes.size();
 			}
 			// Then call drawarrays with that amount
 			std::cout << "Right before draw call" << std::endl;
