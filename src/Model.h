@@ -14,6 +14,7 @@ public:
     Model();
     void LoadModel(const char* path);
     void CreateObject(const char* name);
+    void MatchDataToIndex();
 
 public:
     std::vector<Object*> modelObjects;
@@ -23,6 +24,10 @@ public:
 	std::vector<glm::vec3> vertices;
 	std::vector<glm::vec2> texture;
 	std::vector<glm::vec3> normals;
+
+    std::vector<glm::vec3> meshVertices;
+	std::vector<glm::vec2> texCoord;
+	std::vector<glm::vec3> meshNormals;
 
 };
 

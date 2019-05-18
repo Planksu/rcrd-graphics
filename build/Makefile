@@ -177,6 +177,33 @@ src/GraphicsSystem.cpp.s:
 	$(MAKE) -f CMakeFiles/ricardo-graphics.dir/build.make CMakeFiles/ricardo-graphics.dir/src/GraphicsSystem.cpp.s
 .PHONY : src/GraphicsSystem.cpp.s
 
+src/Model.o: src/Model.cpp.o
+
+.PHONY : src/Model.o
+
+# target to build an object file
+src/Model.cpp.o:
+	$(MAKE) -f CMakeFiles/ricardo-graphics.dir/build.make CMakeFiles/ricardo-graphics.dir/src/Model.cpp.o
+.PHONY : src/Model.cpp.o
+
+src/Model.i: src/Model.cpp.i
+
+.PHONY : src/Model.i
+
+# target to preprocess a source file
+src/Model.cpp.i:
+	$(MAKE) -f CMakeFiles/ricardo-graphics.dir/build.make CMakeFiles/ricardo-graphics.dir/src/Model.cpp.i
+.PHONY : src/Model.cpp.i
+
+src/Model.s: src/Model.cpp.s
+
+.PHONY : src/Model.s
+
+# target to generate assembly for a file
+src/Model.cpp.s:
+	$(MAKE) -f CMakeFiles/ricardo-graphics.dir/build.make CMakeFiles/ricardo-graphics.dir/src/Model.cpp.s
+.PHONY : src/Model.cpp.s
+
 src/Object.o: src/Object.cpp.o
 
 .PHONY : src/Object.o
@@ -246,6 +273,9 @@ help:
 	@echo "... src/GraphicsSystem.o"
 	@echo "... src/GraphicsSystem.i"
 	@echo "... src/GraphicsSystem.s"
+	@echo "... src/Model.o"
+	@echo "... src/Model.i"
+	@echo "... src/Model.s"
 	@echo "... src/Object.o"
 	@echo "... src/Object.i"
 	@echo "... src/Object.s"

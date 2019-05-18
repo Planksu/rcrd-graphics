@@ -5,7 +5,7 @@
 #include <GL/glew.h>
 
 
-#include "Object.h"
+#include "Model.h"
 #include <vector>
 
 class Batch

@@ -6,6 +6,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 set(CMAKE_DEPENDS_CHECK_CXX
   "/home/antton/Documents/ricardo-graphics/src/Batch.cpp" "/home/antton/Documents/ricardo-graphics/build/CMakeFiles/ricardo-graphics.dir/src/Batch.cpp.o"
   "/home/antton/Documents/ricardo-graphics/src/GraphicsSystem.cpp" "/home/antton/Documents/ricardo-graphics/build/CMakeFiles/ricardo-graphics.dir/src/GraphicsSystem.cpp.o"
+  "/home/antton/Documents/ricardo-graphics/src/Model.cpp" "/home/antton/Documents/ricardo-graphics/build/CMakeFiles/ricardo-graphics.dir/src/Model.cpp.o"
   "/home/antton/Documents/ricardo-graphics/src/Object.cpp" "/home/antton/Documents/ricardo-graphics/build/CMakeFiles/ricardo-graphics.dir/src/Object.cpp.o"
   "/home/antton/Documents/ricardo-graphics/src/main.cpp" "/home/antton/Documents/ricardo-graphics/build/CMakeFiles/ricardo-graphics.dir/src/main.cpp.o"
   )

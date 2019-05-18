@@ -26,6 +26,11 @@ public:
 	std::vector<glm::vec3> meshVertices;
 	std::vector<glm::vec2> texCoord;
 	std::vector<glm::vec3> meshNormals;
+
+	// Temporary holders
+	std::vector<glm::vec3> vertices;
+	std::vector<glm::vec2> texture;
+	std::vector<glm::vec3> normals;
 };
 
 #endif

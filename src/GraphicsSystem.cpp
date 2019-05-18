@@ -187,9 +187,7 @@ void GraphicsSystem::Draw()
 		static float r = 0;
 		r += 0.00016f * 90;
 
-		//glm::mat4 mvp = glm::ortho(0.f, (float)width, (float)height, 0.f, -1.f, 1.f);
 		glm::mat4 model = glm::mat4(1.0f);
-
 		// Translate a bit forward
 		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -5.0f));
 		// and the rotation
@@ -202,15 +200,15 @@ void GraphicsSystem::Draw()
 
 		for (size_t i = 0; i < batches.size(); i++)
 		{
-			std::cout << "Objects size: " << batches[i]->objects.size() << std::endl;
+			std::cout << "Models size: " << batches[i]->models.size() << std::endl;
 
 			glBindVertexArray(batches[i]->VAO);
 
 			// Need to find the total amount of vertices in a batch
 			int numVertices = 0;
-			for(size_t j = 0; j < batches[i]->objects.size(); j++)
+			for(size_t j = 0; j < batches[i]->models.size(); j++)
 			{
-				numVertices += batches[i]->objects[j].meshVertices.size();
+				numVertices += batches[i]->models[j].meshVertices.size();
 			}
 			// Then call drawarrays with that amount
 			std::cout << "Right before draw call" << std::endl;

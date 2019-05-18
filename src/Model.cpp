@@ -1,4 +1,7 @@
 #include "Model.h"
+#include <sstream>
+#include <string>
+
 
 Model::Model()
 {
@@ -23,68 +26,91 @@ void Model::LoadModel(const char* path)
 
 	while (std::getline(in, line))
 	{
+        std::cout << "Reading line..." << std::endl;
         std::string input = line.substr(0,2);
-        switch(input)
+        if(input == "v ")
         {
-            case "v ":
-            {
-                std::istringstream v(line.substr(2));
-                glm::vec3 vert;
-                double x, y, z;
-                v >> x; v >> y; v >> z;
-                vert = glm::vec3(x, y, z);
-                vertices.push_back(vert);
-                break;
-            }
-            case "vt":
-            {
-                std::istringstream v(line.substr(3));
-                glm::vec2 tex;
-                double U, V;
-                v >> U; v >> V;
-                tex = glm::vec2(U, V);
-                texture.push_back(tex);
-                break;
-            }
-            case "vn":
-            {
-                std::istringstream v(line.substr(3));
-                glm::vec3 norm;
-                double x, y, z;
-                v >> x; v >> y; v >> z;
-                norm = glm::vec3(x, y, z);
-                normals.push_back(norm);
-                break;
-            }
-            case "f ":
-            {
-                int a, b, c;
-                int A, B, C;
-                int D, E, F;
-                const char* chh = line.c_str();
+            std::istringstream v(line.substr(2));
+            glm::vec3 vert;
+            double x, y, z;
+            v >> x; v >> y; v >> z;
+            std::cout << "This object is: " << objectIndex << std::endl;
+            std::cout << "Read vertice contains values: " << x << ", " << y << ", " << z << std::endl;
+            vert = glm::vec3(x, y, z);
+            modelObjects[objectIndex]->vertices.push_back(vert);
+            vertices.push_back(vert);
+        }
+        else if(input == "vt")
+        {
+            std::istringstream v(line.substr(3));
+            glm::vec2 tex;
+            double U, V;
+            v >> U; v >> V;
+            tex = glm::vec2(U, V);
+            modelObjects[objectIndex]->texture.push_back(tex);
+            texture.push_back(tex);
+        }
+        else if(input == "vn")
+        {
+            std::istringstream v(line.substr(3));
+            glm::vec3 norm;
+            double x, y, z;
+            v >> x; v >> y; v >> z;
+            norm = glm::vec3(x, y, z);
+            modelObjects[objectIndex]->normals.push_back(norm);
+            normals.push_back(norm);
+        }
+        else if(input == "f ")
+        {
+            int a, b, c;
+            int A, B, C;
+            int D, E, F;
+            const char* chh = line.c_str();
 
-                sscanf(chh, "f %i/%i/%i %i/%i/%i %i/%i/%i", &a, &A, &D, &b, &B, &E, &c, &C, &F);
-                a--; b--; c--;
-                A--; B--; C--;
-                D--; E--; F--;
-                faceIndex.push_back(a);
-                faceIndex.push_back(b);
-                faceIndex.push_back(c);
-                textureIndex.push_back(A);
-                textureIndex.push_back(B);
-                textureIndex.push_back(C);
-                normalIndex.push_back(D);
-                normalIndex.push_back(E);
-                normalIndex.push_back(F);
-            }
-            case "o ":
+            sscanf(chh, "f %i/%i/%i %i/%i/%i %i/%i/%i", &a, &A, &D, &b, &B, &E, &c, &C, &F);
+            a--; b--; c--;
+            A--; B--; C--;
+            D--; E--; F--;
+
+            modelObjects[objectIndex]->faceIndex.push_back(a);
+            modelObjects[objectIndex]->faceIndex.push_back(b);
+            modelObjects[objectIndex]->faceIndex.push_back(c);
+
+            modelObjects[objectIndex]->textureIndex.push_back(A);
+            modelObjects[objectIndex]->textureIndex.push_back(B);
+            modelObjects[objectIndex]->textureIndex.push_back(C);
+
+            modelObjects[objectIndex]->normalIndex.push_back(D);
+            modelObjects[objectIndex]->normalIndex.push_back(E);
+            modelObjects[objectIndex]->normalIndex.push_back(F);
+
+            /*faceIndex.push_back(a);
+            faceIndex.push_back(b);
+            faceIndex.push_back(c);
+            textureIndex.push_back(A);
+            textureIndex.push_back(B);
+            textureIndex.push_back(C);
+            normalIndex.push_back(D);
+            normalIndex.push_back(E);
+            normalIndex.push_back(F);*/
+        }
+        else if(input == "o ")
+        {
+            std::cout << "New object found, creating..." << std::endl;
+            
+            // A .obj file model always starts with atleast one object
+            // This is why when creating the first object, we do not need to increment the
+            // objectIndex variable
+            if(modelObjects.size() != 0)
             {
-                // Objects are separated in .obj files by "o <object name>"
-                // Create a new object when this line is read
-                Object* newObject = new Object();
-                modelObjects.push_back(*(newObject));
                 objectIndex++;
             }
+
+            // Objects are separated in .obj files by "o <object name>"
+            // Create a new object when this line is read
+            Object* newObject = new Object(line.c_str());
+            std::cout << "Pushing the new object onto the list.." << std::endl;
+            modelObjects.push_back(newObject);
         }
 	}
 
@@ -94,11 +120,11 @@ void Model::LoadModel(const char* path)
 // This method creates a default object, as at least one object must be present when a .obj file is read
 // Multiple objects may be needed incase the model contains several materials
 // ObjectIndex variable will point to the active object, so don't increment it as default value is 0
-void Model::CreateObject(const char* name)
+/*void Model::CreateObject(const char* name)
 {
     Object* defaultObject = new Object();
     modelObjects.push_back(defaultObject);
-}
+}*/
 
 // This method matches the read vertice, texturecoordinate and normals data to their correct face indexes read
 // from the face data contained in the .obj file
@@ -110,43 +136,63 @@ void Model::MatchDataToIndex()
         std::cout << "No objects created while still trying to read .obj file, ceasing read..." << std::endl;
         exit(1);
     }
-    // Then get a reference to the current object that we will store this .obj data in
-    Object* currentObject = modelObjects[objectIndex];
 
-	std::cout << "Beginning the setting of vertice lists..." << std::endl;
+    for(size_t i = 0; i < modelObjects.size(); i++)
+    {
+        std::cout << "Objects name: " << modelObjects[i]->name << std::endl;
+        std::cout << "Object currently being matched: " << i << std::endl;
 
-	std::cout << "Size of face indexes: " << faceIndex.size() << std::endl;
-	std::cout << "Size of vertices: " << vertices.size() << std::endl;
-	for (size_t i = 0; i < faceIndex.size(); i++)
-	{
-		glm::vec3 meshData;
-		meshData = glm::vec3(vertices[faceIndex[i]].x, vertices[faceIndex[i]].y, vertices[faceIndex[i]].z);
-		meshVertices.push_back(meshData);
-	}
+        std::cout << "Beginning the setting of vertice lists..." << std::endl;
 
-	std::cout << "Size of texture indexes: " << textureIndex.size() << std::endl;
-	for(size_t i = 0; i < textureIndex.size(); i++)
-	{
-		glm::vec2 texData;
-		texData = glm::vec2(texture[textureIndex[i]].x, texture[textureIndex[i]].y);
-		texCoord.push_back(texData);
-	}
-	
-	std::cout << "Size of normal indexes: " << normalIndex.size() << std::endl;
-	for(size_t i = 0; i < normalIndex.size(); i++)
-	{
-		glm::vec3 meshNormal;
-		meshNormal = glm::vec3(normals[normalIndex[i]].x, normals[normalIndex[i]].y, normals[normalIndex[i]].z);
-		meshNormals.push_back(meshNormal);
-	}
-	
-	std::cout << "Size of meshVertices: " << meshVertices.size() << std::endl;
-	std::cout << "Size of texCoord: " << texCoord.size() << std::endl;
-	std::cout << "Size of meshNormals: " << meshNormals.size() << std::endl;
+        std::cout << "Size of face indexes: " << modelObjects[i]->faceIndex.size() << std::endl;
+        std::cout << "Size of vertices: " << modelObjects[i]->vertices.size() << std::endl;
 
-	for(size_t i = 0; i < meshVertices.size(); i++)
-	{
-		std::cout << meshVertices[i].x << " " << meshVertices[i].y << " " << meshVertices[i].z << std::endl;
-	}
-	std::cout << "Finished the setting of vertice lists..." << std::endl;
+       /* for(size_t j = 0; j < modelObjects[i]->vertices.size(); j++)
+        {
+            std::cout << "Vertices in this object:" << modelObjects[i]->vertices[j].x << ", " << modelObjects[i]->vertices[j].y << ", " << modelObjects[i]->vertices[j].z << std::endl;
+        }
+
+        for(size_t j = 0; j < modelObjects[i]->faceIndex.size(); j++)
+        {
+            std::cout << "FaceIndex in this object:" << modelObjects[i]->faceIndex[j] << std::endl;
+        }*/
+        
+
+        for (size_t j = 0; j < modelObjects[i]->faceIndex.size(); j++)
+        {
+            glm::vec3 meshData;
+            meshData = glm::vec3(vertices[modelObjects[i]->faceIndex[j]].x, vertices[modelObjects[i]->faceIndex[j]].y, vertices[modelObjects[i]->faceIndex[j]].z);
+            std::cout << "Set mesh data: " << meshData.x << ", " << meshData.y << ", " << meshData.z << std::endl;
+            //modelObjects[i]->meshVertices.push_back(meshData);
+            meshVertices.push_back(meshData);
+        }
+
+        std::cout << "Size of texture indexes: " << modelObjects[i]->textureIndex.size() << std::endl;
+        for(size_t j = 0; j < modelObjects[i]->textureIndex.size(); j++)
+        {
+            glm::vec2 texData;
+            texData = glm::vec2(texture[modelObjects[i]->textureIndex[j]].x, texture[modelObjects[i]->textureIndex[j]].y);
+            //modelObjects[i]->texCoord.push_back(texData);
+            texCoord.push_back(texData);
+        }
+        
+        std::cout << "Size of normal indexes: " << modelObjects[i]->normalIndex.size() << std::endl;
+        for(size_t j = 0; j < modelObjects[i]->normalIndex.size(); j++)
+        {
+            glm::vec3 meshNormal;
+            meshNormal = glm::vec3(normals[modelObjects[i]->normalIndex[j]].x, normals[modelObjects[i]->normalIndex[j]].y, normals[modelObjects[i]->normalIndex[j]].z);
+            //modelObjects[i]->meshNormals.push_back(meshNormal);
+            meshNormals.push_back(meshNormal);
+        }
+        
+        std::cout << "Size of meshVertices: " << modelObjects[i]->meshVertices.size() << std::endl;
+        std::cout << "Size of texCoord: " << modelObjects[i]->texCoord.size() << std::endl;
+        std::cout << "Size of meshNormals: " << modelObjects[i]->meshNormals.size() << std::endl;
+
+        for(size_t j = 0; j < modelObjects[i]->meshVertices.size(); j++)
+        {
+            std::cout << modelObjects[i]->meshVertices[j].x << " " << modelObjects[i]->meshVertices[j].y << " " << modelObjects[i]->meshVertices[j].z << std::endl;
+        }
+        std::cout << "Finished the setting of vertice lists..." << std::endl;
+    }	
 }
