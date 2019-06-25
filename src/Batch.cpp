@@ -4,11 +4,11 @@ Batch::Batch()
 {
 }
 
-void Batch::LoadObject(const char* path)
+void Batch::LoadObject(const char* obj_path, const char* mtl_path)
 {
 	std::cout << "Loading a new model into memory..." << std::endl;
 	Model newModel;
-	newModel.LoadModel(path);
+	newModel.LoadModel(obj_path, mtl_path);
 	models.push_back(newModel);
 	std::cout << "Model loaded to memory, models size now: " << models.size() << std::endl;
 	GenerateBuffers();

@@ -18,13 +18,14 @@ class Model
 {
 public:
     Model();
-    void LoadModel(const char* path);
+    void LoadModel(const char* obj_path, const char* mtl_path);
     void CreateObject(const char* name);
     void MatchDataToIndex();
 
 public:
     std::vector<Object*> modelObjects;
     int objectIndex;
+
 
 	// The entire model vertices, textures and normals
 	std::vector<glm::vec3> vertices;

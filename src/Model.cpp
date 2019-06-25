@@ -1,4 +1,6 @@
 #include "Model.h"
+#include "Material.h"
+#include "Loader.h"
 #include <sstream>
 #include <string>
 
@@ -11,13 +13,16 @@ Model::Model()
 // This method loads the entire .obj files vertices, texcoords and normals into memory
 // This is not to be confused with Object-class, which contains all vertices, texcoords and normals for a portion
 // of the model that is to be drawn with a material
-void Model::LoadModel(const char* path)
+void Model::LoadModel(const char* obj_path, const char* mtl_path)
 {
+    Loader loader = Loader();
+    loader.LoadObj(obj_path, &modelObjects, &objectIndex, &vertices, &texture, &normals);
+
     // Check that our .obj file exists
-    std::ifstream in(path, std::ios::in);
+    std::ifstream in(obj_path, std::ios::in);
 	if (!in)
 	{
-		std::cout << "Cannot open " << path << std::endl;
+		std::cout << "Cannot open " << obj_path << std::endl;
 		exit(1);
 	}
 
@@ -110,6 +115,10 @@ void Model::LoadModel(const char* path)
             Object* newObject = new Object(line.c_str());
             std::cout << "Pushing the new object onto the list.." << std::endl;
             modelObjects.push_back(newObject);
+        }
+        else if(input == "us")
+        {
+            // In this case, the line reads "usemtl", which means we have to use the specified material for these faces
         }
 	}
 

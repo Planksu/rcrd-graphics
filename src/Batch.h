@@ -14,7 +14,7 @@ class Batch
 public:
     Batch();
     void GenerateBuffers();
-    void LoadObject(const char* path);
+    void LoadObject(const char* obj_path, const char* mtl_path);
 
 public:
     std::vector<Model> models;

@@ -1,0 +1,122 @@
+#include "Loader.h"
+Loader::Loader()
+{
+
+}
+
+void Loader::LoadObj(   const char* path, 
+                        std::vector<Object*> &modelObjects,
+                        int &objectIndex,
+                        std::vector<glm::vec3> &vertices,
+                        std::vector<glm::vec2> &texture,
+                        std::vector<glm::vec3> &normals)
+{
+    // Check that our .obj file exists
+    std::ifstream in(path, std::ios::in);
+    if (!in)
+    {
+         std::cout << "Cannot open " << path << std::endl;
+        exit(1);
+    }
+
+    std::cout << "\nREADING .OBJ FILE..." << std::endl;
+    std::string line;
+
+    while (std::getline(in, line))
+    {
+        std::string input = line.substr(0,2);
+        if(input == "v ")
+        {
+            std::istringstream v(line.substr(2));
+            glm::vec3 vert;
+            double x, y, z;
+            v >> x; v >> y; v >> z;
+            std::cout << "This object is: " << objectIndex << std::endl;
+            std::cout << "Read vertice contains values: " << x << ", " << y << ", " << z << std::endl;
+            vert = glm::vec3(x, y, z);
+            modelObjects[objectIndex]->vertices.push_back(vert);
+            vertices.push_back(vert);
+        }
+        else if(input == "vt")
+        {
+            std::istringstream v(line.substr(3));
+            glm::vec2 tex;
+            double U, V;
+            v >> U; v >> V;
+            tex = glm::vec2(U, V);
+            modelObjects[objectIndex]->texture.push_back(tex);
+            texture.push_back(tex);
+        }
+        else if(input == "vn")
+        {
+            std::istringstream v(line.substr(3));
+            glm::vec3 norm;
+            double x, y, z;
+            v >> x; v >> y; v >> z;
+            norm = glm::vec3(x, y, z);
+            modelObjects[objectIndex]->normals.push_back(norm);
+            normals.push_back(norm);
+            }
+        else if(input == "f ")
+        {
+            int a, b, c;
+            int A, B, C;
+            int D, E, F;
+            const char* chh = line.c_str();
+
+            sscanf(chh, "f %i/%i/%i %i/%i/%i %i/%i/%i", &a, &A, &D, &b, &B, &E, &c, &C, &F);
+            a--; b--; c--;
+            A--; B--; C--;
+            D--; E--; F--;
+
+            modelObjects[objectIndex]->faceIndex.push_back(a);
+            modelObjects[objectIndex]->faceIndex.push_back(b);
+            modelObjects[objectIndex]->faceIndex.push_back(c);
+
+            modelObjects[objectIndex]->textureIndex.push_back(A);
+            modelObjects[objectIndex]->textureIndex.push_back(B);
+            modelObjects[objectIndex]->textureIndex.push_back(C);
+
+            modelObjects[objectIndex]->normalIndex.push_back(D);
+            modelObjects[objectIndex]->normalIndex.push_back(E);
+            modelObjects[objectIndex]->normalIndex.push_back(F);
+
+                /*faceIndex.push_back(a);
+                faceIndex.push_back(b);
+                faceIndex.push_back(c);
+                textureIndex.push_back(A);
+                textureIndex.push_back(B);
+                textureIndex.push_back(C);
+                normalIndex.push_back(D);
+                normalIndex.push_back(E);
+                normalIndex.push_back(F);*/
+        }
+        else if(input == "o ")
+        {
+            std::cout << "New object found, creating..." << std::endl;
+                
+            // A .obj file model always starts with atleast one object
+            // This is why when creating the first object, we do not need to increment the
+            // objectIndex variable
+            if(modelObjects.size() != 0)
+            {
+                objectIndex++;
+            }
+
+            // Objects are separated in .obj files by "o <object name>"
+            // Create a new object when this line is read
+            Object* newObject = new Object(line.c_str());
+            std::cout << "Pushing the new object onto the list.." << std::endl;
+            modelObjects.push_back(newObject);
+        }
+        else if(input == "us")
+        {
+            // In this case, the line reads "usemtl", which means we have to use the specified material for these faces
+        }
+    }
+}
+
+void Loader::LoadMtl(const char* path)
+{
+
+}

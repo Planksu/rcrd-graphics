@@ -15,7 +15,7 @@ int main(int argc, char* argv[])
 	#elif defined __linux__
 	Batch* cubeBatch = graphics.CreateBatch();
 	Batch* millBatch = graphics.CreateBatch();
-	millBatch->LoadObject("/home/antton/Documents/ricardo-graphics/mill.obj");
+	millBatch->LoadObject("/home/antton/Documents/ricardo-graphics/mill.obj", "/home/antton/Documents/ricardo-graphics/mill.mtl");
 	//cubeBatch->LoadObject("/home/antton/Documents/ricardo-graphics/Cube_tex.obj");
 	#endif
 

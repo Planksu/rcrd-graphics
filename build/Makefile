@@ -177,6 +177,60 @@ src/GraphicsSystem.cpp.s:
 	$(MAKE) -f CMakeFiles/ricardo-graphics.dir/build.make CMakeFiles/ricardo-graphics.dir/src/GraphicsSystem.cpp.s
 .PHONY : src/GraphicsSystem.cpp.s
 
+src/Loader.o: src/Loader.cpp.o
+
+.PHONY : src/Loader.o
+
+# target to build an object file
+src/Loader.cpp.o:
+	$(MAKE) -f CMakeFiles/ricardo-graphics.dir/build.make CMakeFiles/ricardo-graphics.dir/src/Loader.cpp.o
+.PHONY : src/Loader.cpp.o
+
+src/Loader.i: src/Loader.cpp.i
+
+.PHONY : src/Loader.i
+
+# target to preprocess a source file
+src/Loader.cpp.i:
+	$(MAKE) -f CMakeFiles/ricardo-graphics.dir/build.make CMakeFiles/ricardo-graphics.dir/src/Loader.cpp.i
+.PHONY : src/Loader.cpp.i
+
+src/Loader.s: src/Loader.cpp.s
+
+.PHONY : src/Loader.s
+
+# target to generate assembly for a file
+src/Loader.cpp.s:
+	$(MAKE) -f CMakeFiles/ricardo-graphics.dir/build.make CMakeFiles/ricardo-graphics.dir/src/Loader.cpp.s
+.PHONY : src/Loader.cpp.s
+
+src/Material.o: src/Material.cpp.o
+
+.PHONY : src/Material.o
+
+# target to build an object file
+src/Material.cpp.o:
+	$(MAKE) -f CMakeFiles/ricardo-graphics.dir/build.make CMakeFiles/ricardo-graphics.dir/src/Material.cpp.o
+.PHONY : src/Material.cpp.o
+
+src/Material.i: src/Material.cpp.i
+
+.PHONY : src/Material.i
+
+# target to preprocess a source file
+src/Material.cpp.i:
+	$(MAKE) -f CMakeFiles/ricardo-graphics.dir/build.make CMakeFiles/ricardo-graphics.dir/src/Material.cpp.i
+.PHONY : src/Material.cpp.i
+
+src/Material.s: src/Material.cpp.s
+
+.PHONY : src/Material.s
+
+# target to generate assembly for a file
+src/Material.cpp.s:
+	$(MAKE) -f CMakeFiles/ricardo-graphics.dir/build.make CMakeFiles/ricardo-graphics.dir/src/Material.cpp.s
+.PHONY : src/Material.cpp.s
+
 src/Model.o: src/Model.cpp.o
 
 .PHONY : src/Model.o
@@ -273,6 +327,12 @@ help:
 	@echo "... src/GraphicsSystem.o"
 	@echo "... src/GraphicsSystem.i"
 	@echo "... src/GraphicsSystem.s"
+	@echo "... src/Loader.o"
+	@echo "... src/Loader.i"
+	@echo "... src/Loader.s"
+	@echo "... src/Material.o"
+	@echo "... src/Material.i"
+	@echo "... src/Material.s"
 	@echo "... src/Model.o"
 	@echo "... src/Model.i"
 	@echo "... src/Model.s"

@@ -83,9 +83,35 @@ CMakeFiles/ricardo-graphics.dir/src/GraphicsSystem.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ricardo-graphics.dir/src/GraphicsSystem.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/antton/Documents/ricardo-graphics/src/GraphicsSystem.cpp -o CMakeFiles/ricardo-graphics.dir/src/GraphicsSystem.cpp.s
 
+CMakeFiles/ricardo-graphics.dir/src/Loader.cpp.o: CMakeFiles/ricardo-graphics.dir/flags.make
+CMakeFiles/ricardo-graphics.dir/src/Loader.cpp.o: ../src/Loader.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/antton/Documents/ricardo-graphics/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/ricardo-graphics.dir/src/Loader.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ricardo-graphics.dir/src/Loader.cpp.o -c /home/antton/Documents/ricardo-graphics/src/Loader.cpp
+
+CMakeFiles/ricardo-graphics.dir/src/Loader.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/ricardo-graphics.dir/src/Loader.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/antton/Documents/ricardo-graphics/src/Loader.cpp > CMakeFiles/ricardo-graphics.dir/src/Loader.cpp.i
+
+CMakeFiles/ricardo-graphics.dir/src/Loader.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ricardo-graphics.dir/src/Loader.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/antton/Documents/ricardo-graphics/src/Loader.cpp -o CMakeFiles/ricardo-graphics.dir/src/Loader.cpp.s
+
+CMakeFiles/ricardo-graphics.dir/src/Material.cpp.o: CMakeFiles/ricardo-graphics.dir/flags.make
+CMakeFiles/ricardo-graphics.dir/src/Material.cpp.o: ../src/Material.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/antton/Documents/ricardo-graphics/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/ricardo-graphics.dir/src/Material.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ricardo-graphics.dir/src/Material.cpp.o -c /home/antton/Documents/ricardo-graphics/src/Material.cpp
+
+CMakeFiles/ricardo-graphics.dir/src/Material.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/ricardo-graphics.dir/src/Material.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/antton/Documents/ricardo-graphics/src/Material.cpp > CMakeFiles/ricardo-graphics.dir/src/Material.cpp.i
+
+CMakeFiles/ricardo-graphics.dir/src/Material.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ricardo-graphics.dir/src/Material.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/antton/Documents/ricardo-graphics/src/Material.cpp -o CMakeFiles/ricardo-graphics.dir/src/Material.cpp.s
+
 CMakeFiles/ricardo-graphics.dir/src/Model.cpp.o: CMakeFiles/ricardo-graphics.dir/flags.make
 CMakeFiles/ricardo-graphics.dir/src/Model.cpp.o: ../src/Model.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/antton/Documents/ricardo-graphics/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/ricardo-graphics.dir/src/Model.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/antton/Documents/ricardo-graphics/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/ricardo-graphics.dir/src/Model.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ricardo-graphics.dir/src/Model.cpp.o -c /home/antton/Documents/ricardo-graphics/src/Model.cpp
 
 CMakeFiles/ricardo-graphics.dir/src/Model.cpp.i: cmake_force
@@ -98,7 +124,7 @@ CMakeFiles/ricardo-graphics.dir/src/Model.cpp.s: cmake_force
 
 CMakeFiles/ricardo-graphics.dir/src/Object.cpp.o: CMakeFiles/ricardo-graphics.dir/flags.make
 CMakeFiles/ricardo-graphics.dir/src/Object.cpp.o: ../src/Object.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/antton/Documents/ricardo-graphics/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/ricardo-graphics.dir/src/Object.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/antton/Documents/ricardo-graphics/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/ricardo-graphics.dir/src/Object.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ricardo-graphics.dir/src/Object.cpp.o -c /home/antton/Documents/ricardo-graphics/src/Object.cpp
 
 CMakeFiles/ricardo-graphics.dir/src/Object.cpp.i: cmake_force
@@ -111,7 +137,7 @@ CMakeFiles/ricardo-graphics.dir/src/Object.cpp.s: cmake_force
 
 CMakeFiles/ricardo-graphics.dir/src/main.cpp.o: CMakeFiles/ricardo-graphics.dir/flags.make
 CMakeFiles/ricardo-graphics.dir/src/main.cpp.o: ../src/main.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/antton/Documents/ricardo-graphics/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/ricardo-graphics.dir/src/main.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/antton/Documents/ricardo-graphics/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/ricardo-graphics.dir/src/main.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ricardo-graphics.dir/src/main.cpp.o -c /home/antton/Documents/ricardo-graphics/src/main.cpp
 
 CMakeFiles/ricardo-graphics.dir/src/main.cpp.i: cmake_force
@@ -126,6 +152,8 @@ CMakeFiles/ricardo-graphics.dir/src/main.cpp.s: cmake_force
 ricardo__graphics_OBJECTS = \
 "CMakeFiles/ricardo-graphics.dir/src/Batch.cpp.o" \
 "CMakeFiles/ricardo-graphics.dir/src/GraphicsSystem.cpp.o" \
+"CMakeFiles/ricardo-graphics.dir/src/Loader.cpp.o" \
+"CMakeFiles/ricardo-graphics.dir/src/Material.cpp.o" \
 "CMakeFiles/ricardo-graphics.dir/src/Model.cpp.o" \
 "CMakeFiles/ricardo-graphics.dir/src/Object.cpp.o" \
 "CMakeFiles/ricardo-graphics.dir/src/main.cpp.o"
@@ -135,6 +163,8 @@ ricardo__graphics_EXTERNAL_OBJECTS =
 
 ricardo-graphics: CMakeFiles/ricardo-graphics.dir/src/Batch.cpp.o
 ricardo-graphics: CMakeFiles/ricardo-graphics.dir/src/GraphicsSystem.cpp.o
+ricardo-graphics: CMakeFiles/ricardo-graphics.dir/src/Loader.cpp.o
+ricardo-graphics: CMakeFiles/ricardo-graphics.dir/src/Material.cpp.o
 ricardo-graphics: CMakeFiles/ricardo-graphics.dir/src/Model.cpp.o
 ricardo-graphics: CMakeFiles/ricardo-graphics.dir/src/Object.cpp.o
 ricardo-graphics: CMakeFiles/ricardo-graphics.dir/src/main.cpp.o
@@ -142,7 +172,7 @@ ricardo-graphics: CMakeFiles/ricardo-graphics.dir/build.make
 ricardo-graphics: /usr/lib/x86_64-linux-gnu/libGL.so
 ricardo-graphics: /usr/lib/x86_64-linux-gnu/libGLU.so
 ricardo-graphics: CMakeFiles/ricardo-graphics.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/antton/Documents/ricardo-graphics/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Linking CXX executable ricardo-graphics"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/antton/Documents/ricardo-graphics/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Linking CXX executable ricardo-graphics"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/ricardo-graphics.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
