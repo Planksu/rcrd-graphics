@@ -15,7 +15,7 @@ void Loader::LoadObj(   const char* path,
     std::ifstream in(path, std::ios::in);
     if (!in)
     {
-         std::cout << "Cannot open " << path << std::endl;
+        std::cout << "Cannot open " << path << std::endl;
         exit(1);
     }
 
@@ -118,5 +118,77 @@ void Loader::LoadObj(   const char* path,
 
 void Loader::LoadMtl(const char* path)
 {
+    std::ifstream in(path, std::ios::in);
+    if(!in)
+    {
+        std::cout << "Cannot open " << path << std::endl;
+        exit(-1);
+    }
 
+    std::cout << "\nREADING .MTL FILE..." << std::endl;
+    std::string line;
+
+    Color ambient = {0};
+    Color diffuse = {0};
+    Color specular = {0};
+    float sp_weight;
+    float dissolve;
+    float optical_density;
+    int illum_model;
+
+    while(std::getline(in, line))
+    {
+        std::string input = line.substr(0,2);
+        if(input == "Ns")
+        {
+            // Specular color exponent, basically weighting
+            std::istringstream v(line.substr(3));
+            v >> sp_weight;
+            std::cout << "Read sp_weight value of: " << sp_weight << std::endl;
+        }
+        else if(input == "Ka")
+        {
+            // Ambient color
+            std::istringstream v(line.substr(3));
+            v >> ambient.r;
+            v >> ambient.g;
+            v >> ambient.b;
+        }
+        else if(input == "Kd")
+        {
+            // Diffuse color
+            std::istringstream v(line.substr(3));
+            v >> diffuse.r;
+            v >> diffuse.g;
+            v >> diffuse.b;
+        }
+        else if(input == "Ks")
+        {
+            // Specular color
+            std::istringstream v(line.substr(3));
+            v >> specular.r;
+            v >> specular.g;
+            v >> specular.b;
+        }
+        else if(input == "d ")
+        {
+            // Dissolve factor
+            std::istringstream v(line.substr(2));
+            v >> dissolve;
+        }
+        else if(input == "Ni")
+        {
+            // Optical density
+            std::istringstream v(line.substr(3));
+            v >> optical_density;
+        }
+        else if(input == "il")
+        {
+            // Illumination model
+            std::istringstream v(line.substr(6));
+            v >> illum_model;
+        }
+    }
+
+    Material material = Material(ambient, diffuse, specular, sp_weight, dissolve, optical_density, illum_model);
 }

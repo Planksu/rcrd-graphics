@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "Object.h"
+#include "Material.h"
 #include <sstream>
 #include <string>
 

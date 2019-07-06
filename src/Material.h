@@ -26,7 +26,7 @@ enum illum_models
 class Material
 {
 public:
-    Material(Color am, Color df, Color sp, float sp_weight, float ds);
+    Material(Color am, Color df, Color sp, float sp_weight, float ds, float od,  int im);
 
 
 private:
@@ -37,6 +37,10 @@ private:
     float specular_weight;  // Specular weight varies between 0-1000
 
     float dissolve;         // Dissolve variable, basically like transparency but not quite
+
+    float optical_density;  // Determines how light is refracted
+
+    int illum_model;        // Illumination model
 
 
 };

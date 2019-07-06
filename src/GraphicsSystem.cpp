@@ -124,6 +124,8 @@ void GraphicsSystem::InitShaders()
 	std::string vert = LoadShaderFromFile("vertShader.txt");
 	std::string frag = LoadShaderFromFile("fragShader.txt");
 
+	
+
 	// Cast to char to create shader object
 	char* vertC = const_cast<char*>(vert.c_str());
 	char* fragC = const_cast<char*>(frag.c_str());
