@@ -7,6 +7,7 @@
 #include <sstream>
 #include <vector>
 #include <glm/glm/glm.hpp>
+#include "Material.h"
 
 class Object
 {
@@ -16,6 +17,7 @@ public:
 
 public:
 	const char* name;
+	std::string material_name;
 
 	// Index lists
 	std::vector<int> faceIndex;
@@ -31,6 +33,8 @@ public:
 	std::vector<glm::vec3> vertices;
 	std::vector<glm::vec2> texture;
 	std::vector<glm::vec3> normals;
+
+	Material* mat;
 };
 
 #endif

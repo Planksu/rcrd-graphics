@@ -26,21 +26,23 @@ enum illum_models
 class Material
 {
 public:
-    Material(Color am, Color df, Color sp, float sp_weight, float ds, float od,  int im);
+    Material(Color am, Color df, Color sp, float sp_weight, float ds, float od,  int im, const char* n);
 
 
 private:
-    Color ambient_color;
-    Color diffuse_color;
+    Color       ambient_color;
+    Color       diffuse_color;
 
-    Color specular_color;
-    float specular_weight;  // Specular weight varies between 0-1000
+    Color       specular_color;
+    float       specular_weight;    // Specular weight varies between 0-1000
 
-    float dissolve;         // Dissolve variable, basically like transparency but not quite
+    float       dissolve;           // Dissolve variable, basically like transparency but not quite
 
-    float optical_density;  // Determines how light is refracted
+    float       optical_density;    // Determines how light is refracted
 
-    int illum_model;        // Illumination model
+    int         illum_model;        // Illumination model
+
+    const char* name;               // Name of the material
 
 
 };

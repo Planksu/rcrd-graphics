@@ -2,6 +2,7 @@
 #include <glm/glm/gtx/string_cast.hpp>
 
 #define GLM_ENABLE_EXPERIMENTAL
+//#define RICARDO_RUNTIME_DEBUG
 
 
 GraphicsSystem::GraphicsSystem(int w, int h, const char* title)
@@ -176,13 +177,14 @@ void GraphicsSystem::InitGL()
 
 void GraphicsSystem::Draw()
 {
-	std::cout << "Beginning the draw method..." << std::endl;
 	while (!glfwWindowShouldClose(window))
 	{
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
+#ifdef RICARDO_RUNTIME_DEBUG
 		std::cout << "Batches size: " << batches.size() << std::endl;
+#endif
 		glUseProgram(program);
 
 		// Make some kind of angles to use in rotating
@@ -202,8 +204,9 @@ void GraphicsSystem::Draw()
 
 		for (size_t i = 0; i < batches.size(); i++)
 		{
+#ifdef RICARDO_RUNTIME_DEBUG
 			std::cout << "Models size: " << batches[i]->models.size() << std::endl;
-
+#endif
 			glBindVertexArray(batches[i]->VAO);
 
 			// Need to find the total amount of vertices in a batch
@@ -213,8 +216,10 @@ void GraphicsSystem::Draw()
 				numVertices += batches[i]->models[j].vertexes.size();
 			}
 			// Then call drawarrays with that amount
+#ifdef RICARDO_RUNTIME_DEBUG
 			std::cout << "Right before draw call" << std::endl;
 			std::cout << "Number of vertices: " << numVertices << std::endl;
+#endif
 			glDrawArrays(GL_TRIANGLES, 0, numVertices);
 
 			glBindVertexArray(0);

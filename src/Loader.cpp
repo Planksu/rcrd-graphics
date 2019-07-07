@@ -1,4 +1,7 @@
 #include "Loader.h"
+
+//#define RICARDO_OBJ_LOADING_DEBUG
+
 Loader::Loader()
 {
 
@@ -31,8 +34,10 @@ void Loader::LoadObj(   const char* path,
             glm::vec3 vert;
             double x, y, z;
             v >> x; v >> y; v >> z;
+#ifdef RICARDO_OBJ_LOADING_DEBUG            
             std::cout << "This object is: " << objectIndex << std::endl;
             std::cout << "Read vertice contains values: " << x << ", " << y << ", " << z << std::endl;
+#endif
             vert = glm::vec3(x, y, z);
             modelObjects[objectIndex]->vertices.push_back(vert);
             vertices.push_back(vert);
@@ -94,6 +99,7 @@ void Loader::LoadObj(   const char* path,
         else if(input == "o ")
         {
             std::cout << "New object found, creating..." << std::endl;
+            std::istringstream v(line.substr(2));
                 
             // A .obj file model always starts with atleast one object
             // This is why when creating the first object, we do not need to increment the
@@ -105,13 +111,18 @@ void Loader::LoadObj(   const char* path,
 
             // Objects are separated in .obj files by "o <object name>"
             // Create a new object when this line is read
-            Object* newObject = new Object(line.c_str());
+            // Have to get string from istringstream as the representation goes out of scope after this statement
+            const std::string tmp = v.str();
+            Object* newObject = new Object(tmp.c_str());
             std::cout << "Pushing the new object onto the list.." << std::endl;
             modelObjects.push_back(newObject);
         }
         else if(input == "us")
         {
             // In this case, the line reads "usemtl", which means we have to use the specified material for these faces
+            std::istringstream v(line.substr(7));
+            const std::string tmp = v.str();
+            modelObjects[objectIndex]->material_name = tmp.c_str();
         }
     }
 }
@@ -131,14 +142,21 @@ void Loader::LoadMtl(const char* path)
     Color ambient = {0};
     Color diffuse = {0};
     Color specular = {0};
-    float sp_weight;
-    float dissolve;
-    float optical_density;
-    int illum_model;
+    float sp_weight = 0;
+    float dissolve = 0;
+    float optical_density = 0;
+    int illum_model = 0;
+    const char* name;
 
     while(std::getline(in, line))
     {
         std::string input = line.substr(0,2);
+        if(input == "ne")
+        {
+            // New material
+            std::istringstream v(line.substr(7));
+            v >> (char*)name;
+        }
         if(input == "Ns")
         {
             // Specular color exponent, basically weighting
@@ -190,5 +208,5 @@ void Loader::LoadMtl(const char* path)
         }
     }
 
-    Material material = Material(ambient, diffuse, specular, sp_weight, dissolve, optical_density, illum_model);
+    Material material = Material(ambient, diffuse, specular, sp_weight, dissolve, optical_density, illum_model, name);
 }

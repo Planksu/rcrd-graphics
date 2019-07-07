@@ -4,6 +4,7 @@
 #include <sstream>
 #include <string>
 
+//#define RICARDO_OBJ_MATCHING_DEBUG
 
 Model::Model()
 {
@@ -17,6 +18,7 @@ void Model::LoadModel(const char* obj_path, const char* mtl_path)
 {
     Loader loader = Loader();
     loader.LoadObj(obj_path, modelObjects, objectIndex, vertices, texture, normals);
+ //   loader.LoadMtl(mtl_path);
     MatchDataToIndex();
 }
 
@@ -42,6 +44,7 @@ void Model::MatchDataToIndex()
 
     for(size_t i = 0; i < modelObjects.size(); i++)
     {
+#ifdef RICARDO_OBJ_MATCHING_DEBUG
         std::cout << "Objects name: " << modelObjects[i]->name << std::endl;
         std::cout << "Object currently being matched: " << i << std::endl;
 
@@ -49,6 +52,7 @@ void Model::MatchDataToIndex()
 
         std::cout << "Size of face indexes: " << modelObjects[i]->faceIndex.size() << std::endl;
         std::cout << "Size of vertices: " << modelObjects[i]->vertices.size() << std::endl;
+#endif
 
        /* for(size_t j = 0; j < modelObjects[i]->vertices.size(); j++)
         {
@@ -75,8 +79,9 @@ void Model::MatchDataToIndex()
             newVer.vert = meshData;
             vertexes.push_back(newVer);
         }
-
+#ifdef RICARDO_OBJ_MATCHING_DEBUG
         std::cout << "Size of texture indexes: " << modelObjects[i]->textureIndex.size() << std::endl;
+#endif
         for(size_t j = 0; j < modelObjects[i]->textureIndex.size(); j++)
         {
             texData = glm::vec2(texture[modelObjects[i]->textureIndex[j]].x, texture[modelObjects[i]->textureIndex[j]].y);
@@ -84,8 +89,9 @@ void Model::MatchDataToIndex()
             // After we created a new vertex struct in the first loop, we can access it with the same indexes here
             vertexes[i].texCoord = texData;
         }
-        
+#ifdef RICARDO_OBJ_MATCHING_DEBUG  
         std::cout << "Size of normal indexes: " << modelObjects[i]->normalIndex.size() << std::endl;
+#endif
         for(size_t j = 0; j < modelObjects[i]->normalIndex.size(); j++)
         {
             meshNormal = glm::vec3(normals[modelObjects[i]->normalIndex[j]].x, normals[modelObjects[i]->normalIndex[j]].y, normals[modelObjects[i]->normalIndex[j]].z);
@@ -94,13 +100,13 @@ void Model::MatchDataToIndex()
             vertexes[i].norm = meshNormal;
         }
 
+#ifdef RICARDO_OBJ_MATCHING_DEBUG
         for(size_t j = 0; j < modelObjects[i]->faceIndex.size(); j++)
         {
             std::cout << "Vertexes content: " << vertexes[j].vert.x << ", " << vertexes[j].vert.y << ", " << vertexes[j].vert.z << std::endl;
         }
-        
-
         std::cout << "Size of vertexes: " << vertexes.size() << std::endl;
         std::cout << "Finished the setting of vertice lists..." << std::endl;
+#endif
     }	
 }
