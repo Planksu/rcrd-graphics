@@ -1,4 +1,5 @@
 #include "Batch.h"
+#include <cstddef>
 
 Batch::Batch()
 {
@@ -24,19 +25,22 @@ void Batch::GenerateBuffers()
 		glGenVertexArrays(1, &this->VAO);
 		glBindVertexArray(this->VAO);
 
-		// VBO stuff
-		glGenBuffers(1, &this->VBO);
-		glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
-
-		std::cout << "Buffer data generated" << std::endl;
-
+		// Move vertex data to buffers
+		glGenBuffers(1, &this->vertexes);
+		glBindBuffer(GL_ARRAY_BUFFER, this->vertexes);
 		glBufferData(GL_ARRAY_BUFFER, models[i].vertexes.size() * sizeof(Vertex), &models[i].vertexes[0], GL_STATIC_DRAW);
-		//glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
-		//glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * objects[i].meshVertices.size(), &objects[i].meshVertices[0], GL_DYNAMIC_DRAW);
 
 		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), nullptr);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, vert)));
 
+		// Move normal data to buffers
+		glGenBuffers(1, &this->normals);
+		glBindBuffer(GL_ARRAY_BUFFER, this->normals);
+		glBufferData(GL_ARRAY_BUFFER, models[i].normals.size() * sizeof(Vertex), &models[i].normals[0], GL_STATIC_DRAW);
+
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, norm)));
+		
 		// Unbind
 		glBindVertexArray(0);
     

@@ -18,7 +18,7 @@ void Model::LoadModel(const char* obj_path, const char* mtl_path)
 {
     Loader loader = Loader();
     loader.LoadObj(obj_path, modelObjects, objectIndex, vertices, texture, normals);
- //   loader.LoadMtl(mtl_path);
+    loader.LoadMtl(mtl_path);
     MatchDataToIndex();
 }
 

@@ -18,7 +18,7 @@ public:
 
 public:
     std::vector<Model> models;
-    GLuint VAO, VBO, EBO;
+    GLuint VAO, vertexes, normals;
 
 
 };

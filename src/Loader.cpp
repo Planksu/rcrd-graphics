@@ -155,7 +155,8 @@ void Loader::LoadMtl(const char* path)
         {
             // New material
             std::istringstream v(line.substr(7));
-            v >> (char*)name;
+            const std::string tmp = v.str();
+            name = tmp.c_str();
         }
         if(input == "Ns")
         {
