@@ -2,14 +2,10 @@
 #define _MODEL_HEADER_
 
 #include "Object.h"
+#include "Material.h"
+#include "Vertex.h"
 #include <vector>
 
-struct Vertex
-{
-    glm::vec3 vert;
-    glm::vec2 texCoord;
-    glm::vec3 norm;
-};
 
 // This class is a container for all the objects that a model could have
 // As a model can be constructed of several objects that all have to be separated to keep materials
@@ -21,9 +17,12 @@ public:
     void LoadModel(const char* obj_path, const char* mtl_path);
     void CreateObject(const char* name);
     void MatchDataToIndex();
+    void MatchMaterialToObject();
 
 public:
     std::vector<Object*> modelObjects;
+    std::vector<Material*> modelMaterials;
+    int materialIndex;
     int objectIndex;
 
 

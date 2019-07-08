@@ -20,7 +20,9 @@ public:
                     std::vector<glm::vec3> &vertices, 
                     std::vector<glm::vec2> &texture, 
                     std::vector<glm::vec3> &normals);
-    void LoadMtl(const char* path);
+    void LoadMtl(	const char* path,
+    				std::vector<Material*> &modelMaterials,
+    				int materialIndex);
 
 };
 

@@ -8,15 +8,16 @@
 #include <vector>
 #include <glm/glm/glm.hpp>
 #include "Material.h"
+#include "Vertex.h"
 
 class Object
 {
 public:
 
-	Object(const char* n);
+	Object(std::string n);
 
 public:
-	const char* name;
+	std::string name;
 	std::string material_name;
 
 	// Index lists
@@ -35,6 +36,8 @@ public:
 	std::vector<glm::vec3> normals;
 
 	Material* mat;
+
+	std::vector<Vertex> vertexes;
 };
 
 #endif

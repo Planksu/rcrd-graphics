@@ -1,6 +1,8 @@
 #ifndef _MATERIAL_H
 #define _MATERIAL_H
 
+#include <string>
+
 struct Color
 {
    float r;
@@ -26,10 +28,8 @@ enum illum_models
 class Material
 {
 public:
-    Material(Color am, Color df, Color sp, float sp_weight, float ds, float od,  int im, const char* n);
+    Material(Color am, Color df, Color sp, float sp_weight, float ds, float od,  int im, std::string n);
 
-
-private:
     Color       ambient_color;
     Color       diffuse_color;
 
@@ -42,7 +42,7 @@ private:
 
     int         illum_model;        // Illumination model
 
-    const char* name;               // Name of the material
+    std::string name;               // Name of the material
 
 
 };

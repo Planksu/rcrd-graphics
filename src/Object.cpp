@@ -1,6 +1,6 @@
 #include "Object.h"
 
-Object::Object(const char* n)
+Object::Object(std::string n)
 {
     name = n;
 }

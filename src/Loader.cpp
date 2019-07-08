@@ -85,16 +85,6 @@ void Loader::LoadObj(   const char* path,
             modelObjects[objectIndex]->normalIndex.push_back(D);
             modelObjects[objectIndex]->normalIndex.push_back(E);
             modelObjects[objectIndex]->normalIndex.push_back(F);
-
-                /*faceIndex.push_back(a);
-                faceIndex.push_back(b);
-                faceIndex.push_back(c);
-                textureIndex.push_back(A);
-                textureIndex.push_back(B);
-                textureIndex.push_back(C);
-                normalIndex.push_back(D);
-                normalIndex.push_back(E);
-                normalIndex.push_back(F);*/
         }
         else if(input == "o ")
         {
@@ -123,11 +113,12 @@ void Loader::LoadObj(   const char* path,
             std::istringstream v(line.substr(7));
             const std::string tmp = v.str();
             modelObjects[objectIndex]->material_name = tmp.c_str();
+            std::cout << "Loader: " << modelObjects[objectIndex]->material_name << std::endl;
         }
     }
 }
 
-void Loader::LoadMtl(const char* path)
+void Loader::LoadMtl(const char* path, std::vector<Material*> &modelMaterials, int materialIndex)
 {
     std::ifstream in(path, std::ios::in);
     if(!in)
@@ -146,7 +137,7 @@ void Loader::LoadMtl(const char* path)
     float dissolve = 0;
     float optical_density = 0;
     int illum_model = 0;
-    const char* name;
+    std::string name;
 
     while(std::getline(in, line))
     {
@@ -155,8 +146,15 @@ void Loader::LoadMtl(const char* path)
         {
             // New material
             std::istringstream v(line.substr(7));
-            const std::string tmp = v.str();
-            name = tmp.c_str();
+            name = v.str();
+
+            if(modelMaterials.size() != 0)
+            {
+                materialIndex++;
+            }
+
+            Material* newMaterial = new Material(ambient, diffuse, specular, sp_weight, dissolve, optical_density, illum_model, name);
+            modelMaterials.push_back(newMaterial);
         }
         if(input == "Ns")
         {
@@ -208,6 +206,4 @@ void Loader::LoadMtl(const char* path)
             v >> illum_model;
         }
     }
-
-    Material material = Material(ambient, diffuse, specular, sp_weight, dissolve, optical_density, illum_model, name);
 }

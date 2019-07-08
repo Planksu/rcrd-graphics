@@ -3,6 +3,7 @@
 #include "Loader.h"
 #include <sstream>
 #include <string>
+#include <cstring>
 
 //#define RICARDO_OBJ_MATCHING_DEBUG
 
@@ -18,18 +19,33 @@ void Model::LoadModel(const char* obj_path, const char* mtl_path)
 {
     Loader loader = Loader();
     loader.LoadObj(obj_path, modelObjects, objectIndex, vertices, texture, normals);
-    loader.LoadMtl(mtl_path);
+    loader.LoadMtl(mtl_path, modelMaterials, materialIndex);
     MatchDataToIndex();
+    std::cout << "Succesfully matched data to index!" << std::endl;
+    MatchMaterialToObject();
 }
 
-// This method creates a default object, as at least one object must be present when a .obj file is read
-// Multiple objects may be needed incase the model contains several materials
-// ObjectIndex variable will point to the active object, so don't increment it as default value is 0
-/*void Model::CreateObject(const char* name)
+// This method matches to correct material object from the modelMaterials array to the correct object
+void Model::MatchMaterialToObject()
 {
-    Object* defaultObject = new Object();
-    modelObjects.push_back(defaultObject);
-}*/
+    std::cout << modelObjects.size() << std::endl;
+    std::cout << modelMaterials.size() << std::endl;    
+    for (int i = 0; i < modelObjects.size(); i++)
+    {
+        for (int j = 0; j < modelMaterials.size(); ++j)
+        {
+            if(modelObjects[i]->material_name.compare(modelMaterials[j]->name) == 0) 
+            {
+                modelObjects[i]->mat = modelMaterials[j];
+            }
+        }
+    }
+
+    for (int k = 0; k < modelObjects.size(); ++k)
+    {
+        std::cout << modelObjects[k]->mat->name << std::endl;
+    }
+}
 
 // This method matches the read vertice, texturecoordinate and normals data to their correct face indexes read
 // from the face data contained in the .obj file
@@ -44,6 +60,7 @@ void Model::MatchDataToIndex()
 
     for(size_t i = 0; i < modelObjects.size(); i++)
     {
+
 #ifdef RICARDO_OBJ_MATCHING_DEBUG
         std::cout << "Objects name: " << modelObjects[i]->name << std::endl;
         std::cout << "Object currently being matched: " << i << std::endl;
@@ -52,9 +69,9 @@ void Model::MatchDataToIndex()
 
         std::cout << "Size of face indexes: " << modelObjects[i]->faceIndex.size() << std::endl;
         std::cout << "Size of vertices: " << modelObjects[i]->vertices.size() << std::endl;
-#endif
 
-       /* for(size_t j = 0; j < modelObjects[i]->vertices.size(); j++)
+
+        for(size_t j = 0; j < modelObjects[i]->vertices.size(); j++)
         {
             std::cout << "Vertices in this object:" << modelObjects[i]->vertices[j].x << ", " << modelObjects[i]->vertices[j].y << ", " << modelObjects[i]->vertices[j].z << std::endl;
         }
@@ -62,12 +79,12 @@ void Model::MatchDataToIndex()
         for(size_t j = 0; j < modelObjects[i]->faceIndex.size(); j++)
         {
             std::cout << "FaceIndex in this object:" << modelObjects[i]->faceIndex[j] << std::endl;
-        }*/
+        }
+#endif
 
         glm::vec3 meshData;
         glm::vec2 texData;
         glm::vec3 meshNormal;
-
 
         for (size_t j = 0; j < modelObjects[i]->faceIndex.size(); j++)
         {
@@ -78,6 +95,7 @@ void Model::MatchDataToIndex()
             Vertex newVer = Vertex();
             newVer.vert = meshData;
             vertexes.push_back(newVer);
+            modelObjects[i]->vertexes.push_back(newVer);
         }
 #ifdef RICARDO_OBJ_MATCHING_DEBUG
         std::cout << "Size of texture indexes: " << modelObjects[i]->textureIndex.size() << std::endl;
@@ -88,6 +106,7 @@ void Model::MatchDataToIndex()
 
             // After we created a new vertex struct in the first loop, we can access it with the same indexes here
             vertexes[i].texCoord = texData;
+            modelObjects[i]->vertexes[i].texCoord = texData;
         }
 #ifdef RICARDO_OBJ_MATCHING_DEBUG  
         std::cout << "Size of normal indexes: " << modelObjects[i]->normalIndex.size() << std::endl;
@@ -98,6 +117,7 @@ void Model::MatchDataToIndex()
 
             // Same thing here
             vertexes[i].norm = meshNormal;
+            modelObjects[i]->vertexes[i].norm = meshNormal;
         }
 
 #ifdef RICARDO_OBJ_MATCHING_DEBUG

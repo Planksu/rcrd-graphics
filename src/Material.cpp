@@ -1,6 +1,6 @@
 #include "Material.h"
 
-Material::Material(Color am, Color df, Color sp, float sp_weight, float ds, float od, int im, const char* n)
+Material::Material(Color am, Color df, Color sp, float sp_weight, float ds, float od, int im, std::string n)
 {
     ambient_color = am;
     diffuse_color = df;

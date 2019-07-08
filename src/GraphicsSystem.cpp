@@ -2,7 +2,7 @@
 #include <glm/glm/gtx/string_cast.hpp>
 
 #define GLM_ENABLE_EXPERIMENTAL
-//#define RICARDO_RUNTIME_DEBUG
+#define RICARDO_RUNTIME_DEBUG
 
 
 GraphicsSystem::GraphicsSystem(int w, int h, const char* title)
@@ -146,8 +146,8 @@ void GraphicsSystem::InitGLFW(const char* title)
 
 	glfwSetErrorCallback(&error_callback);
 
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
@@ -202,30 +202,43 @@ void GraphicsSystem::Draw()
 		glm::mat4 mvp = projection * view * model;
 		glUniformMatrix4fv(glGetUniformLocation(program, "mvp"), 1, GL_FALSE, (const GLfloat*)&mvp[0]);
 
+		int vertexColorLocation = glGetUniformLocation(program, "color");
+
 		for (size_t i = 0; i < batches.size(); i++)
 		{
 #ifdef RICARDO_RUNTIME_DEBUG
 			std::cout << "Models size: " << batches[i]->models.size() << std::endl;
 #endif
 			glBindVertexArray(batches[i]->VAO);
+			for (int j = 0; j < batches[i]->models.size(); ++j)
+			{
+				int numVertices = 0;
+				int prevNum = 0;
+				for (int k = 0; k < batches[i]->models[j].modelObjects.size(); ++k)
+				{
+					std::cout << "Size of objects vertices: " << batches[i]->models[j].modelObjects[k]->vertexes.size() << std::endl;
+					std::cout << "Size of models vertices: " << batches[i]->models[j].vertexes.size() << std::endl;
+
+					numVertices += (batches[i]->models[j].modelObjects[k]->vertexes.size());
+					glUniform3f(vertexColorLocation, batches[i]->models[j].modelObjects[k]->mat->diffuse_color.r,  batches[i]->models[j].modelObjects[k]->mat->diffuse_color.g,  batches[i]->models[j].modelObjects[k]->mat->diffuse_color.b);
+					glDrawArrays(GL_TRIANGLES, prevNum, numVertices);
+					prevNum = numVertices;
+					std::cout << "Number of vertices: " << numVertices << std::endl;
+				}
+			}
+
 
 			// Need to find the total amount of vertices in a batch
-			int numVertices = 0;
-			for(size_t j = 0; j < batches[i]->models.size(); j++)
+			/*for(size_t j = 0; j < batches[i]->models.size(); j++)
 			{
 				numVertices += batches[i]->models[j].vertexes.size();
-			}
+			}*/
 			// Then call drawarrays with that amount
-#ifdef RICARDO_RUNTIME_DEBUG
-			std::cout << "Right before draw call" << std::endl;
-			std::cout << "Number of vertices: " << numVertices << std::endl;
-#endif
-			glDrawArrays(GL_TRIANGLES, 0, numVertices);
-
 			glBindVertexArray(0);
 		}
-		glfwSwapBuffers(window);
 		glfwPollEvents();
+		glfwSwapBuffers(window);
+
 	}
 	std::cout << "Finished the draw method!" << std::endl;
 }
