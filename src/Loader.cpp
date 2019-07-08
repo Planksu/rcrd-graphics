@@ -113,7 +113,6 @@ void Loader::LoadObj(   const char* path,
             std::istringstream v(line.substr(7));
             const std::string tmp = v.str();
             modelObjects[objectIndex]->material_name = tmp.c_str();
-            std::cout << "Loader: " << modelObjects[objectIndex]->material_name << std::endl;
         }
     }
 }
@@ -160,50 +159,50 @@ void Loader::LoadMtl(const char* path, std::vector<Material*> &modelMaterials, i
         {
             // Specular color exponent, basically weighting
             std::istringstream v(line.substr(3));
-            v >> sp_weight;
-            std::cout << "Read sp_weight value of: " << sp_weight << std::endl;
+            v >> modelMaterials[materialIndex]->specular_weight;
         }
         else if(input == "Ka")
         {
             // Ambient color
             std::istringstream v(line.substr(3));
-            v >> ambient.r;
-            v >> ambient.g;
-            v >> ambient.b;
+
+            v >> modelMaterials[materialIndex]->ambient_color.r;
+            v >> modelMaterials[materialIndex]->ambient_color.g;
+            v >> modelMaterials[materialIndex]->ambient_color.b;
         }
         else if(input == "Kd")
         {
             // Diffuse color
             std::istringstream v(line.substr(3));
-            v >> diffuse.r;
-            v >> diffuse.g;
-            v >> diffuse.b;
+            v >> modelMaterials[materialIndex]->diffuse_color.r;
+            v >> modelMaterials[materialIndex]->diffuse_color.g;
+            v >> modelMaterials[materialIndex]->diffuse_color.b;
         }
         else if(input == "Ks")
         {
             // Specular color
             std::istringstream v(line.substr(3));
-            v >> specular.r;
-            v >> specular.g;
-            v >> specular.b;
+            v >> modelMaterials[materialIndex]->specular_color.r;
+            v >> modelMaterials[materialIndex]->specular_color.r;
+            v >> modelMaterials[materialIndex]->specular_color.r;
         }
         else if(input == "d ")
         {
             // Dissolve factor
             std::istringstream v(line.substr(2));
-            v >> dissolve;
+            v >> modelMaterials[materialIndex]->dissolve;
         }
         else if(input == "Ni")
         {
             // Optical density
             std::istringstream v(line.substr(3));
-            v >> optical_density;
+            v >> modelMaterials[materialIndex]->optical_density;
         }
         else if(input == "il")
         {
             // Illumination model
             std::istringstream v(line.substr(6));
-            v >> illum_model;
+            v >> modelMaterials[materialIndex]->illum_model;
         }
     }
 }

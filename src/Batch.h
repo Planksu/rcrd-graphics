@@ -5,7 +5,7 @@
 #include <GL/glew.h>
 #include <glm/glm/glm.hpp>
 
-
+#include "Vertex.h"
 #include "Model.h"
 #include <vector>
 

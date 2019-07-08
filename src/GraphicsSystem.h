@@ -17,6 +17,7 @@
 #include <vector>
 #include "Object.h"
 #include "Batch.h"
+#include "Light.h"
 
 #define yeet throw
 
@@ -32,6 +33,7 @@ public:
 	std::string LoadShaderFromFile(const std::string &filename);
 	void CreateShaderObject(char* vShaderSrc, char* fShadersrc, GLuint* object);
 	void InitShaders();
+	void InitLight();
 	Batch* CreateBatch();
 
 
@@ -40,6 +42,7 @@ private:
 	GLuint program;
 	std::vector<Batch*> batches;
 
+	Light* light;
 
 	int width, height;
 

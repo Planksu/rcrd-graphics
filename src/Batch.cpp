@@ -32,18 +32,25 @@ void Batch::GenerateBuffers()
 
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, vert)));
+		
+		//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+
 
 		// Move normal data to buffers
-		glGenBuffers(1, &this->normals);
-		glBindBuffer(GL_ARRAY_BUFFER, this->normals);
-		glBufferData(GL_ARRAY_BUFFER, models[i].normals.size() * sizeof(Vertex), &models[i].normals[0], GL_STATIC_DRAW);
+		//glGenBuffers(1, &this->normals);
+		//glBindBuffer(GL_ARRAY_BUFFER, this->normals);
+		//glBufferData(GL_ARRAY_BUFFER, models[i].vertexes.size() * sizeof(Vertex), &models[i].vertexes[0], GL_STATIC_DRAW);
 
 		glEnableVertexAttribArray(1);
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, norm)));
+		//glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(sizeof(glm::vec3)));
+
+
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, texCoord)));
 		
 		// Unbind
 		glBindVertexArray(0);
-    
 	}
 	std::cout << "Finished generating GL buffers..." << std::endl;
 }

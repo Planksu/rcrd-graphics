@@ -1,8 +1,9 @@
 #include "GraphicsSystem.h"
 #include <glm/glm/gtx/string_cast.hpp>
 
+
 #define GLM_ENABLE_EXPERIMENTAL
-#define RICARDO_RUNTIME_DEBUG
+//#define RICARDO_RUNTIME_DEBUG
 
 
 GraphicsSystem::GraphicsSystem(int w, int h, const char* title)
@@ -11,6 +12,7 @@ GraphicsSystem::GraphicsSystem(int w, int h, const char* title)
 	InitGLFW(title);
 	InitGL();
 	InitShaders();
+	InitLight();
 }
 
 GLuint LoadShader(GLenum type, const char *shaderSrc)
@@ -175,6 +177,16 @@ void GraphicsSystem::InitGL()
 	std::cout << glGetString(GL_VERSION) << std::endl;
 }
 
+void GraphicsSystem::InitLight()
+{
+	glm::vec3 position = glm::vec3(0.0f, -2.0f, -2.0f);
+	glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
+	glm::vec3 ambient_color = glm::vec3(0.2f, 0.2f, 0.2f);
+	float shininess = 0.1f;
+
+	light = new Light(position, color, ambient_color, shininess);
+}
+
 void GraphicsSystem::Draw()
 {
 	while (!glfwWindowShouldClose(window))
@@ -193,14 +205,20 @@ void GraphicsSystem::Draw()
 
 		glm::mat4 model = glm::mat4(1.0f);
 		// Translate a bit forward
-		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -5.0f));
+		model = glm::translate(model, glm::vec3(0.0f, -0.5f, -2.0f));
 		// and the rotation
 		model = glm::rotate(model, r, glm::vec3(0.0f, 1.0f, 0.0f));
 
 		glm::mat4 view = glm::mat4(1.0f);
 		glm::mat4 projection = glm::perspective(45.f, (float)width / (float)height, 1.0f, 10.0f);
 		glm::mat4 mvp = projection * view * model;
+		glm::mat4 mv = model * view;
 		glUniformMatrix4fv(glGetUniformLocation(program, "mvp"), 1, GL_FALSE, (const GLfloat*)&mvp[0]);
+		glUniformMatrix4fv(glGetUniformLocation(program, "mv"), 1, GL_FALSE, (const GLfloat*)&mv[0]);
+		glUniform3f(glGetUniformLocation(program, "u_light_position"), light->position.x, light->position.y, light->position.z);
+		glUniform3f(glGetUniformLocation(program, "u_light_color"), light->color.x, light->color.y, light->color.z);
+		glUniform3f(glGetUniformLocation(program, "u_ambient_color"), light->ambient_color.x, light->ambient_color.y, light->ambient_color.z);
+		glUniform1f(glGetUniformLocation(program, "u_shininess"), light->shininess);
 
 		int vertexColorLocation = glGetUniformLocation(program, "color");
 
@@ -216,24 +234,19 @@ void GraphicsSystem::Draw()
 				int prevNum = 0;
 				for (int k = 0; k < batches[i]->models[j].modelObjects.size(); ++k)
 				{
+#ifdef RICARDO_RUNTIME_DEBUG
 					std::cout << "Size of objects vertices: " << batches[i]->models[j].modelObjects[k]->vertexes.size() << std::endl;
 					std::cout << "Size of models vertices: " << batches[i]->models[j].vertexes.size() << std::endl;
-
+#endif
 					numVertices += (batches[i]->models[j].modelObjects[k]->vertexes.size());
+					
 					glUniform3f(vertexColorLocation, batches[i]->models[j].modelObjects[k]->mat->diffuse_color.r,  batches[i]->models[j].modelObjects[k]->mat->diffuse_color.g,  batches[i]->models[j].modelObjects[k]->mat->diffuse_color.b);
+					//std::cout << "Diffuse color: " << batches[i]->models[j].modelObjects[k]->mat->diffuse_color.r << std::endl;
 					glDrawArrays(GL_TRIANGLES, prevNum, numVertices);
+
 					prevNum = numVertices;
-					std::cout << "Number of vertices: " << numVertices << std::endl;
 				}
 			}
-
-
-			// Need to find the total amount of vertices in a batch
-			/*for(size_t j = 0; j < batches[i]->models.size(); j++)
-			{
-				numVertices += batches[i]->models[j].vertexes.size();
-			}*/
-			// Then call drawarrays with that amount
 			glBindVertexArray(0);
 		}
 		glfwPollEvents();

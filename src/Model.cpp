@@ -10,6 +10,7 @@
 Model::Model()
 {
     objectIndex = 0;
+    materialIndex = 0;
 }
 
 // This method loads the entire .obj files vertices, texcoords and normals into memory
@@ -27,9 +28,7 @@ void Model::LoadModel(const char* obj_path, const char* mtl_path)
 
 // This method matches to correct material object from the modelMaterials array to the correct object
 void Model::MatchMaterialToObject()
-{
-    std::cout << modelObjects.size() << std::endl;
-    std::cout << modelMaterials.size() << std::endl;    
+{  
     for (int i = 0; i < modelObjects.size(); i++)
     {
         for (int j = 0; j < modelMaterials.size(); ++j)
@@ -39,11 +38,6 @@ void Model::MatchMaterialToObject()
                 modelObjects[i]->mat = modelMaterials[j];
             }
         }
-    }
-
-    for (int k = 0; k < modelObjects.size(); ++k)
-    {
-        std::cout << modelObjects[k]->mat->name << std::endl;
     }
 }
 
@@ -69,6 +63,8 @@ void Model::MatchDataToIndex()
 
         std::cout << "Size of face indexes: " << modelObjects[i]->faceIndex.size() << std::endl;
         std::cout << "Size of vertices: " << modelObjects[i]->vertices.size() << std::endl;
+        std::cout << "Size of normal indexes: " << modelObjects[i]->normalIndex.size() << std::endl;
+        std::cout << "Size of texture indexes: " << modelObjects[i]->textureIndex.size() << std::endl;
 
 
         for(size_t j = 0; j < modelObjects[i]->vertices.size(); j++)
@@ -97,27 +93,22 @@ void Model::MatchDataToIndex()
             vertexes.push_back(newVer);
             modelObjects[i]->vertexes.push_back(newVer);
         }
-#ifdef RICARDO_OBJ_MATCHING_DEBUG
-        std::cout << "Size of texture indexes: " << modelObjects[i]->textureIndex.size() << std::endl;
-#endif
         for(size_t j = 0; j < modelObjects[i]->textureIndex.size(); j++)
         {
             texData = glm::vec2(texture[modelObjects[i]->textureIndex[j]].x, texture[modelObjects[i]->textureIndex[j]].y);
 
             // After we created a new vertex struct in the first loop, we can access it with the same indexes here
             vertexes[i].texCoord = texData;
-            modelObjects[i]->vertexes[i].texCoord = texData;
+            modelObjects[i]->vertexes[j].texCoord = texData;
         }
-#ifdef RICARDO_OBJ_MATCHING_DEBUG  
-        std::cout << "Size of normal indexes: " << modelObjects[i]->normalIndex.size() << std::endl;
-#endif
         for(size_t j = 0; j < modelObjects[i]->normalIndex.size(); j++)
         {
             meshNormal = glm::vec3(normals[modelObjects[i]->normalIndex[j]].x, normals[modelObjects[i]->normalIndex[j]].y, normals[modelObjects[i]->normalIndex[j]].z);
 
             // Same thing here
+            //std::cout << "This normal: " << meshNormal.x << ", " << meshNormal.y << ", " << meshNormal.z << std::endl;
             vertexes[i].norm = meshNormal;
-            modelObjects[i]->vertexes[i].norm = meshNormal;
+            modelObjects[i]->vertexes[j].norm = meshNormal;
         }
 
 #ifdef RICARDO_OBJ_MATCHING_DEBUG
