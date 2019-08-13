@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="include">
+      <UniqueIdentifier>{89AF369E-F58E-B539-FEA6-40106A051C9B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\ricardo-graphics\include\Batch.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ricardo-graphics\include\GraphicsSystem.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ricardo-graphics\include\Light.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ricardo-graphics\include\Loader.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ricardo-graphics\include\Material.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ricardo-graphics\include\Model.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ricardo-graphics\include\Object.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ricardo-graphics\include\Vertex.h">
+      <Filter>include</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\ricardo-graphics\src\Batch.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ricardo-graphics\src\GraphicsSystem.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ricardo-graphics\src\Light.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ricardo-graphics\src\Loader.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ricardo-graphics\src\Material.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ricardo-graphics\src\Model.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ricardo-graphics\src\Object.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ricardo-graphics\src\main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

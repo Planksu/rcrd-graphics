@@ -1,3 +1,0 @@
-/home/antton/Documents/ricardo-graphics/build/CMakeFiles/rebuild_cache.dir
-/home/antton/Documents/ricardo-graphics/build/CMakeFiles/ricardo-graphics.dir
-/home/antton/Documents/ricardo-graphics/build/CMakeFiles/edit_cache.dir

@@ -1,5 +1,0 @@
-Model:
-	holds vertices, tex coords and normals
-
-Object (or possibly mesh?)
-	holds face data for material purposes
