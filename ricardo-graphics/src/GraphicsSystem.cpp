@@ -205,7 +205,7 @@ void GraphicsSystem::Draw()
 
 		glm::mat4 model = glm::mat4(1.0f);
 		// Translate a bit forward
-		model = glm::translate(model, glm::vec3(0.0f, -0.5f, -2.0f));
+		model = glm::translate(model, glm::vec3(0.0f, -0.5f, -5.0f));
 		// and the rotation
 		model = glm::rotate(model, r, glm::vec3(0.0f, 1.0f, 0.0f));
 
