@@ -4,6 +4,7 @@
 #include <Object.h>
 #include <Material.h>
 #include <Vertex.h>
+#include <core.h>
 
 #include <vector>
 
@@ -31,10 +32,6 @@ public:
 	std::vector<glm::vec3> vertices;
 	std::vector<glm::vec2> texture;
 	std::vector<glm::vec3> normals;
-
-  /*  std::vector<glm::vec3> meshVertices;
-	std::vector<glm::vec2> texCoord;
-	std::vector<glm::vec3> meshNormals;*/
 
     std::vector<Vertex> vertexes;
 

@@ -13,7 +13,7 @@ int main(int argc, char* argv[])
 	#ifdef _WIN32
 	Batch* cubeBatch = graphics.CreateBatch();
 	//cubeBatch->LoadObject("C://Users//Antton//Documents//ricardo-graphics//resources//firehydrant.obj", "C://Users//Antton//Documents//ricardo-graphics//resources//firehydrant.mtl");
-	cubeBatch->LoadObject("./resources/Cube.obj", "./resources/Cube.mtl");
+	cubeBatch->LoadObject("./resources/mill.obj", "./resources/mill.mtl");
 	#elif defined __linux__
 	Batch* cubeBatch = graphics.CreateBatch();
 	Batch* millBatch = graphics.CreateBatch();

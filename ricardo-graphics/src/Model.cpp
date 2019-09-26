@@ -23,7 +23,7 @@ void Model::LoadModel(const char* obj_path, const char* mtl_path)
     loader.LoadObj(obj_path, modelObjects, objectIndex, vertices, texture, normals);
     loader.LoadMtl(mtl_path, modelMaterials, materialIndex);
     MatchDataToIndex();
-    std::cout << "Succesfully matched data to index!" << std::endl;
+	RCRD_DEBUG("Successfully matched data to index!");
     MatchMaterialToObject();
 }
 
@@ -49,35 +49,29 @@ void Model::MatchDataToIndex()
     // First, check that we have atleast one object
     if(modelObjects.size() == 0)
     {
-        std::cout << "No objects created while still trying to read .obj file, ceasing read..." << std::endl;
+		RCRD_DEBUG("No objects created while still trying to read .obj file, ceasing read...");
         exit(-1);
     }
 
     for(size_t i = 0; i < modelObjects.size(); i++)
     {
+		RCRD_DEBUG("Objects name: " << modelObjects[i]->name);
+		RCRD_DEBUG("Object currently being matched: " << i);
+		RCRD_DEBUG("Beginning the setting of vertice lists...");
+		RCRD_DEBUG("Size of face indexes: " << modelObjects[i]->faceIndex.size());
+		RCRD_DEBUG("Size of vertices: " << modelObjects[i]->vertices.size());
+		RCRD_DEBUG("Size of normal indexes: " << modelObjects[i]->normalIndex.size());
+		RCRD_DEBUG("Size of texture indexes: " << modelObjects[i]->textureIndex.size());
 
-#ifdef RICARDO_OBJ_MATCHING_DEBUG
-        std::cout << "Objects name: " << modelObjects[i]->name << std::endl;
-        std::cout << "Object currently being matched: " << i << std::endl;
+		for (size_t j = 0; j < modelObjects[i]->vertices.size(); j++)
+		{
+			RCRD_DEBUG("Vertices in this object:" << modelObjects[i]->vertices[j].x << ", " << modelObjects[i]->vertices[j].y << ", " << modelObjects[i]->vertices[j].z);
+		}
 
-        std::cout << "Beginning the setting of vertice lists..." << std::endl;
-
-        std::cout << "Size of face indexes: " << modelObjects[i]->faceIndex.size() << std::endl;
-        std::cout << "Size of vertices: " << modelObjects[i]->vertices.size() << std::endl;
-        std::cout << "Size of normal indexes: " << modelObjects[i]->normalIndex.size() << std::endl;
-        std::cout << "Size of texture indexes: " << modelObjects[i]->textureIndex.size() << std::endl;
-
-
-        for(size_t j = 0; j < modelObjects[i]->vertices.size(); j++)
-        {
-            std::cout << "Vertices in this object:" << modelObjects[i]->vertices[j].x << ", " << modelObjects[i]->vertices[j].y << ", " << modelObjects[i]->vertices[j].z << std::endl;
-        }
-
-        for(size_t j = 0; j < modelObjects[i]->faceIndex.size(); j++)
-        {
-            std::cout << "FaceIndex in this object:" << modelObjects[i]->faceIndex[j] << std::endl;
-        }
-#endif
+		for (size_t j = 0; j < modelObjects[i]->faceIndex.size(); j++)
+		{
+			RCRD_DEBUG("FaceIndex in this object:" << modelObjects[i]->faceIndex[j]);
+		}
 
         glm::vec3 meshData;
         glm::vec2 texData;
@@ -86,7 +80,6 @@ void Model::MatchDataToIndex()
         for (size_t j = 0; j < modelObjects[i]->faceIndex.size(); j++)
         {
             meshData = glm::vec3(vertices[modelObjects[i]->faceIndex[j]].x, vertices[modelObjects[i]->faceIndex[j]].y, vertices[modelObjects[i]->faceIndex[j]].z);
-            //std::cout << "Set mesh data: " << meshData.x << ", " << meshData.y << ", " << meshData.z << std::endl;
 
             // Create a new vert struct to hold the vertex information
             Vertex newVer = Vertex();
@@ -112,13 +105,12 @@ void Model::MatchDataToIndex()
             modelObjects[i]->vertexes[j].norm = meshNormal;
         }
 
-#ifdef RICARDO_OBJ_MATCHING_DEBUG
+
         for(size_t j = 0; j < modelObjects[i]->faceIndex.size(); j++)
         {
-            std::cout << "Vertexes content: " << vertexes[j].vert.x << ", " << vertexes[j].vert.y << ", " << vertexes[j].vert.z << std::endl;
-        }
-        std::cout << "Size of vertexes: " << vertexes.size() << std::endl;
-        std::cout << "Finished the setting of vertice lists..." << std::endl;
-#endif
+			RCRD_DEBUG("Vertexes content: " << vertexes[j].vert.x << ", " << vertexes[j].vert.y << ", " << vertexes[j].vert.z);
+		}
+		RCRD_DEBUG("Size of vertexes: " << vertexes.size());
+		RCRD_DEBUG("Finished setting of vertice lists...");
     }	
 }

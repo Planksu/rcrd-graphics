@@ -1,6 +1,5 @@
 #include <Loader.h>
 
-//#define RICARDO_OBJ_LOADING_DEBUG
 
 Loader::Loader()
 {
@@ -18,13 +17,12 @@ void Loader::LoadObj(   const char* path,
     std::ifstream in(path, std::ios::in);
     if (!in)
     {
-        std::cout << "Cannot open " << path << std::endl;
-        exit(1);
+		RCRD_DEBUG("Cannot open " << path);
+        exit(-1);
     }
-
-    std::cout << "\nREADING .OBJ FILE..." << std::endl;
-    std::string line;
-
+	RCRD_DEBUG("\nREADING .OBJ FILE...");
+    
+	std::string line;
     while (std::getline(in, line))
     {
         std::string input = line.substr(0,2);
@@ -32,13 +30,13 @@ void Loader::LoadObj(   const char* path,
         {
             std::istringstream v(line.substr(2));
             glm::vec3 vert;
+
             double x, y, z;
             v >> x; v >> y; v >> z;
-#ifdef RICARDO_OBJ_LOADING_DEBUG            
-            std::cout << "This object is: " << objectIndex << std::endl;
-            std::cout << "Read vertice contains values: " << x << ", " << y << ", " << z << std::endl;
-#endif
             vert = glm::vec3(x, y, z);
+
+			RCRD_DEBUG("This object is: " << objectIndex);
+			RCRD_DEBUG("Read vertice contains values: " << x << ", " << y << ", " << z);
             modelObjects[objectIndex]->vertices.push_back(vert);
             vertices.push_back(vert);
         }
@@ -65,35 +63,36 @@ void Loader::LoadObj(   const char* path,
         else if(input == "f ")
         {
             int a, b, c;
-            int A, B, C;
-            int D, E, F;
+            int d, e, f;
+            int g, h, i;
             const char* chh = line.c_str();
 
-            sscanf(chh, "f %i/%i/%i %i/%i/%i %i/%i/%i", &a, &A, &D, &b, &B, &E, &c, &C, &F);
+			// Read all vertice indexes with one line
+            sscanf(chh, "f %i/%i/%i %i/%i/%i %i/%i/%i", &a, &d, &g, &b, &e, &h, &c, &f, &i);
             a--; b--; c--;
-            A--; B--; C--;
-            D--; E--; F--;
+            d--; e--; f--;
+            g--; h--; i--;
 
             modelObjects[objectIndex]->faceIndex.push_back(a);
             modelObjects[objectIndex]->faceIndex.push_back(b);
             modelObjects[objectIndex]->faceIndex.push_back(c);
 
-            modelObjects[objectIndex]->textureIndex.push_back(A);
-            modelObjects[objectIndex]->textureIndex.push_back(B);
-            modelObjects[objectIndex]->textureIndex.push_back(C);
+            modelObjects[objectIndex]->textureIndex.push_back(d);
+            modelObjects[objectIndex]->textureIndex.push_back(e);
+            modelObjects[objectIndex]->textureIndex.push_back(f);
 
-            modelObjects[objectIndex]->normalIndex.push_back(D);
-            modelObjects[objectIndex]->normalIndex.push_back(E);
-            modelObjects[objectIndex]->normalIndex.push_back(F);
+            modelObjects[objectIndex]->normalIndex.push_back(g);
+            modelObjects[objectIndex]->normalIndex.push_back(h);
+            modelObjects[objectIndex]->normalIndex.push_back(i);
         }
         else if(input == "o ")
         {
-            std::cout << "New object found, creating..." << std::endl;
+			RCRD_DEBUG("New object found, creating...");
             std::istringstream v(line.substr(2));
                 
             // A .obj file model always starts with atleast one object
             // This is why when creating the first object, we do not need to increment the
-            // objectIndex variable
+            // objectIndex variable, as the index for the first object should be 0
             if(modelObjects.size() != 0)
             {
                 objectIndex++;
@@ -104,7 +103,7 @@ void Loader::LoadObj(   const char* path,
             // Have to get string from istringstream as the representation goes out of scope after this statement
             const std::string tmp = v.str();
             Object* newObject = new Object(tmp.c_str());
-            std::cout << "Pushing the new object onto the list.." << std::endl;
+			RCRD_DEBUG("Pushing the new object onto the list...");
             modelObjects.push_back(newObject);
         }
         else if(input == "us")
@@ -122,13 +121,13 @@ void Loader::LoadMtl(const char* path, std::vector<Material*> &modelMaterials, i
     std::ifstream in(path, std::ios::in);
     if(!in)
     {
-        std::cout << "Cannot open " << path << std::endl;
+		RCRD_DEBUG("Cannot open " << path);
         exit(-1);
     }
 
-    std::cout << "\nREADING .MTL FILE..." << std::endl;
-    std::string line;
-
+	RCRD_DEBUG("\nREADING .MTL FILE...");
+    
+	std::string line;
     Color ambient = {0};
     Color diffuse = {0};
     Color specular = {0};
@@ -183,8 +182,8 @@ void Loader::LoadMtl(const char* path, std::vector<Material*> &modelMaterials, i
             // Specular color
             std::istringstream v(line.substr(3));
             v >> modelMaterials[materialIndex]->specular_color.r;
-            v >> modelMaterials[materialIndex]->specular_color.r;
-            v >> modelMaterials[materialIndex]->specular_color.r;
+            v >> modelMaterials[materialIndex]->specular_color.g;
+            v >> modelMaterials[materialIndex]->specular_color.b;
         }
         else if(input == "d ")
         {

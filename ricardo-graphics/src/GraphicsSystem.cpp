@@ -192,7 +192,6 @@ void GraphicsSystem::Draw()
 
 		RCRD_DEBUG("Batches size: " << batches.size());
 		glUseProgram(program);
-
 		// Make some kind of angles to use in rotating
 		static float r = 0;
 		r += 0.00016f * 90;
