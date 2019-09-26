@@ -1,13 +1,15 @@
-#ifndef _BATCH_HEADER
-#define _BATCH_HEADER
+#ifndef RCRD_BATCH_H
+#define RCRD_BATCH_H
 
 // GLEW
 #include <glew/include/GL/glew.h>
 #include <glm/glm.hpp>
 
-#include "Vertex.h"
-#include "Model.h"
+#include <Vertex.h>
+#include <Model.h>
 #include <vector>
+#include <core.h>
+
 
 class Batch
 {

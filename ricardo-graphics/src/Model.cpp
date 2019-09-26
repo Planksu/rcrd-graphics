@@ -1,6 +1,7 @@
-#include "Model.h"
-#include "Material.h"
-#include "Loader.h"
+#include <Model.h>
+#include <Material.h>
+#include <Loader.h>
+
 #include <sstream>
 #include <string>
 #include <cstring>

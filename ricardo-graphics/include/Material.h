@@ -1,5 +1,5 @@
-#ifndef _MATERIAL_H
-#define _MATERIAL_H
+#ifndef RCRD_MATERIAL_H
+#define RCRD_MATERIAL_H
 
 #include <string>
 

@@ -1,5 +1,5 @@
-#ifndef _VERTEX_HEADER
-#define _VERTEX_HEADER
+#ifndef RCRD_VERTEX_H
+#define RCRD_VERTEX_H
 
 #include <glm/glm.hpp>
 

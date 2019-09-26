@@ -1,14 +1,14 @@
+#include <Object.h>
+#include <GraphicsSystem.h>
+#include <Batch.h>
+
 #include <iostream>
 #include <exception>
-#include "Object.h"
-#include "GraphicsSystem.h"
-#include "Batch.h"
-
 
 
 int main(int argc, char* argv[])
 {
-	GraphicsSystem graphics = GraphicsSystem(1280, 720, "Window");
+	GraphicsSystem graphics = GraphicsSystem(1280, 720, "rcrd-graphics");
 
 	#ifdef _WIN32
 	Batch* cubeBatch = graphics.CreateBatch();

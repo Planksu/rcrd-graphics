@@ -1,5 +1,10 @@
-#ifndef _OBJECT_HEADER_
-#define _OBJECT_HEADER_
+#ifndef RCRD_OBJECT_H
+#define RCRD_OBJECT_H
+
+
+#include <Material.h>
+#include <Vertex.h>
+
 
 #include <iostream>
 #include <string>
@@ -7,8 +12,6 @@
 #include <sstream>
 #include <vector>
 #include <glm/glm.hpp>
-#include "Material.h"
-#include "Vertex.h"
 
 class Object
 {

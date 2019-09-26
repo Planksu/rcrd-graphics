@@ -1,5 +1,5 @@
-#ifndef _LIGHT_HEADER
-#define _LIGHT_HEADER
+#ifndef RCRD_LIGHT_H
+#define RCRD_LIGHT_H
 
 #include <glm/glm.hpp>
 

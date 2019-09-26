@@ -1,5 +1,6 @@
-#include "Batch.h"
+#include <Batch.h>
 #include <cstddef>
+
 
 Batch::Batch()
 {
@@ -7,18 +8,19 @@ Batch::Batch()
 
 void Batch::LoadObject(const char* obj_path, const char* mtl_path)
 {
-	std::cout << "Loading a new model into memory..." << std::endl;
+	RCRD_DEBUG("Loading a new model into memory...");
 	Model newModel;
 	newModel.LoadModel(obj_path, mtl_path);
 	models.push_back(newModel);
-	std::cout << "Model loaded to memory, models size now: " << models.size() << std::endl;
+	RCRD_DEBUG("Model loaded to memory, models size now: " << models.size());
 	GenerateBuffers();
 }
 
 void Batch::GenerateBuffers()
 {
-	std::cout << "\nGENERATING GL BUFFERS..." << std::endl;
-	std::cout << "Models size when generating buffers: " << models.size() << std::endl;
+
+	RCRD_DEBUG("GENERATIONG GL BUFFERS...");
+	RCRD_DEBUG("Models size when generating bufferes: " << models.size());
 	for (size_t i = 0; i < models.size(); i++)
 	{
 		// VAO stuff
@@ -52,5 +54,5 @@ void Batch::GenerateBuffers()
 		// Unbind
 		glBindVertexArray(0);
 	}
-	std::cout << "Finished generating GL buffers..." << std::endl;
+	RCRD_DEBUG("Finished generating GL buffers!");
 }

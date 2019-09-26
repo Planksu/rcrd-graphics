@@ -1,4 +1,4 @@
-#include "GraphicsSystem.h"
+#include <GraphicsSystem.h>
 #include <glm/gtx/string_cast.hpp>
 
 
@@ -34,7 +34,7 @@ GLuint LoadShader(GLenum type, const char *shaderSrc)
 		{
 			char* infoLog = (char*)malloc(sizeof(char) * infoLen);
 			glGetShaderInfoLog(shader, infoLen, NULL, infoLog);
-			printf("Error compiling shader:\n%s\n", infoLog);
+			RCRD_DEBUG("Error compiling shader: " << infoLog);
 			free(infoLog);
 		}
 		glDeleteShader(shader);
@@ -59,7 +59,6 @@ std::string GraphicsSystem::LoadShaderFromFile(const std::string& filename)
 {
 	// Load shaders from txt file
 	std::string shader;
-
 	std::ifstream file(filename, std::ios::in);
 
 	if (!file.is_open())
@@ -109,7 +108,7 @@ void GraphicsSystem::CreateShaderObject(char* vShaderSrc, char* fShaderSrc, GLui
 			char* infoLog = (char*)malloc(sizeof(char) * infoLen);
 
 			glGetProgramInfoLog(*object, infoLen, NULL, infoLog);
-			printf("Error linking program:\n%s\n", infoLog);
+			RCRD_DEBUG("Error linking program: " << infoLog);
 
 			free(infoLog);
 		}
@@ -127,8 +126,6 @@ void GraphicsSystem::InitShaders()
 	std::string vert = LoadShaderFromFile("shaders/vertShader.txt");
 	std::string frag = LoadShaderFromFile("shaders/fragShader.txt");
 
-	
-
 	// Cast to char to create shader object
 	char* vertC = const_cast<char*>(vert.c_str());
 	char* fragC = const_cast<char*>(frag.c_str());
@@ -143,7 +140,7 @@ void GraphicsSystem::InitGLFW(const char* title)
 {
 	if (!glfwInit())
 	{
-		yeet new std::exception();
+		exit(-1);
 	}
 
 	glfwSetErrorCallback(&error_callback);
@@ -157,7 +154,7 @@ void GraphicsSystem::InitGLFW(const char* title)
 
 	if (!window)
 	{
-		yeet new std::exception();
+		exit(-1);
 	}
 
 	glfwMakeContextCurrent(window);
@@ -165,7 +162,7 @@ void GraphicsSystem::InitGLFW(const char* title)
 	GLenum err = glewInit();
 	if (GLEW_OK != err)
 	{
-		yeet new std::exception();
+		exit(-1);
 	}
 }
 
@@ -194,9 +191,7 @@ void GraphicsSystem::Draw()
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-#ifdef RICARDO_RUNTIME_DEBUG
-		std::cout << "Batches size: " << batches.size() << std::endl;
-#endif
+		RCRD_DEBUG("Batches size: " << batches.size());
 		glUseProgram(program);
 
 		// Make some kind of angles to use in rotating
@@ -224,9 +219,7 @@ void GraphicsSystem::Draw()
 
 		for (size_t i = 0; i < batches.size(); i++)
 		{
-#ifdef RICARDO_RUNTIME_DEBUG
-			std::cout << "Models size: " << batches[i]->models.size() << std::endl;
-#endif
+			RCRD_DEBUG("Models size: " << batches[i]->models.size());
 			glBindVertexArray(batches[i]->VAO);
 			for (int j = 0; j < batches[i]->models.size(); ++j)
 			{
@@ -234,12 +227,9 @@ void GraphicsSystem::Draw()
 				int prevNum = 0;
 				for (int k = 0; k < batches[i]->models[j].modelObjects.size(); ++k)
 				{
-#ifdef RICARDO_RUNTIME_DEBUG
-					std::cout << "Size of objects vertices: " << batches[i]->models[j].modelObjects[k]->vertexes.size() << std::endl;
-					std::cout << "Size of models vertices: " << batches[i]->models[j].vertexes.size() << std::endl;
-#endif
-					numVertices += (batches[i]->models[j].modelObjects[k]->vertexes.size());
-					
+					RCRD_DEBUG("Size of objects vertices: " << batches[i]->models[j].modelObjects[k]->vertexes.size());
+					RCRD_DEBUG("Size of models vertices: " << batches[i]->models[j].vertexes.size());
+				
 					glUniform3f(vertexColorLocation, batches[i]->models[j].modelObjects[k]->mat->diffuse_color.r,  batches[i]->models[j].modelObjects[k]->mat->diffuse_color.g,  batches[i]->models[j].modelObjects[k]->mat->diffuse_color.b);
 					//std::cout << "Diffuse color: " << batches[i]->models[j].modelObjects[k]->mat->diffuse_color.r << std::endl;
 					glDrawArrays(GL_TRIANGLES, prevNum, numVertices);
@@ -253,13 +243,13 @@ void GraphicsSystem::Draw()
 		glfwSwapBuffers(window);
 
 	}
-	std::cout << "Finished the draw method!" << std::endl;
+	RCRD_DEBUG("Finished the draw method!");
 }
 
 Batch* GraphicsSystem::CreateBatch()
 {
 	Batch* newBatch = new Batch();
 	batches.push_back(newBatch);
-	std::cout << "New batch created, amount of batches currently: " << batches.size() << std::endl;
+	RCRD_DEBUG("New batch created, amount of batches currently: " << batches.size());
 	return newBatch;
 }

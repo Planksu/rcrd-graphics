@@ -1,9 +1,10 @@
-#ifndef _MODEL_HEADER_
-#define _MODEL_HEADER_
+#ifndef RCRD_MODEL_H
+#define RCRD_MODEL_H
 
-#include "Object.h"
-#include "Material.h"
-#include "Vertex.h"
+#include <Object.h>
+#include <Material.h>
+#include <Vertex.h>
+
 #include <vector>
 
 

@@ -1,9 +1,10 @@
-#ifndef _LOADER_H
-#define _LOADER_H
+#ifndef RCRD_LOADER_H
+#define RCRD_LOADER_H
+
+#include <Object.h>
+#include <Material.h>
 
 #include <vector>
-#include "Object.h"
-#include "Material.h"
 #include <sstream>
 #include <string>
 

@@ -1,5 +1,5 @@
-#ifndef _GRAPHICSSYSTEM_HEADER_
-#define _GRAPHICSSYSTEM_HEADER_
+#ifndef RCRD_GRAPHICSSYSTEM_H
+#define RCRD_GRAPHICSSYSTEM_H
 
 #undef GLFW_DLL
 
@@ -15,11 +15,11 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include <vector>
-#include "Object.h"
-#include "Batch.h"
-#include "Light.h"
 
-#define yeet throw
+#include <Object.h>
+#include <Batch.h>
+#include <Light.h>
+#include <core.h>
 
 class GraphicsSystem
 {

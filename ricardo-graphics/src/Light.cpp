@@ -1,4 +1,5 @@
-#include "Light.h"
+#include <Light.h>
+
 
 Light::Light(glm::vec3 pos, glm::vec3 col, glm::vec3 am_col, float shin)
 {
