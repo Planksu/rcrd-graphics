@@ -6,8 +6,6 @@
 #include <string>
 #include <cstring>
 
-//#define RICARDO_OBJ_MATCHING_DEBUG
-
 Model::Model()
 {
     objectIndex = 0;
@@ -25,6 +23,11 @@ void Model::LoadModel(const char* obj_path, const char* mtl_path)
     MatchDataToIndex();
 	RCRD_DEBUG("Successfully matched data to index!");
     MatchMaterialToObject();
+	RCRD_DEBUG("Successfully matched material to object!");
+
+	//vertices.clear();
+	//normals.clear();
+	//texture.clear();
 }
 
 // This method matches to correct material object from the modelMaterials array to the correct object
@@ -53,6 +56,7 @@ void Model::MatchDataToIndex()
         exit(-1);
     }
 
+	int lastIndexCount = 0;
     for(size_t i = 0; i < modelObjects.size(); i++)
     {
 		RCRD_DEBUG("Objects name: " << modelObjects[i]->name);
@@ -92,7 +96,7 @@ void Model::MatchDataToIndex()
             texData = glm::vec2(texture[modelObjects[i]->textureIndex[j]].x, texture[modelObjects[i]->textureIndex[j]].y);
 
             // After we created a new vertex struct in the first loop, we can access it with the same indexes here
-            vertexes[i].texCoord = texData;
+            vertexes[lastIndexCount + j].texCoord = texData;
             modelObjects[i]->vertexes[j].texCoord = texData;
         }
         for(size_t j = 0; j < modelObjects[i]->normalIndex.size(); j++)
@@ -101,10 +105,15 @@ void Model::MatchDataToIndex()
 
             // Same thing here
             //std::cout << "This normal: " << meshNormal.x << ", " << meshNormal.y << ", " << meshNormal.z << std::endl;
-            vertexes[i].norm = meshNormal;
+            vertexes[lastIndexCount + j].norm = meshNormal;
             modelObjects[i]->vertexes[j].norm = meshNormal;
         }
 
+		lastIndexCount = modelObjects[i]->faceIndex.size();
+		if (modelObjects[i]->textureIndex.size() > lastIndexCount)
+			lastIndexCount = modelObjects[i]->textureIndex.size();
+		if (modelObjects[i]->normalIndex.size() > lastIndexCount)
+			lastIndexCount = modelObjects[i]->normalIndex.size();
 
         for(size_t j = 0; j < modelObjects[i]->faceIndex.size(); j++)
         {

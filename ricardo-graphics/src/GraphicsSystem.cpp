@@ -190,6 +190,8 @@ void GraphicsSystem::Draw()
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
+
+
 		RCRD_DEBUG("Batches size: " << batches.size());
 		glUseProgram(program);
 		// Make some kind of angles to use in rotating
@@ -212,8 +214,8 @@ void GraphicsSystem::Draw()
 		glUniform3f(glGetUniformLocation(program, "u_light_color"), light->color.x, light->color.y, light->color.z);
 		glUniform3f(glGetUniformLocation(program, "u_ambient_color"), light->ambient_color.x, light->ambient_color.y, light->ambient_color.z);
 		glUniform1f(glGetUniformLocation(program, "u_shininess"), light->shininess);
-
-		int vertexColorLocation = glGetUniformLocation(program, "color");
+		GLint lightPos = glGetUniformLocation(program, "u_light_position");
+		GLint vertexColorLocation = glGetUniformLocation(program, "color");
 
 		for (size_t i = 0; i < batches.size(); i++)
 		{
@@ -230,7 +232,6 @@ void GraphicsSystem::Draw()
 		
 					numVertices += (batches[i]->models[j].modelObjects[k]->vertexes.size());
 					glUniform3f(vertexColorLocation, batches[i]->models[j].modelObjects[k]->mat->diffuse_color.r,  batches[i]->models[j].modelObjects[k]->mat->diffuse_color.g,  batches[i]->models[j].modelObjects[k]->mat->diffuse_color.b);
-					//std::cout << "Diffuse color: " << batches[i]->models[j].modelObjects[k]->mat->diffuse_color.r << std::endl;
 					glDrawArrays(GL_TRIANGLES, prevNum, numVertices);
 
 					prevNum = numVertices;

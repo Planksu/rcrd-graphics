@@ -1,4 +1,4 @@
-#version 330 core
+#version 400 core
 
 // light model
 uniform vec3 u_light_position;
@@ -25,7 +25,7 @@ void main()
 	vec3 ambient_color;
 	vec3 color;
 	
-	ambient_color = u_ambient_color * vec3(v_color);
+	ambient_color = u_ambient_color * v_color;
 	to_light = u_light_position - v_vertex;
 	to_light = normalize(to_light);
 	vertex_normal = normalize(v_normal);
