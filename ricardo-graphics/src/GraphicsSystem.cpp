@@ -170,8 +170,7 @@ void GraphicsSystem::InitGL()
 {
 	glfwGetFramebufferSize(window, &width, &height);
 	glViewport(0, 0, width, height);
-	std::cout << "GL VERSION\n" << std::endl;
-	std::cout << glGetString(GL_VERSION) << std::endl;
+	RCRD_DEBUG("GL VERSION " << glGetString(GL_VERSION));
 }
 
 void GraphicsSystem::InitLight()
@@ -229,7 +228,8 @@ void GraphicsSystem::Draw()
 				{
 					RCRD_DEBUG("Size of objects vertices: " << batches[i]->models[j].modelObjects[k]->vertexes.size());
 					RCRD_DEBUG("Size of models vertices: " << batches[i]->models[j].vertexes.size());
-				
+		
+					numVertices += (batches[i]->models[j].modelObjects[k]->vertexes.size());
 					glUniform3f(vertexColorLocation, batches[i]->models[j].modelObjects[k]->mat->diffuse_color.r,  batches[i]->models[j].modelObjects[k]->mat->diffuse_color.g,  batches[i]->models[j].modelObjects[k]->mat->diffuse_color.b);
 					//std::cout << "Diffuse color: " << batches[i]->models[j].modelObjects[k]->mat->diffuse_color.r << std::endl;
 					glDrawArrays(GL_TRIANGLES, prevNum, numVertices);
@@ -241,9 +241,8 @@ void GraphicsSystem::Draw()
 		}
 		glfwPollEvents();
 		glfwSwapBuffers(window);
-
+		RCRD_DEBUG("Finished the draw method!");
 	}
-	RCRD_DEBUG("Finished the draw method!");
 }
 
 Batch* GraphicsSystem::CreateBatch()
