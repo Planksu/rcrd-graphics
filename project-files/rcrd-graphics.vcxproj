@@ -19,10 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{C716FC81-B30F-1BD4-DC41-0059C899FADF}</ProjectGuid>
+    <ProjectGuid>{4E970965-BA57-859B-8392-CE18EF11CA77}</ProjectGuid>
     <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>ricardo-graphics</RootNamespace>
+    <RootNamespace>rcrd-graphics</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -70,28 +70,28 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>..\builds\Debug\x86\</OutDir>
     <IntDir>..\builds\obj\Debug\x86\</IntDir>
-    <TargetName>ricardo-graphics</TargetName>
+    <TargetName>rcrd-graphics</TargetName>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>..\builds\Debug\x64\</OutDir>
     <IntDir>..\builds\obj\Debug\x64\</IntDir>
-    <TargetName>ricardo-graphics</TargetName>
+    <TargetName>rcrd-graphics</TargetName>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release x86|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>..\builds\Release\x86\</OutDir>
     <IntDir>..\builds\obj\Release\x86\</IntDir>
-    <TargetName>ricardo-graphics</TargetName>
+    <TargetName>rcrd-graphics</TargetName>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>..\builds\Release\x64\</OutDir>
     <IntDir>..\builds\obj\Release\x64\</IntDir>
-    <TargetName>ricardo-graphics</TargetName>
+    <TargetName>rcrd-graphics</TargetName>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug x86|x64'">
@@ -99,7 +99,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\ricardo-graphics\include;..\ricardo-graphics\lib\include;..\ricardo-graphics\lib\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\rcrd-graphics\include;..\rcrd-graphics\lib\include;..\rcrd-graphics\lib\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
     </ClCompile>
@@ -107,7 +107,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>glfw3.lib;OpenGL32.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\builds\Debug\x86;..\ricardo-graphics\lib\glfw\lib-vc2019;..\ricardo-graphics\lib\glew\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\builds\Debug\x86;..\rcrd-graphics\lib\glfw\lib-vc2019;..\rcrd-graphics\lib\glew\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -115,7 +115,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\ricardo-graphics\include;..\ricardo-graphics\lib\include;..\ricardo-graphics\lib\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\rcrd-graphics\include;..\rcrd-graphics\lib\include;..\rcrd-graphics\lib\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
     </ClCompile>
@@ -123,7 +123,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>glfw3.lib;OpenGL32.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\builds\Debug\x64;..\ricardo-graphics\lib\glfw\lib-vc2019;..\ricardo-graphics\lib\glew\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\builds\Debug\x64;..\rcrd-graphics\lib\glfw\lib-vc2019;..\rcrd-graphics\lib\glew\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release x86|x64'">
@@ -131,7 +131,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\ricardo-graphics\include;..\ricardo-graphics\lib\include;..\ricardo-graphics\lib\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\rcrd-graphics\include;..\rcrd-graphics\lib\include;..\rcrd-graphics\lib\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -143,7 +143,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>glfw3.lib;OpenGL32.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\builds\Release\x86;..\ricardo-graphics\lib\glfw\lib-vc2019;..\ricardo-graphics\lib\glew\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\builds\Release\x86;..\rcrd-graphics\lib\glfw\lib-vc2019;..\rcrd-graphics\lib\glew\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -151,7 +151,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32_LEAN_AND_MEAN;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\ricardo-graphics\include;..\ricardo-graphics\lib\include;..\ricardo-graphics\lib\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\rcrd-graphics\include;..\rcrd-graphics\lib\include;..\rcrd-graphics\lib\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -163,32 +163,32 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>glfw3.lib;OpenGL32.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\builds\Release\x64;..\ricardo-graphics\lib\glfw\lib-vc2019;..\ricardo-graphics\lib\glew\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\builds\Release\x64;..\rcrd-graphics\lib\glfw\lib-vc2019;..\rcrd-graphics\lib\glew\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\ricardo-graphics\include\Batch.h" />
-    <ClInclude Include="..\ricardo-graphics\include\Camera.h" />
-    <ClInclude Include="..\ricardo-graphics\include\GraphicsSystem.h" />
-    <ClInclude Include="..\ricardo-graphics\include\Light.h" />
-    <ClInclude Include="..\ricardo-graphics\include\Loader.h" />
-    <ClInclude Include="..\ricardo-graphics\include\Material.h" />
-    <ClInclude Include="..\ricardo-graphics\include\Model.h" />
-    <ClInclude Include="..\ricardo-graphics\include\Object.h" />
-    <ClInclude Include="..\ricardo-graphics\include\Vertex.h" />
-    <ClInclude Include="..\ricardo-graphics\include\core.h" />
-    <ClInclude Include="..\ricardo-graphics\include\debug.h" />
+    <ClInclude Include="..\rcrd-graphics\include\Batch.h" />
+    <ClInclude Include="..\rcrd-graphics\include\Camera.h" />
+    <ClInclude Include="..\rcrd-graphics\include\GraphicsSystem.h" />
+    <ClInclude Include="..\rcrd-graphics\include\Light.h" />
+    <ClInclude Include="..\rcrd-graphics\include\Loader.h" />
+    <ClInclude Include="..\rcrd-graphics\include\Material.h" />
+    <ClInclude Include="..\rcrd-graphics\include\Model.h" />
+    <ClInclude Include="..\rcrd-graphics\include\Object.h" />
+    <ClInclude Include="..\rcrd-graphics\include\Vertex.h" />
+    <ClInclude Include="..\rcrd-graphics\include\core.h" />
+    <ClInclude Include="..\rcrd-graphics\include\debug.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\ricardo-graphics\src\Batch.cpp" />
-    <ClCompile Include="..\ricardo-graphics\src\Camera.cpp" />
-    <ClCompile Include="..\ricardo-graphics\src\GraphicsSystem.cpp" />
-    <ClCompile Include="..\ricardo-graphics\src\Light.cpp" />
-    <ClCompile Include="..\ricardo-graphics\src\Loader.cpp" />
-    <ClCompile Include="..\ricardo-graphics\src\Material.cpp" />
-    <ClCompile Include="..\ricardo-graphics\src\Model.cpp" />
-    <ClCompile Include="..\ricardo-graphics\src\Object.cpp" />
-    <ClCompile Include="..\ricardo-graphics\src\main.cpp" />
+    <ClCompile Include="..\rcrd-graphics\src\Batch.cpp" />
+    <ClCompile Include="..\rcrd-graphics\src\Camera.cpp" />
+    <ClCompile Include="..\rcrd-graphics\src\GraphicsSystem.cpp" />
+    <ClCompile Include="..\rcrd-graphics\src\Light.cpp" />
+    <ClCompile Include="..\rcrd-graphics\src\Loader.cpp" />
+    <ClCompile Include="..\rcrd-graphics\src\Material.cpp" />
+    <ClCompile Include="..\rcrd-graphics\src\Model.cpp" />
+    <ClCompile Include="..\rcrd-graphics\src\Object.cpp" />
+    <ClCompile Include="..\rcrd-graphics\src\main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

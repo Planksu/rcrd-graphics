@@ -12,7 +12,6 @@ int main(int argc, char* argv[])
 
 	#ifdef _WIN32
 	Batch* cubeBatch = graphics.CreateBatch();
-	//cubeBatch->LoadObject("C://Users//Antton//Documents//ricardo-graphics//resources//firehydrant.obj", "C://Users//Antton//Documents//ricardo-graphics//resources//firehydrant.mtl");
 	cubeBatch->LoadObject("./resources/monkeysmooth.obj", "./resources/monkeysmooth.mtl");
 	#elif defined __linux__
 	#endif

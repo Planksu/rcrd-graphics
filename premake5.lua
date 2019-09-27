@@ -1,4 +1,4 @@
-workspace "ricardo-graphics"
+workspace "rcrd-graphics"
 	configurations {"Debug", "Release"}
 	targetdir "./builds/%{cfg.buildcfg}/%{cfg.platform}"
 	objdir "./builds/obj/%{cfg.buildcfg}/%{cfg.platform}"
@@ -32,19 +32,19 @@ workspace "ricardo-graphics"
 			"WIN32_LEAN_AND_MEAN"
 		}
 
-project "ricardo-graphics"
-	targetname "ricardo-graphics"
+project "rcrd-graphics"
+	targetname "rcrd-graphics"
 	kind "ConsoleApp"
 	-- kind "WindowedApp"
 	language "C++"
 	links {"glfw3", "OpenGL32", "glew32"}
-	files { "./ricardo-graphics/include/**.h", "./ricardo-graphics/src/**.cpp", "./ricardo-graphics/source/**.h" }
+	files { "./rcrd-graphics/include/**.h", "./rcrd-graphics/src/**.cpp", "./rcrd-graphics/source/**.h" }
 		
 	configuration "not macosx"
-		includedirs {"./ricardo-graphics/include", "./ricardo-graphics/lib/include", "./ricardo-graphics/lib/glfw/include", "./ricardo-graphics/lib/glfw/include"}
-		libdirs{"./ricardo-graphics/lib/glfw/lib-vc2019/", "./ricardo-graphics/lib/glew/x64/"}
+		includedirs {"./rcrd-graphics/include", "./rcrd-graphics/lib/include", "./rcrd-graphics/lib/glfw/include", "./rcrd-graphics/lib/glfw/include"}
+		libdirs{"./rcrd-graphics/lib/glfw/lib-vc2019/", "./rcrd-graphics/lib/glew/x64/"}
 	configuration "macosx"
-		sysincludedirs {"./ricardo-graphics/lib/include", "./ricardo-graphics/lib/glfw/include"}
+		sysincludedirs {"./rcrd-graphics/lib/include", "./rcrd-graphics/lib/glfw/include"}
 
 	configuration "windows"
 		defines {}
