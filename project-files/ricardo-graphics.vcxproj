@@ -168,6 +168,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\ricardo-graphics\include\Batch.h" />
+    <ClInclude Include="..\ricardo-graphics\include\Camera.h" />
     <ClInclude Include="..\ricardo-graphics\include\GraphicsSystem.h" />
     <ClInclude Include="..\ricardo-graphics\include\Light.h" />
     <ClInclude Include="..\ricardo-graphics\include\Loader.h" />
@@ -180,6 +181,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\ricardo-graphics\src\Batch.cpp" />
+    <ClCompile Include="..\ricardo-graphics\src\Camera.cpp" />
     <ClCompile Include="..\ricardo-graphics\src\GraphicsSystem.cpp" />
     <ClCompile Include="..\ricardo-graphics\src\Light.cpp" />
     <ClCompile Include="..\ricardo-graphics\src\Loader.cpp" />

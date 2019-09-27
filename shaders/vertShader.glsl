@@ -6,11 +6,7 @@ layout (location = 1) in vec3 normal;
 layout (location = 2) in vec2 texCoord;
 
 
-// light model
-uniform vec3 u_light_position;
-uniform vec3 u_light_color;
-uniform float u_shininess;
-uniform vec3 u_ambient_color;
+uniform vec3 camera_position;
 uniform vec3 color;
 
 
@@ -22,6 +18,7 @@ uniform mat4 mvp;
 out vec3 v_vertex;
 out vec3 v_color;
 out vec3 v_normal;
+out vec3 v_camera_pos;
 
 void main()
 {
@@ -31,6 +28,8 @@ void main()
 
     // pass the vertex color to the fragment shader
     v_color = color;
+
+	v_camera_pos = camera_position;
 
     // transform the location of the vertex
     gl_Position = mvp * vec4(position, 1.0);

@@ -7,11 +7,12 @@ class Light
 {
 public:
 
-	Light(glm::vec3 pos, glm::vec3 col, glm::vec3 am_col, float shin);
+	Light(glm::vec3 pos, glm::vec3 col, glm::vec3 am_col, glm::vec3 dir, float shin);
 
 	glm::vec3 position;
 	glm::vec3 color;
 	glm::vec3 ambient_color;
+	glm::vec3 direction;
 	float shininess;
 
 };

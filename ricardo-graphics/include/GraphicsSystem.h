@@ -19,6 +19,7 @@
 #include <Object.h>
 #include <Batch.h>
 #include <Light.h>
+#include <Camera.h>
 #include <core.h>
 
 class GraphicsSystem
@@ -34,6 +35,7 @@ public:
 	void CreateShaderObject(char* vShaderSrc, char* fShadersrc, GLuint* object);
 	void InitShaders();
 	void InitLight();
+	void InitCamera();
 	Batch* CreateBatch();
 
 
@@ -43,6 +45,7 @@ private:
 	std::vector<Batch*> batches;
 
 	Light* light;
+	Camera* camera;
 
 	int width, height;
 

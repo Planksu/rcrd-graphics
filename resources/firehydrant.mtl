@@ -1,22 +1,13 @@
-# Blender MTL File: 'fire1.blend'
-# Material Count: 2
+# Blender MTL File: 'None'
+# Material Count: 1
 
-newmtl Material.001
-Ns 323.999994
+newmtl _10554_FireHydrant_v1_L2blinn1SG
+Ns 30.000009
 Ka 1.000000 1.000000 1.000000
-Kd 0.800000 0.800000 0.800000
+Kd 0.000000 0.000000 0.000000
 Ks 0.500000 0.500000 0.500000
 Ke 0.0 0.0 0.0
-Ni 1.000000
+Ni 1.500000
 d 1.000000
 illum 2
-
-newmtl Material.002
-Ns 440.999985
-Ka 1.000000 1.000000 1.000000
-Kd 0.341383 0.341383 0.341383
-Ks 0.000000 0.000000 0.000000
-Ke 0.0 0.0 0.0
-Ni 1.450000
-d 1.000000
-illum 1
+map_Kd C:\\Users\\anttonjok\\Downloads\\FireHydrant_v1_L2.123c821b0838-0088-4685-b96e-8e629413f03e\\FireHydrant.jpg

@@ -12,6 +12,9 @@
     <ClInclude Include="..\ricardo-graphics\include\Batch.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="..\ricardo-graphics\include\Camera.h">
+      <Filter>include</Filter>
+    </ClInclude>
     <ClInclude Include="..\ricardo-graphics\include\GraphicsSystem.h">
       <Filter>include</Filter>
     </ClInclude>
@@ -42,6 +45,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\ricardo-graphics\src\Batch.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\ricardo-graphics\src\Camera.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\ricardo-graphics\src\GraphicsSystem.cpp">
