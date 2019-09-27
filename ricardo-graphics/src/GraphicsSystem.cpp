@@ -123,8 +123,8 @@ void GraphicsSystem::CreateShaderObject(char* vShaderSrc, char* fShaderSrc, GLui
 
 void GraphicsSystem::InitShaders()
 {
-	std::string vert = LoadShaderFromFile("shaders/vertShader.txt");
-	std::string frag = LoadShaderFromFile("shaders/fragShader.txt");
+	std::string vert = LoadShaderFromFile("shaders/vertShader.glsl");
+	std::string frag = LoadShaderFromFile("shaders/fragShader.glsl");
 
 	// Cast to char to create shader object
 	char* vertC = const_cast<char*>(vert.c_str());
@@ -171,12 +171,13 @@ void GraphicsSystem::InitGL()
 	glfwGetFramebufferSize(window, &width, &height);
 	glViewport(0, 0, width, height);
 	RCRD_DEBUG("GL VERSION " << glGetString(GL_VERSION));
+	glEnable(GL_DEPTH_TEST);
 }
 
 void GraphicsSystem::InitLight()
 {
-	glm::vec3 position = glm::vec3(0.0f, -2.0f, -2.0f);
-	glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
+	glm::vec3 position = glm::vec3(50000.0f, 5000.0f, 3.0f);
+	glm::vec3 color = glm::vec3(1.0f, 0.0f, 0.0f);
 	glm::vec3 ambient_color = glm::vec3(0.2f, 0.2f, 0.2f);
 	float shininess = 0.1f;
 
@@ -188,9 +189,7 @@ void GraphicsSystem::Draw()
 	while (!glfwWindowShouldClose(window))
 	{
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
-
-
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		RCRD_DEBUG("Batches size: " << batches.size());
 		glUseProgram(program);
@@ -208,6 +207,7 @@ void GraphicsSystem::Draw()
 		glm::mat4 projection = glm::perspective(45.f, (float)width / (float)height, 1.0f, 10.0f);
 		glm::mat4 mvp = projection * view * model;
 		glm::mat4 mv = model * view;
+		glm::mat4 mv_inverse_transpose = glm::transpose(glm::inverse(mv));
 		glUniformMatrix4fv(glGetUniformLocation(program, "mvp"), 1, GL_FALSE, (const GLfloat*)&mvp[0]);
 		glUniformMatrix4fv(glGetUniformLocation(program, "mv"), 1, GL_FALSE, (const GLfloat*)&mv[0]);
 		glUniform3f(glGetUniformLocation(program, "u_light_position"), light->position.x, light->position.y, light->position.z);
