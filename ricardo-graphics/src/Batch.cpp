@@ -19,7 +19,7 @@ void Batch::LoadObject(const char* obj_path, const char* mtl_path)
 void Batch::GenerateBuffers()
 {
 
-	RCRD_DEBUG("GENERATIONG GL BUFFERS...");
+	RCRD_DEBUG("GENERATING GL BUFFERS...");
 	RCRD_DEBUG("Models size when generating bufferes: " << models.size());
 
 	glGenVertexArrays(1, &this->VAO);

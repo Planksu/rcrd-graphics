@@ -3,7 +3,6 @@
 
 
 #define GLM_ENABLE_EXPERIMENTAL
-//#define RICARDO_RUNTIME_DEBUG
 
 
 GraphicsSystem::GraphicsSystem(int w, int h, const char* title)
@@ -18,30 +17,7 @@ GraphicsSystem::GraphicsSystem(int w, int h, const char* title)
 
 GLuint LoadShader(GLenum type, const char *shaderSrc)
 {
-	GLuint shader;
-	GLint compiled;
-	shader = glCreateShader(type);
-	assert(shader != 0);
-
-	glShaderSource(shader, 1, &shaderSrc, NULL);
-	glCompileShader(shader);
-	glGetShaderiv(shader, GL_COMPILE_STATUS, &compiled);
-
-	if (!compiled)
-	{
-		GLint infoLen = 0;
-		glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLen);
-		if (infoLen > 1)
-		{
-			char* infoLog = (char*)malloc(sizeof(char) * infoLen);
-			glGetShaderInfoLog(shader, infoLen, NULL, infoLog);
-			RCRD_DEBUG("Error compiling shader: " << infoLog);
-			free(infoLog);
-		}
-		glDeleteShader(shader);
-		return 0;
-	}
-	return shader;
+	
 }
 
 
@@ -58,68 +34,12 @@ void error_callback(int error, const char* description)
 
 std::string GraphicsSystem::LoadShaderFromFile(const std::string& filename)
 {
-	// Load shaders from txt file
-	std::string shader;
-	std::ifstream file(filename, std::ios::in);
-
-	if (!file.is_open())
-	{
-		printf("Could not open shader file!");
-		return shader;
-	}
-
-	std::string line = "";
-	while (!file.eof())
-	{
-		std::getline(file, line);
-		shader.append(line + "\n");
-	}
-
-	file.close();
-	return shader;
+	
 }
 
 void GraphicsSystem::CreateShaderObject(char* vShaderSrc, char* fShaderSrc, GLuint* object)
 {
-	GLuint vertexShader;
-	GLuint fragmentShader;
-	GLint linked;
-
-	vertexShader = LoadShader(GL_VERTEX_SHADER, vShaderSrc);
-	fragmentShader = LoadShader(GL_FRAGMENT_SHADER, fShaderSrc);
-
-	*object = glCreateProgram();
-
-	assert(*object != 0);
-
-	glAttachShader(*object, vertexShader);
-	glAttachShader(*object, fragmentShader);
-	glBindAttribLocation(*object, 0, "position");
-	glLinkProgram(*object);
-	glGetProgramiv(*object, GL_LINK_STATUS, &linked);
-
-	if (!linked)
-	{
-		GLint infoLen = 0;
-
-		glGetProgramiv(*object, GL_INFO_LOG_LENGTH, &infoLen);
-
-		if (infoLen > 1)
-		{
-			char* infoLog = (char*)malloc(sizeof(char) * infoLen);
-
-			glGetProgramInfoLog(*object, infoLen, NULL, infoLog);
-			RCRD_DEBUG("Error linking program: " << infoLog);
-
-			free(infoLog);
-		}
-
-		glDeleteProgram(*object);
-		return;
-	}
-
-
-	return;
+	
 }
 
 void GraphicsSystem::InitShaders()
@@ -178,8 +98,8 @@ void GraphicsSystem::InitGL()
 void GraphicsSystem::InitLight()
 {
 	glm::vec3 position = glm::vec3(-10.0f, 10.0f, 10.0f);
-	glm::vec3 color = glm::vec3(0.5f, 0.0f, 0.5f);
-	glm::vec3 ambient_color = glm::vec3(0.1f, 0.1f, 0.1f);
+	glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
+	glm::vec3 ambient_color = glm::vec3(0.0f, 0.0f, 1.0f);
 	glm::vec3 direction = glm::vec3(0.0f, 0.0f, 0.0f);
 	float shininess = 1.f;
 
@@ -188,7 +108,7 @@ void GraphicsSystem::InitLight()
 
 void GraphicsSystem::InitCamera()
 {
-	glm::vec3 position = glm::vec3(1.f, 1.f, 1.f);
+	glm::vec3 position = glm::vec3(0.f, 0.f, 3.5f);
 	glm::vec3 rotation = glm::vec3(0.f, 0.f, 0.f);
 	float fov = 90.f;
 	camera = new Camera(position, rotation, fov);

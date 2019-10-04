@@ -175,6 +175,7 @@
     <ClInclude Include="..\ricardo-graphics\include\Material.h" />
     <ClInclude Include="..\ricardo-graphics\include\Model.h" />
     <ClInclude Include="..\ricardo-graphics\include\Object.h" />
+    <ClInclude Include="..\ricardo-graphics\include\Shader.h" />
     <ClInclude Include="..\ricardo-graphics\include\Vertex.h" />
     <ClInclude Include="..\ricardo-graphics\include\core.h" />
     <ClInclude Include="..\ricardo-graphics\include\debug.h" />
@@ -188,6 +189,7 @@
     <ClCompile Include="..\ricardo-graphics\src\Material.cpp" />
     <ClCompile Include="..\ricardo-graphics\src\Model.cpp" />
     <ClCompile Include="..\ricardo-graphics\src\Object.cpp" />
+    <ClCompile Include="..\ricardo-graphics\src\Shader.cpp" />
     <ClCompile Include="..\ricardo-graphics\src\main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
