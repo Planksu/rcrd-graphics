@@ -8,7 +8,7 @@ Shader::Shader()
 
 }
 
-void Shader::LoadShaderFromFile(const char* path)
+std::string Shader::LoadShaderFromFile(const char* path)
 {
 	std::string shader;
 	std::ifstream file(path, std::ios::in);
@@ -16,7 +16,7 @@ void Shader::LoadShaderFromFile(const char* path)
 	if (!file.is_open())
 	{
 		RCRD_DEBUG("Could not open shader file!");
-		return;
+		return "ERROR";
 	}
 
 	std::string line = "";
@@ -27,8 +27,9 @@ void Shader::LoadShaderFromFile(const char* path)
 	}
 
 	file.close();
-	
+	return shader;
 }
+
 
 GLuint Shader::CompileShader(GLenum type, const char* src)
 {
@@ -58,42 +59,45 @@ GLuint Shader::CompileShader(GLenum type, const char* src)
 	return shader;
 }
 
-void Shader::CreateShaderObject()
+void Shader::CreateShaderObject(std::string vertData, std::string fragData)
 {
 	GLuint vertexShader;
 	GLuint fragmentShader;
 	GLint linked;
 
-	vertexShader = CompileShader(GL_VERTEX_SHADER, vShaderSrc);
-	fragmentShader = CompileShader(GL_FRAGMENT_SHADER, fShaderSrc);
+	const char* vert = const_cast<char*>(vertData.c_str());
+	const char* frag = const_cast<char*>(fragData.c_str());
 
-	*object = glCreateProgram();
+	vertexShader = CompileShader(GL_VERTEX_SHADER, vert);
+	fragmentShader = CompileShader(GL_FRAGMENT_SHADER, frag);
 
-	assert(*object != 0);
+	program = glCreateProgram();
 
-	glAttachShader(*object, vertexShader);
-	glAttachShader(*object, fragmentShader);
-	glBindAttribLocation(*object, 0, "position");
-	glLinkProgram(*object);
-	glGetProgramiv(*object, GL_LINK_STATUS, &linked);
+	assert(program != 0);
+
+	glAttachShader(program, vertexShader);
+	glAttachShader(program, fragmentShader);
+	glBindAttribLocation(program, 0, "position");
+	glLinkProgram(program);
+	glGetProgramiv(program, GL_LINK_STATUS, &linked);
 
 	if (!linked)
 	{
 		GLint infoLen = 0;
 
-		glGetProgramiv(*object, GL_INFO_LOG_LENGTH, &infoLen);
+		glGetProgramiv(program, GL_INFO_LOG_LENGTH, &infoLen);
 
 		if (infoLen > 1)
 		{
 			char* infoLog = (char*)malloc(sizeof(char) * infoLen);
 
-			glGetProgramInfoLog(*object, infoLen, NULL, infoLog);
+			glGetProgramInfoLog(program, infoLen, NULL, infoLog);
 			RCRD_DEBUG("Error linking program: " << infoLog);
 
 			free(infoLog);
 		}
 
-		glDeleteProgram(*object);
+		glDeleteProgram(program);
 		return;
 	}
 

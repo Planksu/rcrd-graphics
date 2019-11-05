@@ -38,6 +38,6 @@ void main()
 	vec3 r = reflect(-l, n);
 	float cosAlpha = clamp(dot(e,r),0,1);
 
-	color = ambient_color + diffuse_color * u_light_color * light_power * cosTheta / (distance*distance) + specular_color * u_light_color * light_power * pow(cosAlpha, 5) / (distance*distance);
+	color = ambient_color + diffuse_color * u_light_color * light_power * cosTheta / (distance*distance) + specular_color * u_light_color * light_power * pow(cosAlpha, 100)  / (distance*distance);
 	color_out = vec4(color, 1.0);
 } 

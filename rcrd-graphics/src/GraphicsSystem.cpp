@@ -15,12 +15,6 @@ GraphicsSystem::GraphicsSystem(int w, int h, const char* title)
 	InitCamera();
 }
 
-GLuint LoadShader(GLenum type, const char *shaderSrc)
-{
-	
-}
-
-
 GraphicsSystem::~GraphicsSystem()
 {
 }
@@ -32,27 +26,12 @@ void error_callback(int error, const char* description)
 
 #pragma region Shader methods
 
-std::string GraphicsSystem::LoadShaderFromFile(const std::string& filename)
-{
-	
-}
-
-void GraphicsSystem::CreateShaderObject(char* vShaderSrc, char* fShaderSrc, GLuint* object)
-{
-	
-}
-
 void GraphicsSystem::InitShaders()
 {
-	std::string vert = LoadShaderFromFile("shaders/vertShader.glsl");
-	std::string frag = LoadShaderFromFile("shaders/fragShader.glsl");
-
-	// Cast to char to create shader object
-	char* vertC = const_cast<char*>(vert.c_str());
-	char* fragC = const_cast<char*>(frag.c_str());
-
-	// Create the actual shader object
-	CreateShaderObject(vertC, fragC, &program);
+	shader = new Shader();
+	std::string vert = shader->LoadShaderFromFile("shaders/vertShader.glsl");
+	std::string frag = shader->LoadShaderFromFile("shaders/fragShader.glsl");
+	shader->CreateShaderObject(vert, frag);
 }
 
 #pragma endregion
@@ -99,7 +78,7 @@ void GraphicsSystem::InitLight()
 {
 	glm::vec3 position = glm::vec3(-10.0f, 10.0f, 10.0f);
 	glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
-	glm::vec3 ambient_color = glm::vec3(0.0f, 0.0f, 1.0f);
+	glm::vec3 ambient_color = glm::vec3(0.0f, 0.0f, 0.2f);
 	glm::vec3 direction = glm::vec3(0.0f, 0.0f, 0.0f);
 	float shininess = 1.f;
 
@@ -108,7 +87,7 @@ void GraphicsSystem::InitLight()
 
 void GraphicsSystem::InitCamera()
 {
-	glm::vec3 position = glm::vec3(0.f, 0.f, 3.5f);
+	glm::vec3 position = glm::vec3(0.f, 0.f, 0.f);
 	glm::vec3 rotation = glm::vec3(0.f, 0.f, 0.f);
 	float fov = 90.f;
 	camera = new Camera(position, rotation, fov);
@@ -122,14 +101,14 @@ void GraphicsSystem::Draw()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		RCRD_DEBUG("Batches size: " << batches.size());
-		glUseProgram(program);
+		glUseProgram(shader->program);
 		// Make some kind of angles to use in rotating
 		static float r = 0;
 		r += 0.00016f * 90;
 
 		glm::mat4 model = glm::mat4(1.0f);
 		// Translate a bit forward
-		model = glm::translate(model, glm::vec3(0.0f, -0.5f, -5.0f));
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -5.0f));
 		// and the rotation
 		model = glm::rotate(model, r, glm::vec3(0.0f, 1.0f, 0.0f));
 
@@ -142,15 +121,15 @@ void GraphicsSystem::Draw()
 		glm::mat4 mvp = projection * view * model;
 		glm::mat4 mv = model * view;
 		glm::mat4 mv_inverse_transpose = glm::transpose(glm::inverse(mv));
-		glUniformMatrix4fv(glGetUniformLocation(program, "mvp"), 1, GL_FALSE, (const GLfloat*)&mvp[0]);
-		glUniformMatrix4fv(glGetUniformLocation(program, "mv"), 1, GL_FALSE, (const GLfloat*)&mv[0]);
-		glUniform3f(glGetUniformLocation(program, "u_light_position"), light->position.x, light->position.y, light->position.z);
-		glUniform3f(glGetUniformLocation(program, "u_light_color"), light->color.x, light->color.y, light->color.z);
-		glUniform3f(glGetUniformLocation(program, "u_ambient_color"), light->ambient_color.x, light->ambient_color.y, light->ambient_color.z);
-		glUniform3f(glGetUniformLocation(program, "camera_position"), camera->pos.x, camera->pos.y, camera->pos.z);
-		glUniform3f(glGetUniformLocation(program, "u_light_dir"), light->direction.x, light->direction.y, light->direction.z);
-		glUniform1f(glGetUniformLocation(program, "u_shininess"), light->shininess);
-		GLint vertexColorLocation = glGetUniformLocation(program, "color");
+		glUniformMatrix4fv(glGetUniformLocation(shader->program, "mvp"), 1, GL_FALSE, (const GLfloat*)&mvp[0]);
+		glUniformMatrix4fv(glGetUniformLocation(shader->program, "mv"), 1, GL_FALSE, (const GLfloat*)&mv[0]);
+		glUniform3f(glGetUniformLocation(shader->program, "u_light_position"), light->position.x, light->position.y, light->position.z);
+		glUniform3f(glGetUniformLocation(shader->program, "u_light_color"), light->color.x, light->color.y, light->color.z);
+		glUniform3f(glGetUniformLocation(shader->program, "u_ambient_color"), light->ambient_color.x, light->ambient_color.y, light->ambient_color.z);
+		glUniform3f(glGetUniformLocation(shader->program, "camera_position"), camera->pos.x, camera->pos.y, camera->pos.z);
+		glUniform3f(glGetUniformLocation(shader->program, "u_light_dir"), light->direction.x, light->direction.y, light->direction.z);
+		glUniform1f(glGetUniformLocation(shader->program, "u_shininess"), light->shininess);
+		GLint vertexColorLocation = glGetUniformLocation(shader->program, "color");
 
 		for (size_t i = 0; i < batches.size(); i++)
 		{

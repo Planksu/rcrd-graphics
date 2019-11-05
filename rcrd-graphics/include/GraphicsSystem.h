@@ -21,6 +21,7 @@
 #include <Light.h>
 #include <Camera.h>
 #include <core.h>
+#include <Shader.h>
 
 class GraphicsSystem
 {
@@ -46,6 +47,7 @@ private:
 
 	Light* light;
 	Camera* camera;
+	Shader* shader;
 
 	int width, height;
 

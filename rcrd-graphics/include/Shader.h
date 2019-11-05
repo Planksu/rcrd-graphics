@@ -9,14 +9,14 @@ class Shader
 public:
 	Shader();
 
-	void LoadShaderFromFile(const char* path);
+	std::string LoadShaderFromFile(const char* path);
 	GLuint CompileShader(GLenum type, const char* src);
-	void CreateShaderObject();
+	void CreateShaderObject(std::string vertData, std::string fragData);
 
 
 private:
-	const char* fragShader;
-	const char* vertShader;
+	char* fragShader;
+	char* vertShader;
 
 public:
 
