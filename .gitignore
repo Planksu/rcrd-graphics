@@ -14,9 +14,10 @@
 
 # Build results
 [Dd]ebug/
-!*.dll
+!Debug/x64/glew32.dll
 [Dd]ebugPublic/
 [Rr]elease/
+!Release/x64/glew32.dll
 [Rr]eleases/
 x86/
 bld/
