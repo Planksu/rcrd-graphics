@@ -80,7 +80,7 @@ void GraphicsSystem::InitLight()
 	glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
 	glm::vec3 ambient_color = glm::vec3(0.0f, 0.0f, 0.2f);
 	glm::vec3 direction = glm::vec3(0.0f, 0.0f, 0.0f);
-	float shininess = 1.f;
+	float shininess = 10.f;
 
 	light = new Light(position, color, ambient_color, direction, shininess);
 }
