@@ -12,7 +12,9 @@ int main(int argc, char* argv[])
 
 	#ifdef _WIN32
 	Batch* cubeBatch = graphics.CreateBatch();
-	cubeBatch->LoadObject("./resources/huracan.obj", "./resources/huracan.mtl");
+	cubeBatch->LoadObject("./resources/cubesmooth.obj", "./resources/cubesmooth.mtl");
+	Batch* floorBatch = graphics.CreateBatch();
+	floorBatch->LoadObject("./resources/floor.obj", "./resources/floor.mtl");
 	#elif defined __linux__
 	#endif
 

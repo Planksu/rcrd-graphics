@@ -76,7 +76,7 @@ void GraphicsSystem::InitGL()
 
 void GraphicsSystem::InitLight()
 {
-	glm::vec3 position = glm::vec3(-10.0f, 10.0f, 10.0f);
+	glm::vec3 position = glm::vec3(-10.f, 10.f, 10.0f);
 	glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
 	glm::vec3 ambient_color = glm::vec3(0.0f, 0.0f, 0.2f);
 	glm::vec3 direction = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -87,8 +87,8 @@ void GraphicsSystem::InitLight()
 
 void GraphicsSystem::InitCamera()
 {
-	glm::vec3 position = glm::vec3(0.f, 0.f, 0.f);
-	glm::vec3 rotation = glm::vec3(0.f, 0.f, 0.f);
+	glm::vec3 position = glm::vec3(0.f, -1.f, -2.f);
+	glm::vec3 rotation = glm::vec3(0.3f, 0.f, 0.f);
 	float fov = 90.f;
 	camera = new Camera(position, rotation, fov);
 }
@@ -99,9 +99,11 @@ void GraphicsSystem::Draw()
 	{
 		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		RCRD_DEBUG("Batches size: " << batches.size());
 		glUseProgram(shader->program);
+
 		// Make some kind of angles to use in rotating
 		static float r = 0;
 		r += 0.00016f * 90;
@@ -115,6 +117,10 @@ void GraphicsSystem::Draw()
 		glm::mat4 view = glm::mat4(1.0f);
 
 		view = glm::translate(view, camera->pos);
+		view = glm::rotate(view, camera->rot.x, glm::vec3(1.0f, 0.0f, 0.0f));
+		view = glm::rotate(view, camera->rot.y, glm::vec3(0.0f, 1.0f, 0.0f));
+		view = glm::rotate(view, camera->rot.z, glm::vec3(0.0f, 0.0f, 1.0f));
+
 		light->direction = view * glm::vec4(light->direction, 1.0f);
 
 		glm::mat4 projection = glm::perspective(45.f, (float)width / (float)height, 1.0f, 10.0f);
