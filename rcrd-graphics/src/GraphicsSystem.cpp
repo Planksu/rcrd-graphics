@@ -123,7 +123,7 @@ void GraphicsSystem::Draw()
 
 		light->direction = view * glm::vec4(light->direction, 1.0f);
 
-		glm::mat4 projection = glm::perspective(45.f, (float)width / (float)height, 1.0f, 10.0f);
+		glm::mat4 projection = glm::perspective(45.f, (float)width / (float)height, 1.0f, 2000.0f);
 		glm::mat4 mvp = projection * view * model;
 		glm::mat4 mv = model * view;
 		glm::mat4 mv_inverse_transpose = glm::transpose(glm::inverse(mv));
