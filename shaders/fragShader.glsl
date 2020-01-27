@@ -6,6 +6,8 @@ uniform vec3 u_light_color;
 uniform float u_shininess;
 uniform vec3 u_ambient_color;
 uniform vec3 u_light_dir;
+uniform vec3 diffuse_model;
+uniform vec3 specular_model;
 
 // data coming from the vertex shader
 in vec3 v_vertex;
@@ -19,7 +21,7 @@ out vec4 color_out;
 
 void main()
 {	
-	vec3 ambient_color = v_color * 0.1;
+	vec3 ambient_color = v_color * 0.2;
 	vec3 diffuse_color = v_color;
 	vec3 specular_color = v_specular;
 	
@@ -39,9 +41,8 @@ void main()
 		vec3 r = reflect(-l, n);
 		float specAngle = max(dot(r,v), 0.0);
 		specular = pow(specAngle, u_shininess);
-
 	}
 	
-	vec3 color = v_ambient * ambient_color + v_color * lambertian * v_color + specular_color * specular * specular_color;
+	vec3 color = v_ambient * u_ambient_color + v_color * lambertian * diffuse_model + specular_color * specular * specular_model;
 	color_out = vec4(color, 1.0);
 } 

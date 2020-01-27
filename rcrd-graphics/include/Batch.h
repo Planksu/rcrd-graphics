@@ -21,6 +21,8 @@ public:
 public:
     std::vector<Model> models;
     GLuint VAO, vertexes, normals;
+	glm::vec3 diffuse = glm::vec3(0, 0, 0);
+	glm::vec3 specular = glm::vec3(0, 0, 0);
 
 
 };

@@ -79,8 +79,8 @@ void GraphicsSystem::InitLight()
 	glm::vec3 position = glm::vec3(-10.f, 10.f, 10.0f);
 	glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
 	glm::vec3 ambient_color = glm::vec3(0.0f, 0.0f, 0.2f);
-	glm::vec3 direction = glm::vec3(0.0f, 0.0f, 0.0f);
-	float shininess = 5.f;
+	glm::vec3 direction = glm::vec3(0.0f, -1.f, -1.f);
+	float shininess = 25.f;
 
 	light = new Light(position, color, ambient_color, direction, shininess);
 }
@@ -97,7 +97,7 @@ void GraphicsSystem::Draw()
 {
 	while (!glfwWindowShouldClose(window))
 	{
-		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+		glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -157,7 +157,9 @@ void GraphicsSystem::Draw()
 					glUniform3f(vertexDiffuseLocation, batches[i]->models[j].modelObjects[k]->mat->diffuse_color.r,  batches[i]->models[j].modelObjects[k]->mat->diffuse_color.g,  batches[i]->models[j].modelObjects[k]->mat->diffuse_color.b);
 					glUniform3f(vertexAmbientLocation, batches[i]->models[j].modelObjects[k]->mat->ambient_color.r, batches[i]->models[j].modelObjects[k]->mat->ambient_color.g, batches[i]->models[j].modelObjects[k]->mat->ambient_color.b);
 					glUniform3f(vertexSpecularLocation, batches[i]->models[j].modelObjects[k]->mat->specular_color.r, batches[i]->models[j].modelObjects[k]->mat->specular_color.g, batches[i]->models[j].modelObjects[k]->mat->specular_color.b);
-
+					glUniform3f(glGetUniformLocation(shader->program, "diffuse_model"), batches[i]->diffuse.x, batches[i]->diffuse.y, batches[i]->diffuse.z);
+					glUniform3f(glGetUniformLocation(shader->program, "specular_model"), batches[i]->specular.x, batches[i]->specular.y, batches[i]->specular.z);
+				
 					glDrawArrays(GL_TRIANGLES, prevNum, numVertices);
 
 					prevNum = numVertices;
