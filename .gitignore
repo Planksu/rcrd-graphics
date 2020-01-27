@@ -13,17 +13,17 @@
 *.userprefs
 
 # Build results
-[Dd]ebug/
+[Dd]ebug/*
 !Debug/x64/glew32.dll
-[Dd]ebugPublic/
-[Rr]elease/
+[Dd]ebugPublic/*
+[Rr]elease/*
 !Release/x64/glew32.dll
-[Rr]eleases/
-x86/
-bld/
-[Bb]in/
-[Oo]bj/
-[Ll]og/
+[Rr]eleases/*
+x86/*
+bld/*
+[Bb]in/*
+[Oo]bj/*
+[Ll]og/*
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/
