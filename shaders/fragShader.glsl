@@ -22,7 +22,7 @@ void main()
 	
 	vec3 ambient_color = u_ambient_color * v_color;
 	vec3 diffuse_color = v_color;
-	vec3 specular_color = vec3(0.3, 0.3, 0.3);
+	vec3 specular_color = vec3(0.3, 0.3, 0.3) * u_shininess;
 	
 	// Distance to light
 	float distance = distance(u_light_position, v_vertex);
