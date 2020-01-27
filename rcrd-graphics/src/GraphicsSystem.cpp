@@ -87,7 +87,7 @@ void GraphicsSystem::InitLight()
 
 void GraphicsSystem::InitCamera()
 {
-	glm::vec3 position = glm::vec3(0.f, -1.f, -2.f);
+	glm::vec3 position = glm::vec3(0.f, -1.f, -4.f);
 	glm::vec3 rotation = glm::vec3(0.3f, 0.f, 0.f);
 	float fov = 90.f;
 	camera = new Camera(position, rotation, fov);
@@ -135,7 +135,10 @@ void GraphicsSystem::Draw()
 		glUniform3f(glGetUniformLocation(shader->program, "camera_position"), camera->pos.x, camera->pos.y, camera->pos.z);
 		glUniform3f(glGetUniformLocation(shader->program, "u_light_dir"), light->direction.x, light->direction.y, light->direction.z);
 		glUniform1f(glGetUniformLocation(shader->program, "u_shininess"), light->shininess);
-		GLint vertexColorLocation = glGetUniformLocation(shader->program, "color");
+		GLint vertexDiffuseLocation = glGetUniformLocation(shader->program, "diffuse");
+		GLint vertexAmbientLocation = glGetUniformLocation(shader->program, "ambient");
+		GLint vertexSpecularLocation = glGetUniformLocation(shader->program, "specular");
+
 
 		for (size_t i = 0; i < batches.size(); i++)
 		{
@@ -151,7 +154,10 @@ void GraphicsSystem::Draw()
 					RCRD_DEBUG("Size of models vertices: " << batches[i]->models[j].vertexes.size());
 		
 					numVertices += (batches[i]->models[j].modelObjects[k]->vertexes.size());
-					glUniform3f(vertexColorLocation, batches[i]->models[j].modelObjects[k]->mat->diffuse_color.r,  batches[i]->models[j].modelObjects[k]->mat->diffuse_color.g,  batches[i]->models[j].modelObjects[k]->mat->diffuse_color.b);
+					glUniform3f(vertexDiffuseLocation, batches[i]->models[j].modelObjects[k]->mat->diffuse_color.r,  batches[i]->models[j].modelObjects[k]->mat->diffuse_color.g,  batches[i]->models[j].modelObjects[k]->mat->diffuse_color.b);
+					glUniform3f(vertexAmbientLocation, batches[i]->models[j].modelObjects[k]->mat->ambient_color.r, batches[i]->models[j].modelObjects[k]->mat->ambient_color.g, batches[i]->models[j].modelObjects[k]->mat->ambient_color.b);
+					glUniform3f(vertexSpecularLocation, batches[i]->models[j].modelObjects[k]->mat->specular_color.r, batches[i]->models[j].modelObjects[k]->mat->specular_color.g, batches[i]->models[j].modelObjects[k]->mat->specular_color.b);
+
 					glDrawArrays(GL_TRIANGLES, prevNum, numVertices);
 
 					prevNum = numVertices;

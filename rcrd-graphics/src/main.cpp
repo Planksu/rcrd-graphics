@@ -15,6 +15,8 @@ int main(int argc, char* argv[])
 	cubeBatch->LoadObject("./resources/cubesmooth.obj", "./resources/cubesmooth.mtl");
 	Batch* floorBatch = graphics.CreateBatch();
 	floorBatch->LoadObject("./resources/floor.obj", "./resources/floor.mtl");
+	Batch* treeBatch = graphics.CreateBatch();
+	treeBatch->LoadObject("./resources/tree.obj", "./resources/tree.mtl");
 	#elif defined __linux__
 	#endif
 
