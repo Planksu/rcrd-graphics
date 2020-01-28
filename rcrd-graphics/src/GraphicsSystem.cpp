@@ -76,19 +76,19 @@ void GraphicsSystem::InitGL()
 
 void GraphicsSystem::InitLight()
 {
-	glm::vec3 position = glm::vec3(-10.f, 10.f, 10.0f);
+	glm::vec3 position = glm::vec3(5.f, 5.f, 5.0f);
 	glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
 	glm::vec3 ambient_color = glm::vec3(0.0f, 0.0f, 0.2f);
-	glm::vec3 direction = glm::vec3(0.0f, -1.f, -1.f);
-	float shininess = 15.f;
+	glm::vec3 direction = glm::vec3(0.0f, 0.f, 0.f);
+	float shininess = 5.f;
 
 	light = new Light(position, color, ambient_color, direction, shininess);
 }
 
 void GraphicsSystem::InitCamera()
 {
-	glm::vec3 position = glm::vec3(0.f, -1.f, -4.f);
-	glm::vec3 rotation = glm::vec3(0.3f, 0.f, 0.f);
+	glm::vec3 position = glm::vec3(0.f, -2.f, -4.f);
+	glm::vec3 rotation = glm::vec3(0.f, 0.f, 0.f);
 	float fov = 90.f;
 	camera = new Camera(position, rotation, fov);
 }
@@ -97,7 +97,7 @@ void GraphicsSystem::Draw()
 {
 	while (!glfwWindowShouldClose(window))
 	{
-		glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -129,6 +129,7 @@ void GraphicsSystem::Draw()
 		glm::mat4 mv_inverse_transpose = glm::transpose(glm::inverse(mv));
 		glUniformMatrix4fv(glGetUniformLocation(shader->program, "mvp"), 1, GL_FALSE, (const GLfloat*)&mvp[0]);
 		glUniformMatrix4fv(glGetUniformLocation(shader->program, "mv"), 1, GL_FALSE, (const GLfloat*)&mv[0]);
+		glUniformMatrix4fv(glGetUniformLocation(shader->program, "m"), 1, GL_FALSE, (const GLfloat*)&model[0]);
 		glUniform3f(glGetUniformLocation(shader->program, "u_light_position"), light->position.x, light->position.y, light->position.z);
 		glUniform3f(glGetUniformLocation(shader->program, "u_light_color"), light->color.x, light->color.y, light->color.z);
 		glUniform3f(glGetUniformLocation(shader->program, "u_ambient_color"), light->ambient_color.x, light->ambient_color.y, light->ambient_color.z);

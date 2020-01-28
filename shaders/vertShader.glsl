@@ -13,6 +13,7 @@ uniform vec3 specular;
 
 
 // scene transformations
+uniform mat4 m;
 uniform mat4 mv;
 uniform mat4 mvp;
 
@@ -23,6 +24,7 @@ out vec3 v_ambient;
 out vec3 v_specular;
 out vec3 v_normal;
 out vec3 v_camera_pos;
+out vec3 v_fragpos;
 
 void main()
 {
@@ -34,6 +36,8 @@ void main()
     v_color = diffuse;
 	v_ambient = ambient;
 	v_specular = specular;
+	
+	v_fragpos = vec3(m * vec4(position, 1.0));
 
 	v_camera_pos = camera_position;
 
