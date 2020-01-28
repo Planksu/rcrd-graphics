@@ -32,13 +32,15 @@ void GraphicsSystem::InitShaders()
 	depthShader = new Shader();
 	//std::string vert = mainShader->LoadShaderFromFile("shaders/vertShader.glsl");
 	//std::string frag = mainShader->LoadShaderFromFile("shaders/fragShader.glsl");
-	std::string vert = mainShader->LoadShaderFromFile("shaders/depthVert.glsl");
-	std::string frag = mainShader->LoadShaderFromFile("shaders/depthFrag.glsl");
-	std::string vertDepth = mainShader->LoadShaderFromFile("shaders/depthMapVert.glsl");
-	std::string fragDepth = mainShader->LoadShaderFromFile("shaders/depthMapFrag.glsl");
+	std::string vert = mainShader->LoadShaderFromFile("shaders/pointLightShaderV.glsl");
+	std::string frag = mainShader->LoadShaderFromFile("shaders/pointLightShaderF.glsl");
+	std::string vertDepth = depthShader->LoadShaderFromFile("shaders/depthVert.glsl");
+	std::string fragDepth = depthShader->LoadShaderFromFile("shaders/depthFrag.glsl");
+	std::string geomDepth = depthShader->LoadShaderFromFile("shaders/depthGeom.glsl");
+
 
 	mainShader->CreateShaderObject(vert, frag);
-	depthShader->CreateShaderObject(vertDepth, fragDepth);
+	depthShader->CreateShaderObject(vertDepth, fragDepth, geomDepth);
 }
 
 #pragma endregion
@@ -73,17 +75,33 @@ void GraphicsSystem::InitGLFW(const char* title)
 	}
 }
 
+void GLAPIENTRY
+MessageCallback(GLenum source,
+	GLenum type,
+	GLuint id,
+	GLenum severity,
+	GLsizei length,
+	const GLchar* message,
+	const void* userParam)
+{
+	fprintf(stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
+		(type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : ""),
+		type, severity, message);
+}
+
 void GraphicsSystem::InitGL()
 {
 	glfwGetFramebufferSize(window, &width, &height);
 	glViewport(0, 0, width, height);
 	RCRD_DEBUG("GL VERSION " << glGetString(GL_VERSION));
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_DEBUG_OUTPUT);
+	glDebugMessageCallback(MessageCallback, 0);
 }
 
 void GraphicsSystem::InitLight()
 {
-	glm::vec3 position = glm::vec3(5.f, 5.f, 5.0f);
+	glm::vec3 position = glm::vec3(0.f, 2.f, -2.0f);
 	glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
 	glm::vec3 ambient_color = glm::vec3(0.0f, 0.0f, 0.2f);
 	glm::vec3 direction = glm::vec3(0.0f, 0.f, 0.f);
@@ -94,40 +112,51 @@ void GraphicsSystem::InitLight()
 
 void GraphicsSystem::InitCamera()
 {
-	glm::vec3 position = glm::vec3(0.f, -2.f, -4.f);
+	glm::vec3 position = glm::vec3(0.f, 0.f, -4.f);
 	glm::vec3 rotation = glm::vec3(0.f, 0.f, 0.f);
 	float fov = 90.f;
 	camera = new Camera(position, rotation, fov);
 }
 
+
+
 void GraphicsSystem::CreateShadowMap()
 {
-	glm::mat4 lightProj, lightView;
-	float near = 1.0f, far = 50.f;
-	lightProj = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near, far);
-	lightView = glm::lookAt(light->position, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
-	lightSpaceMatrix = lightProj * lightView;
+	glm::mat4 shadowProj = glm::perspective(glm::radians(45.0f), (float)SHADOW_WIDTH / (float)SHADOW_HEIGHT, near, far);
+	std::vector<glm::mat4> shadowTransforms;
+	shadowTransforms.push_back(shadowProj * glm::lookAt(light->position, light->position + glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
+	shadowTransforms.push_back(shadowProj * glm::lookAt(light->position, light->position + glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
+	shadowTransforms.push_back(shadowProj * glm::lookAt(light->position, light->position + glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)));
+	shadowTransforms.push_back(shadowProj * glm::lookAt(light->position, light->position + glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f)));
+	shadowTransforms.push_back(shadowProj * glm::lookAt(light->position, light->position + glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
+	shadowTransforms.push_back(shadowProj * glm::lookAt(light->position, light->position + glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
 
-	glUseProgram(depthShader->program);
-	glUniformMatrix4fv(glGetUniformLocation(depthShader->program, "lightSpaceMatrix"), 1, GL_FALSE, (const GLfloat*)&lightSpaceMatrix[0]);
+	std::vector<const GLchar*> names;
+	names.push_back("shadowMatrices[0]");
+	names.push_back("shadowMatrices[1]");
+	names.push_back("shadowMatrices[2]");
+	names.push_back("shadowMatrices[3]");
+	names.push_back("shadowMatrices[4]");
+	names.push_back("shadowMatrices[5]");
 	
+	glUseProgram(depthShader->program);
+
+	static float r = 0;
+	r += 0.00008f * 90;
+	glm::mat4 model = glm::mat4(1.0f);
+	model = glm::translate(model, glm::vec3(0.0f, 0.0f, -5.0f));
+	model = glm::rotate(model, r, glm::vec3(0.0f, 1.0f, 0.0f));
+
 	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
 	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
 	glClear(GL_DEPTH_BUFFER_BIT);
-
-	//render
-	// Make some kind of angles to use in rotating
-	static float r = 0;
-	r += 0.00016f * 90;
-
-	glm::mat4 model = glm::mat4(1.0f);
-	// Translate a bit forward
-	model = glm::translate(model, glm::vec3(0.0f, 0.0f, -5.0f));
-	// and the rotation
-	model = glm::rotate(model, r, glm::vec3(0.0f, 1.0f, 0.0f));
-
+	for (size_t i = 0; i < 6; i++)
+	{
+		glUniformMatrix4fv(glGetUniformLocation(depthShader->program, names[i]), 1, GL_FALSE, (const GLfloat*)&shadowTransforms[i]);
+	}
+	glUniform1f(glGetUniformLocation(depthShader->program, "far_plane"), far);
+	glUniform3f(glGetUniformLocation(depthShader->program, "lightPos"), light->position.x, light->position.y, light->position.z);
 	glUniformMatrix4fv(glGetUniformLocation(depthShader->program, "model"), 1, GL_FALSE, (const GLfloat*)&model[0]);
-	glUniformMatrix4fv(glGetUniformLocation(depthShader->program, "lightSpaceMatrix"), 1, GL_FALSE, (const GLfloat*)&lightSpaceMatrix[0]);
 
 	for (size_t i = 0; i < batches.size(); i++)
 	{
@@ -151,6 +180,8 @@ void GraphicsSystem::CreateShadowMap()
 		glBindVertexArray(0);
 	}
 
+
+
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glViewport(0, 0, width, height);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -158,31 +189,34 @@ void GraphicsSystem::CreateShadowMap()
 
 void GraphicsSystem::Draw()
 {
-	glGenFramebuffers(1, &depthMapFBO);
 	glUseProgram(depthShader->program);
-
-	glGenTextures(1, &depthMap);
-	glBindTexture(GL_TEXTURE_2D, depthMap);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT,
-		SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
+	glGenFramebuffers(1, &depthMapFBO);
+	glGenTextures(1, &depthCubemap);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, depthCubemap);
+	for (size_t i = 0; i < 6; i++)
+	{
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT,
+			SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+	}
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+	
 	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
+	glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthCubemap, 0);
 	glDrawBuffer(GL_NONE);
 	glReadBuffer(GL_NONE);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	glUseProgram(mainShader->program);
-
+	glUniform1i(glGetUniformLocation(mainShader->program, "diffuseTexture"), 0);
+	glUniform1i(glGetUniformLocation(mainShader->program, "depthMap"), 1);
 
 	while (!glfwWindowShouldClose(window))
 	{
 		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		CreateShadowMap();
@@ -192,7 +226,7 @@ void GraphicsSystem::Draw()
 
 		// Make some kind of angles to use in rotating
 		static float r = 0;
-		r += 0.00016f * 90;
+		r += 0.00008f * 90;
 
 		glm::mat4 model = glm::mat4(1.0f);
 		// Translate a bit forward
@@ -213,14 +247,21 @@ void GraphicsSystem::Draw()
 		glm::mat4 mvp = projection * view * model;
 		glm::mat4 mv = model * view;
 		glm::mat4 mv_inverse_transpose = glm::transpose(glm::inverse(mv));
+		
 		glUniform3f(glGetUniformLocation(mainShader->program, "viewPos"), camera->pos.x, camera->pos.y, camera->pos.z);
 		glUniform3f(glGetUniformLocation(mainShader->program, "lightPos"), light->position.x, light->position.y, light->position.z);
+		GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+		if (status != GL_FRAMEBUFFER_COMPLETE)
+			RCRD_DEBUG("Framebuffer");
 		glUniformMatrix4fv(glGetUniformLocation(mainShader->program, "projection"), 1, GL_FALSE, (const GLfloat*)&projection[0]);
 		glUniformMatrix4fv(glGetUniformLocation(mainShader->program, "model"), 1, GL_FALSE, (const GLfloat*)&model[0]);
 		glUniformMatrix4fv(glGetUniformLocation(mainShader->program, "view"), 1, GL_FALSE, (const GLfloat*)&view[0]);
 		glUniformMatrix4fv(glGetUniformLocation(mainShader->program, "lightSpaceMatrix"), 1, GL_FALSE, (const GLfloat*)&lightSpaceMatrix[0]);
-		glUniform1i(glGetUniformLocation(mainShader->program, "diffuseTexture"), 0);
-		glUniform1i(glGetUniformLocation(mainShader->program, "shadowMap"), 1);
+		glUniform1f(glGetUniformLocation(mainShader->program, "far_plane"), far);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, depthCubemap);
+		glDisable(GL_CULL_FACE);
+		glUniform1i(glGetUniformLocation(mainShader->program, "reverse_normals"), 1);
 
 		//glUniformMatrix4fv(glGetUniformLocation(mainShader->program, "mvp"), 1, GL_FALSE, (const GLfloat*)&mvp[0]);
 		//glUniformMatrix4fv(glGetUniformLocation(mainShader->program, "mv"), 1, GL_FALSE, (const GLfloat*)&mv[0]);
@@ -235,6 +276,8 @@ void GraphicsSystem::Draw()
 		//GLint vertexAmbientLocation = glGetUniformLocation(mainShader->program, "ambient");
 		//GLint vertexSpecularLocation = glGetUniformLocation(mainShader->program, "specular");
 
+		//glActiveTexture(GL_TEXTURE0);
+		//glBindTexture(GL_TEXTURE_CUBE_MAP, depthCubemap);
 
 		for (size_t i = 0; i < batches.size(); i++)
 		{
@@ -255,8 +298,6 @@ void GraphicsSystem::Draw()
 					glUniform3f(vertexSpecularLocation, batches[i]->models[j].modelObjects[k]->mat->specular_color.r, batches[i]->models[j].modelObjects[k]->mat->specular_color.g, batches[i]->models[j].modelObjects[k]->mat->specular_color.b);
 					glUniform3f(glGetUniformLocation(mainShader->program, "diffuse_model"), batches[i]->diffuse.x, batches[i]->diffuse.y, batches[i]->diffuse.z);
 					glUniform3f(glGetUniformLocation(mainShader->program, "specular_model"), batches[i]->specular.x, batches[i]->specular.y, batches[i]->specular.z);*/
-					glActiveTexture(GL_TEXTURE0);
-					glBindTexture(GL_TEXTURE_2D, depthMap);
 
 					glDrawArrays(GL_TRIANGLES, prevNum, numVertices);
 
@@ -265,9 +306,15 @@ void GraphicsSystem::Draw()
 			}
 			glBindVertexArray(0);
 		}
+
+		glUniform1i(glGetUniformLocation(mainShader->program, "reverse_normals"), 0);
+		glEnable(GL_CULL_FACE);
+
+
 		glfwPollEvents();
 		glfwSwapBuffers(window);
 		RCRD_DEBUG("Finished the draw method!");
+		RCRD_DEBUG("Error amount:" << glGetError());
 	}
 }
 

@@ -46,8 +46,8 @@ private:
 	GLuint program;
 	std::vector<Batch*> batches;
 
-	unsigned int depthMapFBO;
-	unsigned int depthMap;
+	GLuint depthMapFBO;
+	GLuint depthCubemap;
 	const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
 
 	Light* light;
@@ -58,7 +58,8 @@ private:
 
 
 	int width, height;
-
+	float near = 1.0f;
+	float far = 2000.0f;
 };
 
 #endif

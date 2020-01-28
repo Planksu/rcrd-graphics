@@ -12,6 +12,8 @@ public:
 	std::string LoadShaderFromFile(const char* path);
 	GLuint CompileShader(GLenum type, const char* src);
 	void CreateShaderObject(std::string vertData, std::string fragData);
+	void CreateShaderObject(std::string vertData, std::string fragData, std::string geomData);
+
 
 
 private:
