@@ -34,6 +34,7 @@ public:
 	void Draw();
 	std::string LoadShaderFromFile(const std::string &filename);
 	void CreateShaderObject(char* vShaderSrc, char* fShadersrc, GLuint* object);
+	void CreateShadowMap();
 	void InitShaders();
 	void InitLight();
 	void InitCamera();
@@ -45,9 +46,16 @@ private:
 	GLuint program;
 	std::vector<Batch*> batches;
 
+	unsigned int depthMapFBO;
+	unsigned int depthMap;
+	const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
+
 	Light* light;
 	Camera* camera;
-	Shader* shader;
+	Shader* mainShader;
+	Shader* depthShader;
+	glm::mat4 lightSpaceMatrix;
+
 
 	int width, height;
 
