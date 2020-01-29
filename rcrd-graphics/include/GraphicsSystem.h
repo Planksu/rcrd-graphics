@@ -59,7 +59,7 @@ private:
 
 	int width, height;
 	float near = 1.0f;
-	float far = 2000.0f;
+	float far = 50.f;
 };
 
 #endif

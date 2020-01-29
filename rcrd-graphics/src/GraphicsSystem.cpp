@@ -101,7 +101,7 @@ void GraphicsSystem::InitGL()
 
 void GraphicsSystem::InitLight()
 {
-	glm::vec3 position = glm::vec3(0.f, 2.f, -2.0f);
+	glm::vec3 position = glm::vec3(0.f, -1.f, -5.0f);
 	glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
 	glm::vec3 ambient_color = glm::vec3(0.0f, 0.0f, 0.2f);
 	glm::vec3 direction = glm::vec3(0.0f, 0.f, 0.f);
@@ -112,8 +112,8 @@ void GraphicsSystem::InitLight()
 
 void GraphicsSystem::InitCamera()
 {
-	glm::vec3 position = glm::vec3(0.f, 0.f, -4.f);
-	glm::vec3 rotation = glm::vec3(0.f, 0.f, 0.f);
+	glm::vec3 position = glm::vec3(0.f, -2.f, -5.f);
+	glm::vec3 rotation = glm::vec3(0.3f, 0.f, 0.f);
 	float fov = 90.f;
 	camera = new Camera(position, rotation, fov);
 }
@@ -122,7 +122,11 @@ void GraphicsSystem::InitCamera()
 
 void GraphicsSystem::CreateShadowMap()
 {
-	glm::mat4 shadowProj = glm::perspective(glm::radians(45.0f), (float)SHADOW_WIDTH / (float)SHADOW_HEIGHT, near, far);
+	light->position.x = sin(glfwGetTime()) * 3.0f;
+	light->position.z = cos(glfwGetTime()) * 5.0f;
+	//light->position.y = cos(glfwGetTime()) * -2.0f;
+	
+	glm::mat4 shadowProj = glm::perspective(glm::radians(90.f), (float)SHADOW_WIDTH / (float)SHADOW_HEIGHT, near, far);
 	std::vector<glm::mat4> shadowTransforms;
 	shadowTransforms.push_back(shadowProj * glm::lookAt(light->position, light->position + glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
 	shadowTransforms.push_back(shadowProj * glm::lookAt(light->position, light->position + glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
@@ -145,8 +149,8 @@ void GraphicsSystem::CreateShadowMap()
 	r += 0.00008f * 90;
 	glm::mat4 model = glm::mat4(1.0f);
 	model = glm::translate(model, glm::vec3(0.0f, 0.0f, -5.0f));
-	model = glm::rotate(model, r, glm::vec3(0.0f, 1.0f, 0.0f));
-
+	//model = glm::rotate(model, r, glm::vec3(0.0f, 1.0f, 0.0f));
+	
 	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
 	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
 	glClear(GL_DEPTH_BUFFER_BIT);
@@ -231,8 +235,12 @@ void GraphicsSystem::Draw()
 		glm::mat4 model = glm::mat4(1.0f);
 		// Translate a bit forward
 		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -5.0f));
-		// and the rotation
-		model = glm::rotate(model, r, glm::vec3(0.0f, 1.0f, 0.0f));
+		//// and the rotation
+		//model = glm::rotate(model, r, glm::vec3(0.0f, 1.0f, 0.0f));
+
+		//light->position.x = sin(glfwGetTime()) * 3.0f;
+		//light->position.z = cos(glfwGetTime()) * 5.0f;
+		//light->position.y = cos(glfwGetTime()) * -2.0f;
 
 		glm::mat4 view = glm::mat4(1.0f);
 
@@ -243,7 +251,7 @@ void GraphicsSystem::Draw()
 
 		light->direction = view * glm::vec4(light->direction, 1.0f);
 
-		glm::mat4 projection = glm::perspective(45.f, (float)width / (float)height, 1.0f, 2000.0f);
+		glm::mat4 projection = glm::perspective(45.f, (float)width / (float)height, 1.0f, 100.f);
 		glm::mat4 mvp = projection * view * model;
 		glm::mat4 mv = model * view;
 		glm::mat4 mv_inverse_transpose = glm::transpose(glm::inverse(mv));

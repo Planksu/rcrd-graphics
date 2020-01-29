@@ -29,7 +29,7 @@ void Batch::GenerateBuffers()
 		// Move vertex data to buffers
 		glGenBuffers(1, &this->vertexes);
 		glBindBuffer(GL_ARRAY_BUFFER, this->vertexes);
-		glBufferData(GL_ARRAY_BUFFER, models[i].vertexes.size() * sizeof(Vertex), &models[i].vertexes[0], GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, models[i].vertexes.size() * sizeof(Vertex), &models[i].vertexes[0], GL_DYNAMIC_DRAW);
 
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, vert)));
@@ -37,7 +37,7 @@ void Batch::GenerateBuffers()
 		// Move normal data to buffers
 		glGenBuffers(1, &this->normals);
 		glBindBuffer(GL_ARRAY_BUFFER, this->normals);
-		glBufferData(GL_ARRAY_BUFFER, models[i].vertexes.size() * sizeof(Vertex), &models[i].vertexes[0], GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, models[i].vertexes.size() * sizeof(Vertex), &models[i].vertexes[0], GL_DYNAMIC_DRAW);
 
 		glEnableVertexAttribArray(1);
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, norm)));
