@@ -155,3 +155,28 @@ void Shader::CreateShaderObject(std::string vertData, std::string fragData, std:
 
 	return;
 }
+
+void Shader::SetVec3Uniform(GLchar* uniformName, glm::vec3 data)
+{
+	glUniform3f(glGetUniformLocation(program, uniformName), data.x, data.y, data.z);
+}
+
+void Shader::SetVec3Uniform(GLchar* uniformName, Color color)
+{
+	glUniform3f(glGetUniformLocation(program, uniformName), color.r, color.g, color.b);
+}
+
+void Shader::SetMat4Uniform(GLchar* uniformName, glm::mat4 data)
+{
+	glUniformMatrix4fv(glGetUniformLocation(program, uniformName), 1, GL_FALSE, (const GLfloat*)&data[0][0]);
+}
+
+void Shader::SetFloatUniform(GLchar* uniformName, float data)
+{
+	glUniform1f(glGetUniformLocation(program, uniformName), data);
+}
+
+void Shader::SetIntUniform(GLchar* uniformName, int data)
+{
+	glUniform1i(glGetUniformLocation(program, uniformName), data);
+}

@@ -129,7 +129,7 @@ void GraphicsSystem::CreateShadowMap()
 	shadowTransforms.push_back(shadowProj * glm::lookAt(light->position, light->position + glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
 	shadowTransforms.push_back(shadowProj * glm::lookAt(light->position, light->position + glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
 
-	std::vector<const GLchar*> names;
+	std::vector<GLchar*> names;
 	names.push_back("shadowMatrices[0]");
 	names.push_back("shadowMatrices[1]");
 	names.push_back("shadowMatrices[2]");
@@ -147,11 +147,11 @@ void GraphicsSystem::CreateShadowMap()
 
 	for (size_t i = 0; i < 6; i++)
 	{
-		glUniformMatrix4fv(glGetUniformLocation(depthShader->program, names[i]), 1, GL_FALSE, (const GLfloat*)&(shadowTransforms[i])[0][0]);
+		depthShader->SetMat4Uniform(names[i], shadowTransforms[i]);
 	}
-	glUniform1f(glGetUniformLocation(depthShader->program, "far_plane"), far);
-	glUniform3f(glGetUniformLocation(depthShader->program, "lightPos"), light->position.x, light->position.y, light->position.z);
-	glUniformMatrix4fv(glGetUniformLocation(depthShader->program, "model"), 1, GL_FALSE, (const GLfloat*)&model[0][0]);
+	depthShader->SetFloatUniform("far_plane", far);
+	depthShader->SetVec3Uniform("lightPos", light->position);
+	depthShader->SetMat4Uniform("model", model);
 
 	RenderScene(depthShader, RENDER_MODE::DEPTH);
 }
@@ -192,10 +192,6 @@ void GraphicsSystem::Draw()
 		RCRD_DEBUG("Batches size: " << batches.size());
 		glUseProgram(mainShader->program);
 
-		// Make some kind of angles to use in rotating
-		static float r = 0;
-		r += 0.00008f * 90;
-
 		glDisable(GL_CULL_FACE);
 		RenderScene(mainShader, RENDER_MODE::FRAGMENT);
 		glEnable(GL_CULL_FACE);
@@ -227,22 +223,22 @@ void GraphicsSystem::RenderScene(Shader* shader, RENDER_MODE mode)
 	glm::mat4 projection = glm::perspective(45.f, (float)width / (float)height, near, far);
 	glm::mat4 mvp = projection * view * model;
 	glm::mat4 mv = model * view;
-	glm::mat4 mv_inverse_transpose = glm::transpose(glm::inverse(mv));
 
-	glUniform3f(glGetUniformLocation(shader->program, "viewPos"), camera->pos.x, camera->pos.y, camera->pos.z);
-	glUniform3f(glGetUniformLocation(shader->program, "lightPos"), light->position.x, light->position.y, light->position.z);
-	glUniformMatrix4fv(glGetUniformLocation(shader->program, "projection"), 1, GL_FALSE, (const GLfloat*)&projection[0]);
-	glUniformMatrix4fv(glGetUniformLocation(shader->program, "model"), 1, GL_FALSE, (const GLfloat*)&model[0]);
-	glUniformMatrix4fv(glGetUniformLocation(shader->program, "view"), 1, GL_FALSE, (const GLfloat*)&view[0]);
-	glUniform1f(glGetUniformLocation(shader->program, "far_plane"), far);
+	shader->SetVec3Uniform("viewPos", camera->pos);
+	shader->SetVec3Uniform("lightPos", light->position);
+	shader->SetMat4Uniform("projection", projection);
+	shader->SetMat4Uniform("model", model);
+	shader->SetMat4Uniform("view", view);
+	shader->SetFloatUniform("far_plane", far);
+
 	
 	if (mode == RENDER_MODE::FRAGMENT)
 	{
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, depthCubemap);
-		glUniform1i(glGetUniformLocation(shader->program, "depthMap"), 1);
-		glUniform3f(glGetUniformLocation(shader->program, "lightColor"), light->color.x, light->color.y, light->color.z);
-		glUniform3f(glGetUniformLocation(shader->program, "lightAmbient"), light->ambient_color.x, light->ambient_color.y, light->ambient_color.z);
+		shader->SetIntUniform("depthMap", 1);
+		shader->SetVec3Uniform("lightColor", light->color);
+		shader->SetVec3Uniform("lightAmbient", light->ambient_color);
 	}
 
 
@@ -260,9 +256,7 @@ void GraphicsSystem::RenderScene(Shader* shader, RENDER_MODE mode)
 				RCRD_DEBUG("Size of models vertices: " << batches[i]->models[j].vertexes.size());
 
 				numVertices += (batches[i]->models[j].modelObjects[k]->vertexes.size());
-				glUniform3f(glGetUniformLocation(shader->program, "diffuse"), batches[i]->models[j].modelObjects[k]->mat->diffuse_color.r, batches[i]->models[j].modelObjects[k]->mat->diffuse_color.g, batches[i]->models[j].modelObjects[k]->mat->diffuse_color.b);
-
-
+				shader->SetVec3Uniform("diffuse", batches[i]->models[j].modelObjects[k]->mat->diffuse_color);
 				glDrawArrays(GL_TRIANGLES, prevNum, numVertices);
 
 				prevNum = numVertices;
