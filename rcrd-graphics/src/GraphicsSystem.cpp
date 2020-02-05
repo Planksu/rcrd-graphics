@@ -96,13 +96,13 @@ void GraphicsSystem::HandleMovement()
 {
 	const float cameraSpeed = 5.f * dt;
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-		camera->pos += cameraSpeed * camera->front;
+		camera->MoveVertical(1, cameraSpeed);
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-		camera->pos -= cameraSpeed * camera->front;
+		camera->MoveVertical(-1, cameraSpeed);
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-		camera->pos -= glm::normalize(glm::cross(camera->front, camera->up)) * cameraSpeed;
+		camera->MoveHorizontal(-1, cameraSpeed);
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-		camera->pos += glm::normalize(glm::cross(camera->front, camera->up)) * cameraSpeed;
+		camera->MoveHorizontal(1, cameraSpeed);
 }
 
 void GraphicsSystem::InitGLFW(const char* title)
@@ -167,9 +167,8 @@ void GraphicsSystem::InitLight()
 	glm::vec3 position = glm::vec3(0.f, 5.f, 0.f);
 	glm::vec3 color = glm::vec3(0.5f, 0.5f, 0.5f);
 	glm::vec3 ambient_color = glm::vec3(0.2f, 0.0f, 0.2f);
-	float shininess = 5.f;
 
-	light = new Light(position, color, ambient_color, shininess);
+	light = new Light(position, color, ambient_color);
 }
 
 void GraphicsSystem::InitCamera()
@@ -292,14 +291,8 @@ void GraphicsSystem::RenderScene(Shader* shader, RENDER_MODE mode)
 	// Translate a bit forward
 	model = glm::translate(model, glm::vec3(0.0f, 0.0f, -5.0f));
 
-	// Make view = camera position
-	//view = glm::translate(view, camera->pos);
+	// Set camera view
 	view = glm::lookAt(camera->pos, camera->pos + camera->front, camera->up);
-
-	// Take care of possible rotations
-	//view = glm::rotate(view, camera->rot.x, glm::vec3(1.0f, 0.0f, 0.0f));
-	//view = glm::rotate(view, camera->rot.y, glm::vec3(0.0f, 1.0f, 0.0f));
-	//view = glm::rotate(view, camera->rot.z, glm::vec3(0.0f, 0.0f, 1.0f));
 
 	glm::mat4 projection = glm::perspective(45.f, (float)width / (float)height, near, far);
 	glm::mat4 mvp = projection * view * model;
