@@ -30,8 +30,6 @@ void GraphicsSystem::InitShaders()
 {
 	mainShader = new Shader();
 	depthShader = new Shader();
-	//std::string vert = mainShader->LoadShaderFromFile("shaders/vertShader.glsl");
-	//std::string frag = mainShader->LoadShaderFromFile("shaders/fragShader.glsl");
 	std::string vert = mainShader->LoadShaderFromFile("shaders/pointLightShaderV.glsl");
 	std::string frag = mainShader->LoadShaderFromFile("shaders/pointLightShaderF.glsl");
 	std::string vertDepth = depthShader->LoadShaderFromFile("shaders/depthVert.glsl");
@@ -102,12 +100,11 @@ void GraphicsSystem::InitGL()
 void GraphicsSystem::InitLight()
 {
 	glm::vec3 position = glm::vec3(0.f, 5.f, 0.f);
-	glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
+	glm::vec3 color = glm::vec3(0.5f, 0.5f, 0.5f);
 	glm::vec3 ambient_color = glm::vec3(0.0f, 0.0f, 0.2f);
-	glm::vec3 direction = glm::vec3(0.0f, 0.f, 0.f);
 	float shininess = 5.f;
 
-	light = new Light(position, color, ambient_color, direction, shininess);
+	light = new Light(position, color, ambient_color, shininess);
 }
 
 void GraphicsSystem::InitCamera()
@@ -118,13 +115,10 @@ void GraphicsSystem::InitCamera()
 	camera = new Camera(position, rotation, fov);
 }
 
-
-
 void GraphicsSystem::CreateShadowMap()
 {
 	light->position.x = sin(glfwGetTime()) * 3.0f;
 	light->position.z = cos(glfwGetTime()) * 5.0f;
-	//light->position.y = cos(glfwGetTime()) * -2.0f;
 	
 	glm::mat4 shadowProj = glm::perspective(glm::radians(90.f), (float)SHADOW_WIDTH / (float)SHADOW_HEIGHT, near, far);
 	std::vector<glm::mat4> shadowTransforms;
@@ -143,17 +137,14 @@ void GraphicsSystem::CreateShadowMap()
 	names.push_back("shadowMatrices[4]");
 	names.push_back("shadowMatrices[5]");
 	
-
-	static float r = 0;
-	r += 0.00008f * 90;
 	glm::mat4 model = glm::mat4(1.0f);
 	model = glm::translate(model, glm::vec3(0.0f, 0.0f, -5.0f));
-	//model = glm::rotate(model, r, glm::vec3(0.0f, 1.0f, 0.0f));
-	
+
 	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
 	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
 	glClear(GL_DEPTH_BUFFER_BIT);
 	glUseProgram(depthShader->program);
+
 	for (size_t i = 0; i < 6; i++)
 	{
 		glUniformMatrix4fv(glGetUniformLocation(depthShader->program, names[i]), 1, GL_FALSE, (const GLfloat*)&(shadowTransforms[i])[0][0]);
@@ -162,33 +153,7 @@ void GraphicsSystem::CreateShadowMap()
 	glUniform3f(glGetUniformLocation(depthShader->program, "lightPos"), light->position.x, light->position.y, light->position.z);
 	glUniformMatrix4fv(glGetUniformLocation(depthShader->program, "model"), 1, GL_FALSE, (const GLfloat*)&model[0][0]);
 
-	for (size_t i = 0; i < batches.size(); i++)
-	{
-		RCRD_DEBUG("Models size: " << batches[i]->models.size());
-		glBindVertexArray(batches[i]->VAO);
-		for (int j = 0; j < batches[i]->models.size(); ++j)
-		{
-			int numVertices = 0;
-			int prevNum = 0;
-			for (int k = 0; k < batches[i]->models[j].modelObjects.size(); ++k)
-			{
-				RCRD_DEBUG("Size of objects vertices: " << batches[i]->models[j].modelObjects[k]->vertexes.size());
-				RCRD_DEBUG("Size of models vertices: " << batches[i]->models[j].vertexes.size());
-
-				numVertices += (batches[i]->models[j].modelObjects[k]->vertexes.size());
-				glDrawArrays(GL_TRIANGLES, prevNum, numVertices);
-
-				prevNum = numVertices;
-			}
-		}
-		glBindVertexArray(0);
-	}
-
-
-
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glViewport(0, 0, width, height);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	RenderScene(depthShader, RENDER_MODE::DEPTH);
 }
 
 void GraphicsSystem::Draw()
@@ -231,91 +196,8 @@ void GraphicsSystem::Draw()
 		static float r = 0;
 		r += 0.00008f * 90;
 
-		glm::mat4 model = glm::mat4(1.0f);
-		// Translate a bit forward
-		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -5.0f));
-		//// and the rotation
-		//model = glm::rotate(model, r, glm::vec3(0.0f, 1.0f, 0.0f));
-
-		//light->position.x = sin(glfwGetTime()) * 3.0f;
-		//light->position.z = cos(glfwGetTime()) * 5.0f;
-		//light->position.y = cos(glfwGetTime()) * -2.0f;
-
-		glm::mat4 view = glm::mat4(1.0f);
-
-		view = glm::translate(view, camera->pos);
-		view = glm::rotate(view, camera->rot.x, glm::vec3(1.0f, 0.0f, 0.0f));
-		view = glm::rotate(view, camera->rot.y, glm::vec3(0.0f, 1.0f, 0.0f));
-		view = glm::rotate(view, camera->rot.z, glm::vec3(0.0f, 0.0f, 1.0f));
-
-		light->direction = view * glm::vec4(light->direction, 1.0f);
-
-		glm::mat4 projection = glm::perspective(45.f, (float)width / (float)height, 1.0f, 100.f);
-		glm::mat4 mvp = projection * view * model;
-		glm::mat4 mv = model * view;
-		glm::mat4 mv_inverse_transpose = glm::transpose(glm::inverse(mv));
-		
-		glUniform3f(glGetUniformLocation(mainShader->program, "viewPos"), camera->pos.x, camera->pos.y, camera->pos.z);
-		glUniform3f(glGetUniformLocation(mainShader->program, "lightPos"), light->position.x, light->position.y, light->position.z);
-		GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-		if (status != GL_FRAMEBUFFER_COMPLETE)
-			RCRD_DEBUG("Framebuffer");
-		glUniformMatrix4fv(glGetUniformLocation(mainShader->program, "projection"), 1, GL_FALSE, (const GLfloat*)&projection[0]);
-		glUniformMatrix4fv(glGetUniformLocation(mainShader->program, "model"), 1, GL_FALSE, (const GLfloat*)&model[0]);
-		glUniformMatrix4fv(glGetUniformLocation(mainShader->program, "view"), 1, GL_FALSE, (const GLfloat*)&view[0]);
-		glUniformMatrix4fv(glGetUniformLocation(mainShader->program, "lightSpaceMatrix"), 1, GL_FALSE, (const GLfloat*)&lightSpaceMatrix[0]);
-		glUniform1f(glGetUniformLocation(mainShader->program, "far_plane"), far);
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, depthCubemap);
-		glUniform1i(glGetUniformLocation(mainShader->program, "depthMap"), 1);
 		glDisable(GL_CULL_FACE);
-		glUniform1i(glGetUniformLocation(mainShader->program, "reverse_normals"), 1);
-
-		//glUniformMatrix4fv(glGetUniformLocation(mainShader->program, "mvp"), 1, GL_FALSE, (const GLfloat*)&mvp[0]);
-		//glUniformMatrix4fv(glGetUniformLocation(mainShader->program, "mv"), 1, GL_FALSE, (const GLfloat*)&mv[0]);
-		//glUniformMatrix4fv(glGetUniformLocation(mainShader->program, "m"), 1, GL_FALSE, (const GLfloat*)&model[0]);
-		//glUniform3f(glGetUniformLocation(mainShader->program, "u_light_position"), light->position.x, light->position.y, light->position.z);
-		//glUniform3f(glGetUniformLocation(mainShader->program, "u_light_color"), light->color.x, light->color.y, light->color.z);
-		//glUniform3f(glGetUniformLocation(mainShader->program, "u_ambient_color"), light->ambient_color.x, light->ambient_color.y, light->ambient_color.z);
-		//glUniform3f(glGetUniformLocation(mainShader->program, "camera_position"), camera->pos.x, camera->pos.y, camera->pos.z);
-		//glUniform3f(glGetUniformLocation(mainShader->program, "u_light_dir"), light->direction.x, light->direction.y, light->direction.z);
-		//glUniform1f(glGetUniformLocation(mainShader->program, "u_shininess"), light->shininess);
-		//GLint vertexDiffuseLocation = glGetUniformLocation(mainShader->program, "diffuse");
-		//GLint vertexAmbientLocation = glGetUniformLocation(mainShader->program, "ambient");
-		//GLint vertexSpecularLocation = glGetUniformLocation(mainShader->program, "specular");
-
-		//glActiveTexture(GL_TEXTURE0);
-		//glBindTexture(GL_TEXTURE_CUBE_MAP, depthCubemap);
-
-		for (size_t i = 0; i < batches.size(); i++)
-		{
-			RCRD_DEBUG("Models size: " << batches[i]->models.size());
-			glBindVertexArray(batches[i]->VAO);
-			for (int j = 0; j < batches[i]->models.size(); ++j)
-			{
-				int numVertices = 0;
-				int prevNum = 0;
-				for (int k = 0; k < batches[i]->models[j].modelObjects.size(); ++k)
-				{
-					RCRD_DEBUG("Size of objects vertices: " << batches[i]->models[j].modelObjects[k]->vertexes.size());
-					RCRD_DEBUG("Size of models vertices: " << batches[i]->models[j].vertexes.size());
-		
-					numVertices += (batches[i]->models[j].modelObjects[k]->vertexes.size());
-					/*glUniform3f(vertexDiffuseLocation, batches[i]->models[j].modelObjects[k]->mat->diffuse_color.r,  batches[i]->models[j].modelObjects[k]->mat->diffuse_color.g,  batches[i]->models[j].modelObjects[k]->mat->diffuse_color.b);
-					glUniform3f(vertexAmbientLocation, batches[i]->models[j].modelObjects[k]->mat->ambient_color.r, batches[i]->models[j].modelObjects[k]->mat->ambient_color.g, batches[i]->models[j].modelObjects[k]->mat->ambient_color.b);
-					glUniform3f(vertexSpecularLocation, batches[i]->models[j].modelObjects[k]->mat->specular_color.r, batches[i]->models[j].modelObjects[k]->mat->specular_color.g, batches[i]->models[j].modelObjects[k]->mat->specular_color.b);
-					glUniform3f(glGetUniformLocation(mainShader->program, "diffuse_model"), batches[i]->diffuse.x, batches[i]->diffuse.y, batches[i]->diffuse.z);
-					glUniform3f(glGetUniformLocation(mainShader->program, "specular_model"), batches[i]->specular.x, batches[i]->specular.y, batches[i]->specular.z);*/
-
-					glDrawArrays(GL_TRIANGLES, prevNum, numVertices);
-
-					prevNum = numVertices;
-				}
-			}
-			glBindVertexArray(0);
-		}
-
-		glUniform1i(glGetUniformLocation(mainShader->program, "reverse_normals"), 0);
+		RenderScene(mainShader, RENDER_MODE::FRAGMENT);
 		glEnable(GL_CULL_FACE);
 
 
@@ -323,6 +205,77 @@ void GraphicsSystem::Draw()
 		glfwSwapBuffers(window);
 		RCRD_DEBUG("Finished the draw method!");
 		RCRD_DEBUG("Error amount:" << glGetError());
+	}
+}
+
+void GraphicsSystem::RenderScene(Shader* shader, RENDER_MODE mode)
+{
+	glm::mat4 model = glm::mat4(1.0f);
+	glm::mat4 view = glm::mat4(1.0f);
+
+	// Translate a bit forward
+	model = glm::translate(model, glm::vec3(0.0f, 0.0f, -5.0f));
+
+	// Make view = camera position
+	view = glm::translate(view, camera->pos);
+
+	// Take care of possible rotations
+	view = glm::rotate(view, camera->rot.x, glm::vec3(1.0f, 0.0f, 0.0f));
+	view = glm::rotate(view, camera->rot.y, glm::vec3(0.0f, 1.0f, 0.0f));
+	view = glm::rotate(view, camera->rot.z, glm::vec3(0.0f, 0.0f, 1.0f));
+
+	glm::mat4 projection = glm::perspective(45.f, (float)width / (float)height, near, far);
+	glm::mat4 mvp = projection * view * model;
+	glm::mat4 mv = model * view;
+	glm::mat4 mv_inverse_transpose = glm::transpose(glm::inverse(mv));
+
+	glUniform3f(glGetUniformLocation(shader->program, "viewPos"), camera->pos.x, camera->pos.y, camera->pos.z);
+	glUniform3f(glGetUniformLocation(shader->program, "lightPos"), light->position.x, light->position.y, light->position.z);
+	glUniformMatrix4fv(glGetUniformLocation(shader->program, "projection"), 1, GL_FALSE, (const GLfloat*)&projection[0]);
+	glUniformMatrix4fv(glGetUniformLocation(shader->program, "model"), 1, GL_FALSE, (const GLfloat*)&model[0]);
+	glUniformMatrix4fv(glGetUniformLocation(shader->program, "view"), 1, GL_FALSE, (const GLfloat*)&view[0]);
+	glUniform1f(glGetUniformLocation(shader->program, "far_plane"), far);
+	
+	if (mode == RENDER_MODE::FRAGMENT)
+	{
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, depthCubemap);
+		glUniform1i(glGetUniformLocation(shader->program, "depthMap"), 1);
+		glUniform3f(glGetUniformLocation(shader->program, "lightColor"), light->color.x, light->color.y, light->color.z);
+		glUniform3f(glGetUniformLocation(shader->program, "lightAmbient"), light->ambient_color.x, light->ambient_color.y, light->ambient_color.z);
+	}
+
+
+	for (size_t i = 0; i < batches.size(); i++)
+	{
+		RCRD_DEBUG("Models size: " << batches[i]->models.size());
+		glBindVertexArray(batches[i]->VAO);
+		for (int j = 0; j < batches[i]->models.size(); ++j)
+		{
+			int numVertices = 0;
+			int prevNum = 0;
+			for (int k = 0; k < batches[i]->models[j].modelObjects.size(); ++k)
+			{
+				RCRD_DEBUG("Size of objects vertices: " << batches[i]->models[j].modelObjects[k]->vertexes.size());
+				RCRD_DEBUG("Size of models vertices: " << batches[i]->models[j].vertexes.size());
+
+				numVertices += (batches[i]->models[j].modelObjects[k]->vertexes.size());
+				glUniform3f(glGetUniformLocation(shader->program, "diffuse"), batches[i]->models[j].modelObjects[k]->mat->diffuse_color.r, batches[i]->models[j].modelObjects[k]->mat->diffuse_color.g, batches[i]->models[j].modelObjects[k]->mat->diffuse_color.b);
+
+
+				glDrawArrays(GL_TRIANGLES, prevNum, numVertices);
+
+				prevNum = numVertices;
+			}
+		}
+		glBindVertexArray(0);
+	}
+
+	if (mode == RENDER_MODE::DEPTH)
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		glViewport(0, 0, width, height);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 }
 

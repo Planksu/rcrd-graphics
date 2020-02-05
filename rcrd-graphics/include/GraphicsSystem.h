@@ -23,6 +23,13 @@
 #include <core.h>
 #include <Shader.h>
 
+enum RENDER_MODE
+{
+	DEPTH = 0,
+	FRAGMENT = 1,
+};
+
+
 class GraphicsSystem
 {
 public:
@@ -32,8 +39,7 @@ public:
 	void InitGLFW(const char* title);
 	void InitGL();
 	void Draw();
-	std::string LoadShaderFromFile(const std::string &filename);
-	void CreateShaderObject(char* vShaderSrc, char* fShadersrc, GLuint* object);
+	void RenderScene(Shader* shader, RENDER_MODE mode);
 	void CreateShadowMap();
 	void InitShaders();
 	void InitLight();
