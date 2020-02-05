@@ -38,7 +38,7 @@ public:
 
 	void InitGLFW(const char* title);
 	void InitGL();
-	void Draw();
+	void Update();
 	void SetupShadowMapVars();
 	void RenderScene(Shader* shader, RENDER_MODE mode);
 	void CreateShadowMap();
@@ -74,7 +74,7 @@ private:
 
 	// Render distances
 	float near = 1.0f;
-	float far = 25.f;
+	float far = 50.f;
 
 	// Mouse variables
 	float lastX = 640;

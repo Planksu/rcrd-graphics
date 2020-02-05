@@ -147,9 +147,11 @@ MessageCallback(GLenum source,
 	const GLchar* message,
 	const void* userParam)
 {
+#ifdef DEBUG
 	fprintf(stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
 		(type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : ""),
 		type, severity, message);
+#endif
 }
 
 void GraphicsSystem::InitGL()
@@ -165,7 +167,7 @@ void GraphicsSystem::InitGL()
 void GraphicsSystem::InitLight()
 {
 	glm::vec3 position = glm::vec3(0.f, 5.f, 0.f);
-	glm::vec3 color = glm::vec3(0.5f, 0.5f, 0.5f);
+	glm::vec3 color = glm::vec3(0.75f, 0.75f, 0.75f);
 	glm::vec3 ambient_color = glm::vec3(0.2f, 0.0f, 0.2f);
 
 	light = new Light(position, color, ambient_color);
@@ -173,10 +175,10 @@ void GraphicsSystem::InitLight()
 
 void GraphicsSystem::InitCamera()
 {
-	glm::vec3 position = glm::vec3(0.f, 2.f, -5.f);
+	glm::vec3 position = glm::vec3(0.f, 2.f, 5.f);
 	glm::vec3 target = glm::vec3(0.0f, 0.0f, 0.0f);
 	glm::vec3 direction = glm::normalize(position - target);
-	float fov = 90.f;
+	float fov = 45.f;
 	camera = new Camera(position, direction, target, fov);
 }
 
@@ -193,7 +195,6 @@ void GraphicsSystem::CreateShadowMap()
 	shadowTransforms.push_back(shadowProj * glm::lookAt(light->position, light->position + glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
 
 	glm::mat4 model = glm::mat4(1.0f);
-	model = glm::translate(model, glm::vec3(0.0f, 0.0f, -5.0f));
 
 	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
 	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
@@ -243,14 +244,13 @@ void GraphicsSystem::SetupShadowMapVars()
 	shadowTransformNames.push_back("shadowMatrices[5]");
 }
 
-void GraphicsSystem::Draw()
+void GraphicsSystem::Update()
 {
 	SetupShadowMapVars();
 
-	glUseProgram(mainShader->program);
-
 	while (!glfwWindowShouldClose(window))
 	{
+		// Update frame timings
 		float currentFrame = glfwGetTime();
 		dt = currentFrame - last;
 		last = currentFrame;
@@ -258,12 +258,12 @@ void GraphicsSystem::Draw()
 		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		light->position.x = sin(glfwGetTime()) * 3.0f;
-		light->position.z = cos(glfwGetTime()) * 5.0f;
+		// Change the light a little
+		light->position.x = sin(glfwGetTime()) * 8.0f;
+		light->position.z = cos(glfwGetTime()) * 4.0f;
 		light->ambient_color.r = sin(glfwGetTime()) * 0.3f;
 		light->ambient_color.g = cos(glfwGetTime()) * 0.3f;
 		light->ambient_color.z = sin(glfwGetTime()) * -0.3f;
-
 
 		CreateShadowMap();
 
@@ -274,12 +274,11 @@ void GraphicsSystem::Draw()
 		RenderScene(mainShader, RENDER_MODE::FRAGMENT);
 		glEnable(GL_CULL_FACE);
 
-
 		glfwPollEvents();
 		HandleInput();
 		glfwSwapBuffers(window);
 		RCRD_DEBUG("Finished the draw method!");
-		RCRD_DEBUG("Error amount:" << glGetError());
+		RCRD_DEBUG("GL ERRORS:" << glGetError());
 	}
 }
 
@@ -288,13 +287,10 @@ void GraphicsSystem::RenderScene(Shader* shader, RENDER_MODE mode)
 	glm::mat4 model = glm::mat4(1.0f);
 	glm::mat4 view = glm::mat4(1.0f);
 
-	// Translate a bit forward
-	model = glm::translate(model, glm::vec3(0.0f, 0.0f, -5.0f));
-
 	// Set camera view
 	view = glm::lookAt(camera->pos, camera->pos + camera->front, camera->up);
 
-	glm::mat4 projection = glm::perspective(45.f, (float)width / (float)height, near, far);
+	glm::mat4 projection = glm::perspective(camera->fov, (float)width / (float)height, near, far);
 	glm::mat4 mvp = projection * view * model;
 	glm::mat4 mv = model * view;
 
