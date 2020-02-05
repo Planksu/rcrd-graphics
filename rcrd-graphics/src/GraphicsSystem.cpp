@@ -224,18 +224,19 @@ void GraphicsSystem::RenderScene(Shader* shader, RENDER_MODE mode)
 	glm::mat4 mvp = projection * view * model;
 	glm::mat4 mv = model * view;
 
-	shader->SetVec3Uniform("viewPos", camera->pos);
 	shader->SetVec3Uniform("lightPos", light->position);
-	shader->SetMat4Uniform("projection", projection);
 	shader->SetMat4Uniform("model", model);
-	shader->SetMat4Uniform("view", view);
 	shader->SetFloatUniform("far_plane", far);
 
 	
+	// These uniforms only need to be set when rendering the actual lighted scene
 	if (mode == RENDER_MODE::FRAGMENT)
 	{
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, depthCubemap);
+		shader->SetVec3Uniform("viewPos", camera->pos);
+		shader->SetMat4Uniform("projection", projection);
+		shader->SetMat4Uniform("view", view);
 		shader->SetIntUniform("depthMap", 1);
 		shader->SetVec3Uniform("lightColor", light->color);
 		shader->SetVec3Uniform("lightAmbient", light->ambient_color);
@@ -265,6 +266,7 @@ void GraphicsSystem::RenderScene(Shader* shader, RENDER_MODE mode)
 		glBindVertexArray(0);
 	}
 
+	// Also, these only need to be set when rendering depthmap
 	if (mode == RENDER_MODE::DEPTH)
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
