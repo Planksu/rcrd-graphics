@@ -1,6 +1,5 @@
 #version 400 core
 
-
 out vec4 FragColor;
 
 in VS_OUT {
@@ -9,7 +8,6 @@ in VS_OUT {
     vec2 TexCoords;
 } fs_in;
 
-uniform sampler2D diffuseTexture;
 uniform samplerCube depthMap;
 
 uniform vec3 lightPos;
@@ -83,7 +81,7 @@ float ShadowCalculation(vec3 fragPos)
 
 void main()
 {           
-    vec3 color = vec3(1,1,1);
+    vec3 color = vec3(0.8);
     vec3 normal = normalize(fs_in.Normal);
     vec3 lightColor = vec3(0.3);
     // ambient
@@ -100,8 +98,8 @@ void main()
     spec = pow(max(dot(normal, halfwayDir), 0.0), 64.0);
     vec3 specular = spec * lightColor;    
     // calculate shadow
-    float shadow = shadows ? ShadowCalculation(fs_in.FragPos) : 0.0;                      
-    vec3 lighting = (ambient + (1.0 - shadow) *(diffuse + specular)) * color;    
+    float shadow = ShadowCalculation(fs_in.FragPos);                      
+    vec3 lighting = (ambient + (1.0 - shadow) * (diffuse + specular)) * color;    
     
     FragColor = vec4(lighting, 1.0);
 }

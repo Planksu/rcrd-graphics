@@ -20,7 +20,7 @@ int main(int argc, char* argv[])
 	floorBatch->diffuse = glm::vec3(0.2f, 0.8f, 0.2f);
 	floorBatch->specular = glm::vec3(0.5f, 0.5f, 0.5f);
 	Batch* cubeBatch = graphics.CreateBatch();
-	cubeBatch->LoadObject("./resources/cube.obj", "./resources/cube.mtl");
+	cubeBatch->LoadObject("./resources/floor.obj", "./resources/floor.mtl");
 	cubeBatch->diffuse = glm::vec3(0.8f, 0.2f, 0.2f);
 	cubeBatch->specular = glm::vec3(0.5f, 0.5f, 0.5f);
 	Batch* ballBatch = graphics.CreateBatch();

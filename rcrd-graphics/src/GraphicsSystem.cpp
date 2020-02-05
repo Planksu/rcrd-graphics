@@ -101,7 +101,7 @@ void GraphicsSystem::InitGL()
 
 void GraphicsSystem::InitLight()
 {
-	glm::vec3 position = glm::vec3(0.f, -1.f, -5.0f);
+	glm::vec3 position = glm::vec3(0.f, 5.f, 0.f);
 	glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
 	glm::vec3 ambient_color = glm::vec3(0.0f, 0.0f, 0.2f);
 	glm::vec3 direction = glm::vec3(0.0f, 0.f, 0.f);
@@ -143,7 +143,6 @@ void GraphicsSystem::CreateShadowMap()
 	names.push_back("shadowMatrices[4]");
 	names.push_back("shadowMatrices[5]");
 	
-	glUseProgram(depthShader->program);
 
 	static float r = 0;
 	r += 0.00008f * 90;
@@ -154,13 +153,14 @@ void GraphicsSystem::CreateShadowMap()
 	glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
 	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
 	glClear(GL_DEPTH_BUFFER_BIT);
+	glUseProgram(depthShader->program);
 	for (size_t i = 0; i < 6; i++)
 	{
-		glUniformMatrix4fv(glGetUniformLocation(depthShader->program, names[i]), 1, GL_FALSE, (const GLfloat*)&shadowTransforms[i]);
+		glUniformMatrix4fv(glGetUniformLocation(depthShader->program, names[i]), 1, GL_FALSE, (const GLfloat*)&(shadowTransforms[i])[0][0]);
 	}
 	glUniform1f(glGetUniformLocation(depthShader->program, "far_plane"), far);
 	glUniform3f(glGetUniformLocation(depthShader->program, "lightPos"), light->position.x, light->position.y, light->position.z);
-	glUniformMatrix4fv(glGetUniformLocation(depthShader->program, "model"), 1, GL_FALSE, (const GLfloat*)&model[0]);
+	glUniformMatrix4fv(glGetUniformLocation(depthShader->program, "model"), 1, GL_FALSE, (const GLfloat*)&model[0][0]);
 
 	for (size_t i = 0; i < batches.size(); i++)
 	{
@@ -215,8 +215,7 @@ void GraphicsSystem::Draw()
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	glUseProgram(mainShader->program);
-	glUniform1i(glGetUniformLocation(mainShader->program, "diffuseTexture"), 0);
-	glUniform1i(glGetUniformLocation(mainShader->program, "depthMap"), 1);
+
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -266,8 +265,9 @@ void GraphicsSystem::Draw()
 		glUniformMatrix4fv(glGetUniformLocation(mainShader->program, "view"), 1, GL_FALSE, (const GLfloat*)&view[0]);
 		glUniformMatrix4fv(glGetUniformLocation(mainShader->program, "lightSpaceMatrix"), 1, GL_FALSE, (const GLfloat*)&lightSpaceMatrix[0]);
 		glUniform1f(glGetUniformLocation(mainShader->program, "far_plane"), far);
-		glActiveTexture(GL_TEXTURE0);
+		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, depthCubemap);
+		glUniform1i(glGetUniformLocation(mainShader->program, "depthMap"), 1);
 		glDisable(GL_CULL_FACE);
 		glUniform1i(glGetUniformLocation(mainShader->program, "reverse_normals"), 1);
 
