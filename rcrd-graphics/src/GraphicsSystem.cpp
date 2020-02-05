@@ -4,6 +4,8 @@
 
 #define GLM_ENABLE_EXPERIMENTAL
 
+void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+
 
 GraphicsSystem::GraphicsSystem(int w, int h, const char* title)
 {
@@ -43,6 +45,66 @@ void GraphicsSystem::InitShaders()
 
 #pragma endregion
 
+void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+	glViewport(0, 0, width, height);
+}
+
+void GraphicsSystem::HandleInput()
+{
+	HandleMovement();
+	HandleMouse();
+}
+
+void GraphicsSystem::HandleMouse()
+{
+	double x, y;
+	glfwGetCursorPos(window, &x, &y);
+
+	if (firstMouse)
+	{
+		lastX = x;
+		lastY = y;
+		firstMouse = false;
+	}
+
+	float xOffset = x - lastX;
+	float yOffset = lastY - y;
+	lastX = x;
+	lastY = y;
+
+	const float sens = 0.05f;
+	xOffset *= sens;
+	yOffset *= sens;
+	yaw += xOffset;
+	pitch += yOffset;
+
+	// Limit to prevent flip
+	if (pitch > 89.0f)
+		pitch = 89.0f;
+	if (pitch < -89.0f)
+		pitch = -89.0f;
+
+	glm::vec3 direction;
+	direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+	direction.y = sin(glm::radians(pitch));
+	direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+	camera->front = glm::normalize(direction);
+}
+
+void GraphicsSystem::HandleMovement()
+{
+	const float cameraSpeed = 5.f * dt;
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+		camera->pos += cameraSpeed * camera->front;
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+		camera->pos -= cameraSpeed * camera->front;
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+		camera->pos -= glm::normalize(glm::cross(camera->front, camera->up)) * cameraSpeed;
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+		camera->pos += glm::normalize(glm::cross(camera->front, camera->up)) * cameraSpeed;
+}
+
 void GraphicsSystem::InitGLFW(const char* title)
 {
 	if (!glfwInit())
@@ -65,12 +127,15 @@ void GraphicsSystem::InitGLFW(const char* title)
 	}
 
 	glfwMakeContextCurrent(window);
+	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
 	GLenum err = glewInit();
 	if (GLEW_OK != err)
 	{
 		exit(-1);
 	}
+
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }
 
 void GLAPIENTRY
@@ -109,10 +174,11 @@ void GraphicsSystem::InitLight()
 
 void GraphicsSystem::InitCamera()
 {
-	glm::vec3 position = glm::vec3(0.f, -2.f, -5.f);
-	glm::vec3 rotation = glm::vec3(0.3f, 0.f, 0.f);
+	glm::vec3 position = glm::vec3(0.f, 2.f, -5.f);
+	glm::vec3 target = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::vec3 direction = glm::normalize(position - target);
 	float fov = 90.f;
-	camera = new Camera(position, rotation, fov);
+	camera = new Camera(position, direction, target, fov);
 }
 
 void GraphicsSystem::CreateShadowMap()
@@ -186,11 +252,19 @@ void GraphicsSystem::Draw()
 
 	while (!glfwWindowShouldClose(window))
 	{
+		float currentFrame = glfwGetTime();
+		dt = currentFrame - last;
+		last = currentFrame;
+
 		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		light->position.x = sin(glfwGetTime()) * 3.0f;
 		light->position.z = cos(glfwGetTime()) * 5.0f;
+		light->ambient_color.r = sin(glfwGetTime()) * 0.3f;
+		light->ambient_color.g = cos(glfwGetTime()) * 0.3f;
+		light->ambient_color.z = sin(glfwGetTime()) * -0.3f;
+
 
 		CreateShadowMap();
 
@@ -203,6 +277,7 @@ void GraphicsSystem::Draw()
 
 
 		glfwPollEvents();
+		HandleInput();
 		glfwSwapBuffers(window);
 		RCRD_DEBUG("Finished the draw method!");
 		RCRD_DEBUG("Error amount:" << glGetError());
@@ -218,12 +293,13 @@ void GraphicsSystem::RenderScene(Shader* shader, RENDER_MODE mode)
 	model = glm::translate(model, glm::vec3(0.0f, 0.0f, -5.0f));
 
 	// Make view = camera position
-	view = glm::translate(view, camera->pos);
+	//view = glm::translate(view, camera->pos);
+	view = glm::lookAt(camera->pos, camera->pos + camera->front, camera->up);
 
 	// Take care of possible rotations
-	view = glm::rotate(view, camera->rot.x, glm::vec3(1.0f, 0.0f, 0.0f));
-	view = glm::rotate(view, camera->rot.y, glm::vec3(0.0f, 1.0f, 0.0f));
-	view = glm::rotate(view, camera->rot.z, glm::vec3(0.0f, 0.0f, 1.0f));
+	//view = glm::rotate(view, camera->rot.x, glm::vec3(1.0f, 0.0f, 0.0f));
+	//view = glm::rotate(view, camera->rot.y, glm::vec3(0.0f, 1.0f, 0.0f));
+	//view = glm::rotate(view, camera->rot.z, glm::vec3(0.0f, 0.0f, 1.0f));
 
 	glm::mat4 projection = glm::perspective(45.f, (float)width / (float)height, near, far);
 	glm::mat4 mvp = projection * view * model;
