@@ -2,11 +2,9 @@
 
 out vec4 FragColor;
 
-in VS_OUT {
-    vec3 FragPos;
-    vec3 Normal;
-    vec2 TexCoords;
-} fs_in;
+in vec3 FragPos;
+in vec3 Normal;
+in vec2 TexCoords;
 
 uniform samplerCube depthMap;
 
@@ -16,13 +14,12 @@ uniform vec3 lightAmbient;
 uniform vec3 viewPos;
 uniform vec3 diffuse;
 
-
 uniform float far_plane;
 uniform bool shadows;
 
 
-// array of offset direction for sampling
-vec3 gridSamplingDisk[20] = vec3[]
+// preventing shadow offsetting with these
+vec3 samplingDisk[20] = vec3[]
 (
    vec3(1, 1,  1), vec3( 1, -1,  1), vec3(-1, -1,  1), vec3(-1, 1,  1), 
    vec3(1, 1, -1), vec3( 1, -1, -1), vec3(-1, -1, -1), vec3(-1, 1, -1),
@@ -33,16 +30,18 @@ vec3 gridSamplingDisk[20] = vec3[]
 
 float ShadowCalculation(vec3 fragPos, vec3 lightDir, vec3 normal)
 {
+	float maxBias = 0.25;
+	float minBias = 0.10;
     vec3 fragToLight = fragPos - lightPos;
     float currentDepth = length(fragToLight);
     float shadow = 0.0;
-    float bias = max(0.25 * (1.0 - dot(normal, lightDir)), 0.10);  ;
+    float bias = max(maxBias * (1.0 - dot(normal, lightDir)), minBias);
     int samples = 20;
     float viewDistance = length(viewPos - fragPos);
     float diskRadius = (1.0 + (viewDistance / far_plane)) / 25.0;
     for(int i = 0; i < samples; ++i)
     {
-        float closestDepth = texture(depthMap, fragToLight + gridSamplingDisk[i] * diskRadius).r;
+        float closestDepth = texture(depthMap, fragToLight + samplingDisk[i] * diskRadius).r;
         closestDepth *= far_plane;   
         if(currentDepth - bias > closestDepth)
             shadow += 1.0;
@@ -55,22 +54,23 @@ float ShadowCalculation(vec3 fragPos, vec3 lightDir, vec3 normal)
 void main()
 {           
     vec3 color = diffuse;
-    vec3 normal = normalize(fs_in.Normal);;
-    // ambient
+    vec3 normal = normalize(Normal);
     vec3 ambient = lightAmbient;
-    // diffuse
-    vec3 lightDir = normalize(lightPos - fs_in.FragPos);
+	
+    vec3 lightDir = normalize(lightPos - FragPos);
     float diff = max(dot(lightDir, normal), 0.0);
     vec3 diffuse = diff * lightColor;
-    // specular
-    vec3 viewDir = normalize(viewPos - fs_in.FragPos);
+
+    vec3 viewDir = normalize(viewPos - FragPos);
     vec3 reflectDir = reflect(-lightDir, normal);
     float spec = 0.0;
     vec3 halfwayDir = normalize(lightDir + viewDir);  
+	
+	// decided to take specular with 128 samples this time as it looks good
     spec = pow(max(dot(normal, halfwayDir), 0.0), 128.0);
     vec3 specular = spec * lightColor;    
-    // calculate shadow
-    float shadow = ShadowCalculation(fs_in.FragPos, lightDir, fs_in.Normal);                      
+
+    float shadow = ShadowCalculation(FragPos, lightDir, Normal);                      
     vec3 lighting = (ambient + (1.0 - shadow) * (diffuse + specular)) * color;    
     
     FragColor = vec4(lighting, 1.0);

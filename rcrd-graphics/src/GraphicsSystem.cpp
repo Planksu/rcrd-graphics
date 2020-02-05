@@ -101,7 +101,7 @@ void GraphicsSystem::InitLight()
 {
 	glm::vec3 position = glm::vec3(0.f, 5.f, 0.f);
 	glm::vec3 color = glm::vec3(0.5f, 0.5f, 0.5f);
-	glm::vec3 ambient_color = glm::vec3(0.0f, 0.0f, 0.2f);
+	glm::vec3 ambient_color = glm::vec3(0.2f, 0.0f, 0.2f);
 	float shininess = 5.f;
 
 	light = new Light(position, color, ambient_color, shininess);
@@ -117,11 +117,9 @@ void GraphicsSystem::InitCamera()
 
 void GraphicsSystem::CreateShadowMap()
 {
-	light->position.x = sin(glfwGetTime()) * 3.0f;
-	light->position.z = cos(glfwGetTime()) * 5.0f;
-	
-	glm::mat4 shadowProj = glm::perspective(glm::radians(90.f), (float)SHADOW_WIDTH / (float)SHADOW_HEIGHT, near, far);
 	std::vector<glm::mat4> shadowTransforms;
+	// Shadow projections have to be updated dynamically as they change with a dynamic light, such as in this case
+	glm::mat4 shadowProj = glm::perspective(glm::radians(90.f), (float)SHADOW_WIDTH / (float)SHADOW_HEIGHT, near, far);
 	shadowTransforms.push_back(shadowProj * glm::lookAt(light->position, light->position + glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
 	shadowTransforms.push_back(shadowProj * glm::lookAt(light->position, light->position + glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
 	shadowTransforms.push_back(shadowProj * glm::lookAt(light->position, light->position + glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)));
@@ -129,14 +127,6 @@ void GraphicsSystem::CreateShadowMap()
 	shadowTransforms.push_back(shadowProj * glm::lookAt(light->position, light->position + glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
 	shadowTransforms.push_back(shadowProj * glm::lookAt(light->position, light->position + glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
 
-	std::vector<GLchar*> names;
-	names.push_back("shadowMatrices[0]");
-	names.push_back("shadowMatrices[1]");
-	names.push_back("shadowMatrices[2]");
-	names.push_back("shadowMatrices[3]");
-	names.push_back("shadowMatrices[4]");
-	names.push_back("shadowMatrices[5]");
-	
 	glm::mat4 model = glm::mat4(1.0f);
 	model = glm::translate(model, glm::vec3(0.0f, 0.0f, -5.0f));
 
@@ -147,7 +137,7 @@ void GraphicsSystem::CreateShadowMap()
 
 	for (size_t i = 0; i < 6; i++)
 	{
-		depthShader->SetMat4Uniform(names[i], shadowTransforms[i]);
+		depthShader->SetMat4Uniform(shadowTransformNames[i], shadowTransforms[i]);
 	}
 	depthShader->SetFloatUniform("far_plane", far);
 	depthShader->SetVec3Uniform("lightPos", light->position);
@@ -156,7 +146,7 @@ void GraphicsSystem::CreateShadowMap()
 	RenderScene(depthShader, RENDER_MODE::DEPTH);
 }
 
-void GraphicsSystem::Draw()
+void GraphicsSystem::SetupShadowMapVars()
 {
 	glUseProgram(depthShader->program);
 	glGenFramebuffers(1, &depthMapFBO);
@@ -172,20 +162,35 @@ void GraphicsSystem::Draw()
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-	
+
 	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
 	glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthCubemap, 0);
 	glDrawBuffer(GL_NONE);
 	glReadBuffer(GL_NONE);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	
+	// Set shadow transforms uniform names
+	shadowTransformNames.push_back("shadowMatrices[0]");
+	shadowTransformNames.push_back("shadowMatrices[1]");
+	shadowTransformNames.push_back("shadowMatrices[2]");
+	shadowTransformNames.push_back("shadowMatrices[3]");
+	shadowTransformNames.push_back("shadowMatrices[4]");
+	shadowTransformNames.push_back("shadowMatrices[5]");
+}
+
+void GraphicsSystem::Draw()
+{
+	SetupShadowMapVars();
 
 	glUseProgram(mainShader->program);
-
 
 	while (!glfwWindowShouldClose(window))
 	{
 		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		light->position.x = sin(glfwGetTime()) * 3.0f;
+		light->position.z = cos(glfwGetTime()) * 5.0f;
 
 		CreateShadowMap();
 
@@ -227,7 +232,6 @@ void GraphicsSystem::RenderScene(Shader* shader, RENDER_MODE mode)
 	shader->SetVec3Uniform("lightPos", light->position);
 	shader->SetMat4Uniform("model", model);
 	shader->SetFloatUniform("far_plane", far);
-
 	
 	// These uniforms only need to be set when rendering the actual lighted scene
 	if (mode == RENDER_MODE::FRAGMENT)

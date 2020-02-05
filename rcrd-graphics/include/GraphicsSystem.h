@@ -39,6 +39,7 @@ public:
 	void InitGLFW(const char* title);
 	void InitGL();
 	void Draw();
+	void SetupShadowMapVars();
 	void RenderScene(Shader* shader, RENDER_MODE mode);
 	void CreateShadowMap();
 	void InitShaders();
@@ -51,6 +52,7 @@ private:
 	GLFWwindow* window;
 	GLuint program;
 	std::vector<Batch*> batches;
+	std::vector<GLchar*> shadowTransformNames;
 
 	GLuint depthMapFBO;
 	GLuint depthCubemap;
