@@ -15,6 +15,7 @@ GraphicsSystem::GraphicsSystem(int w, int h, const char* title)
 	InitShaders();
 	InitLight();
 	InitCamera();
+	InitInputSystem();
 }
 
 GraphicsSystem::~GraphicsSystem()
@@ -50,59 +51,9 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 	glViewport(0, 0, width, height);
 }
 
-void GraphicsSystem::HandleInput()
+void GraphicsSystem::InitInputSystem()
 {
-	HandleMovement();
-	HandleMouse();
-}
-
-void GraphicsSystem::HandleMouse()
-{
-	double x, y;
-	glfwGetCursorPos(window, &x, &y);
-
-	if (firstMouse)
-	{
-		lastX = x;
-		lastY = y;
-		firstMouse = false;
-	}
-
-	float xOffset = x - lastX;
-	float yOffset = lastY - y;
-	lastX = x;
-	lastY = y;
-
-	const float sens = 0.05f;
-	xOffset *= sens;
-	yOffset *= sens;
-	yaw += xOffset;
-	pitch += yOffset;
-
-	// Limit to prevent flip
-	if (pitch > 89.0f)
-		pitch = 89.0f;
-	if (pitch < -89.0f)
-		pitch = -89.0f;
-
-	glm::vec3 direction;
-	direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-	direction.y = sin(glm::radians(pitch));
-	direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-	camera->front = glm::normalize(direction);
-}
-
-void GraphicsSystem::HandleMovement()
-{
-	const float cameraSpeed = 5.f * dt;
-	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-		camera->MoveVertical(1, cameraSpeed);
-	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-		camera->MoveVertical(-1, cameraSpeed);
-	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-		camera->MoveHorizontal(-1, cameraSpeed);
-	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-		camera->MoveHorizontal(1, cameraSpeed);
+	inputSystem = new InputSystem((float)width / 2, (float)height / 2);
 }
 
 void GraphicsSystem::InitGLFW(const char* title)
@@ -168,7 +119,7 @@ void GraphicsSystem::InitLight()
 {
 	glm::vec3 position = glm::vec3(0.f, 5.f, 0.f);
 	glm::vec3 color = glm::vec3(0.75f, 0.75f, 0.75f);
-	glm::vec3 ambient_color = glm::vec3(0.2f, 0.0f, 0.2f);
+	glm::vec3 ambient_color = glm::vec3(0.0f, 0.0f, 0.0f);
 
 	light = new Light(position, color, ambient_color);
 }
@@ -208,8 +159,6 @@ void GraphicsSystem::CreateShadowMap()
 	depthShader->SetFloatUniform("far_plane", far);
 	depthShader->SetVec3Uniform("lightPos", light->position);
 	depthShader->SetMat4Uniform("model", model);
-
-	RenderScene(depthShader, RENDER_MODE::DEPTH);
 }
 
 void GraphicsSystem::SetupShadowMapVars()
@@ -244,28 +193,25 @@ void GraphicsSystem::SetupShadowMapVars()
 	shadowTransformNames.push_back("shadowMatrices[5]");
 }
 
+void GraphicsSystem::MoveLights()
+{
+	light->position.x = sin(glfwGetTime()) * 8.0f;
+	light->position.z = cos(glfwGetTime()) * 4.0f;
+	light->ambient_color.r = sin(glfwGetTime()) * 0.3f;
+	light->ambient_color.g = cos(glfwGetTime()) * 0.3f;
+	light->ambient_color.z = sin(glfwGetTime()) * -0.3f;
+}
+
 void GraphicsSystem::Update()
 {
 	SetupShadowMapVars();
 
 	while (!glfwWindowShouldClose(window))
 	{
-		// Update frame timings
-		float currentFrame = glfwGetTime();
-		dt = currentFrame - last;
-		last = currentFrame;
-
-		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		// Change the light a little
-		light->position.x = sin(glfwGetTime()) * 8.0f;
-		light->position.z = cos(glfwGetTime()) * 4.0f;
-		light->ambient_color.r = sin(glfwGetTime()) * 0.3f;
-		light->ambient_color.g = cos(glfwGetTime()) * 0.3f;
-		light->ambient_color.z = sin(glfwGetTime()) * -0.3f;
-
+		ClearBuffer();
+		MoveLights();
 		CreateShadowMap();
+		RenderScene(depthShader, RENDER_MODE::DEPTH);
 
 		RCRD_DEBUG("Batches size: " << batches.size());
 		glUseProgram(mainShader->program);
@@ -274,25 +220,30 @@ void GraphicsSystem::Update()
 		RenderScene(mainShader, RENDER_MODE::FRAGMENT);
 		glEnable(GL_CULL_FACE);
 
-		glfwPollEvents();
-		HandleInput();
+		inputSystem->Update(window, camera);
 		glfwSwapBuffers(window);
 		RCRD_DEBUG("Finished the draw method!");
 		RCRD_DEBUG("GL ERRORS:" << glGetError());
 	}
 }
 
+void GraphicsSystem::ClearBuffer()
+{
+	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+void GraphicsSystem::FillSceneMatrices(glm::mat4& model, glm::mat4& view, glm::mat4& projection)
+{
+	model		= glm::mat4(1.0f);
+	view		= glm::lookAt(camera->pos, camera->pos + camera->front, camera->up);
+	projection	= glm::perspective(camera->fov, (float)width / (float)height, near, far);
+}
+
 void GraphicsSystem::RenderScene(Shader* shader, RENDER_MODE mode)
 {
-	glm::mat4 model = glm::mat4(1.0f);
-	glm::mat4 view = glm::mat4(1.0f);
-
-	// Set camera view
-	view = glm::lookAt(camera->pos, camera->pos + camera->front, camera->up);
-
-	glm::mat4 projection = glm::perspective(camera->fov, (float)width / (float)height, near, far);
-	glm::mat4 mvp = projection * view * model;
-	glm::mat4 mv = model * view;
+	glm::mat4 model, view, projection;
+	FillSceneMatrices(model, view, projection);
 
 	shader->SetVec3Uniform("lightPos", light->position);
 	shader->SetMat4Uniform("model", model);

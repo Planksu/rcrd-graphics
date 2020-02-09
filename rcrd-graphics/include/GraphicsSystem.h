@@ -22,6 +22,7 @@
 #include <Camera.h>
 #include <core.h>
 #include <Shader.h>
+#include <InputSystem.h>
 
 enum RENDER_MODE
 {
@@ -38,16 +39,17 @@ public:
 
 	void InitGLFW(const char* title);
 	void InitGL();
-	void Update();
-	void SetupShadowMapVars();
-	void RenderScene(Shader* shader, RENDER_MODE mode);
-	void CreateShadowMap();
 	void InitShaders();
 	void InitLight();
 	void InitCamera();
-	void HandleInput();
-	void HandleMovement();
-	void HandleMouse();
+	void InitInputSystem();
+	void Update();
+	void MoveLights();
+	void SetupShadowMapVars();
+	void RenderScene(Shader* shader, RENDER_MODE mode);
+	void FillSceneMatrices(glm::mat4 &model, glm::mat4& view, glm::mat4& projection);
+	void CreateShadowMap();
+	void ClearBuffer();
 	Batch* CreateBatch();
 
 
@@ -71,21 +73,11 @@ private:
 	Camera* camera;
 	Shader* mainShader;
 	Shader* depthShader;
+	InputSystem* inputSystem;
 
 	// Render distances
 	float near = 1.0f;
 	float far = 50.f;
-
-	// Mouse variables
-	float lastX = 640;
-	float lastY = 360;
-	float yaw = -90.f;
-	float pitch = 0.0f;
-	bool firstMouse = true;
-
-	// Frame variables
-	float dt = 0.0f;
-	float last = 0.0f;
 };
 
 #endif

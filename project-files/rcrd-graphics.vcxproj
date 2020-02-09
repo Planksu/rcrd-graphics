@@ -170,6 +170,7 @@
     <ClInclude Include="..\rcrd-graphics\include\Batch.h" />
     <ClInclude Include="..\rcrd-graphics\include\Camera.h" />
     <ClInclude Include="..\rcrd-graphics\include\GraphicsSystem.h" />
+    <ClInclude Include="..\rcrd-graphics\include\InputSystem.h" />
     <ClInclude Include="..\rcrd-graphics\include\Light.h" />
     <ClInclude Include="..\rcrd-graphics\include\Loader.h" />
     <ClInclude Include="..\rcrd-graphics\include\Material.h" />
@@ -184,6 +185,7 @@
     <ClCompile Include="..\rcrd-graphics\src\Batch.cpp" />
     <ClCompile Include="..\rcrd-graphics\src\Camera.cpp" />
     <ClCompile Include="..\rcrd-graphics\src\GraphicsSystem.cpp" />
+    <ClCompile Include="..\rcrd-graphics\src\InputSystem.cpp" />
     <ClCompile Include="..\rcrd-graphics\src\Light.cpp" />
     <ClCompile Include="..\rcrd-graphics\src\Loader.cpp" />
     <ClCompile Include="..\rcrd-graphics\src\Material.cpp" />

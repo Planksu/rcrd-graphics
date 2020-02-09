@@ -18,6 +18,9 @@
     <ClInclude Include="..\rcrd-graphics\include\GraphicsSystem.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="..\rcrd-graphics\include\InputSystem.h">
+      <Filter>include</Filter>
+    </ClInclude>
     <ClInclude Include="..\rcrd-graphics\include\Light.h">
       <Filter>include</Filter>
     </ClInclude>
@@ -54,6 +57,9 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\rcrd-graphics\src\GraphicsSystem.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rcrd-graphics\src\InputSystem.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\rcrd-graphics\src\Light.cpp">
