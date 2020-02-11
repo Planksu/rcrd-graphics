@@ -52,14 +52,15 @@ public:
 	Batch* CreateBatch();
 
 public:
-	GLFWwindow* window;
-	Camera* camera;
+	Camera* getCamera() { return camera; }
+	GLFWwindow* getWindow() { return window; }
 
 private:
 
 	// Window
 	int width, height;
 	int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
+	GLFWwindow* window;
 
 	// Containers
 	std::vector<Batch*> batches;
@@ -73,6 +74,8 @@ private:
 	Light* light;
 	Shader* mainShader;
 	Shader* depthShader;
+	Camera* camera;
+
 
 	// Render distances
 	float near = 1.0f;

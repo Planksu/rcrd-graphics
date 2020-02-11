@@ -26,9 +26,9 @@ int main(int argc, char* argv[])
 	#elif defined __linux__
 	#endif
 
-	while (!glfwWindowShouldClose(graphics.window))
+	while (!glfwWindowShouldClose(graphics.getWindow()))
 	{
 		graphics.Update();
-		input.Update(graphics.window, graphics.camera);
+		input.Update(graphics.getWindow(), graphics.getCamera());
 	}
 }
