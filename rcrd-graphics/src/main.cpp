@@ -1,5 +1,6 @@
 #include <Object.h>
 #include <GraphicsSystem.h>
+#include <InputSystem.h>
 #include <Batch.h>
 
 #include <iostream>
@@ -9,6 +10,7 @@
 int main(int argc, char* argv[])
 {
 	GraphicsSystem graphics = GraphicsSystem(1280, 720, "rcrd_graphics");
+	InputSystem input = InputSystem(1280 / 2, 720 / 2);
 
 	#ifdef _WIN32
 	Batch* monkeyBatch = graphics.CreateBatch();
@@ -24,6 +26,9 @@ int main(int argc, char* argv[])
 	#elif defined __linux__
 	#endif
 
-
-	graphics.Update();
+	while (!glfwWindowShouldClose(graphics.window))
+	{
+		graphics.Update();
+		input.Update(graphics.window, graphics.camera);
+	}
 }

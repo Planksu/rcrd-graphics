@@ -17,6 +17,7 @@ void InputSystem::CalculateDelta()
 	last = currentFrame;
 }
 
+
 void InputSystem::Update(GLFWwindow* window, Camera* camera)
 {
 	glfwPollEvents();

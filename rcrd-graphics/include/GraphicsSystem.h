@@ -42,7 +42,6 @@ public:
 	void InitShaders();
 	void InitLight();
 	void InitCamera();
-	void InitInputSystem();
 	void Update();
 	void MoveLights();
 	void SetupShadowMapVars();
@@ -52,11 +51,13 @@ public:
 	void ClearBuffer();
 	Batch* CreateBatch();
 
+public:
+	GLFWwindow* window;
+	Camera* camera;
 
 private:
 
 	// Window
-	GLFWwindow* window;
 	int width, height;
 	int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
 
@@ -70,10 +71,8 @@ private:
 
 	// Other objects
 	Light* light;
-	Camera* camera;
 	Shader* mainShader;
 	Shader* depthShader;
-	InputSystem* inputSystem;
 
 	// Render distances
 	float near = 1.0f;

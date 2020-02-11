@@ -17,6 +17,7 @@ public:
 	~InputSystem();
 
 	void Update(GLFWwindow* window, Camera* camera);
+	void Init(float centerX, float centerY);
 	void HandleMovement(GLFWwindow* window, Camera* camera);
 	void HandleRotation(GLFWwindow* window, Camera* camera);
 	void CalculateDelta();

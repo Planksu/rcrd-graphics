@@ -15,7 +15,7 @@ GraphicsSystem::GraphicsSystem(int w, int h, const char* title)
 	InitShaders();
 	InitLight();
 	InitCamera();
-	InitInputSystem();
+	SetupShadowMapVars();
 }
 
 GraphicsSystem::~GraphicsSystem()
@@ -51,10 +51,6 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 	glViewport(0, 0, width, height);
 }
 
-void GraphicsSystem::InitInputSystem()
-{
-	inputSystem = new InputSystem((float)width / 2, (float)height / 2);
-}
 
 void GraphicsSystem::InitGLFW(const char* title)
 {
@@ -204,27 +200,21 @@ void GraphicsSystem::MoveLights()
 
 void GraphicsSystem::Update()
 {
-	SetupShadowMapVars();
+	ClearBuffer();
+	MoveLights();
+	CreateShadowMap();
+	RenderScene(depthShader, RENDER_MODE::DEPTH);
 
-	while (!glfwWindowShouldClose(window))
-	{
-		ClearBuffer();
-		MoveLights();
-		CreateShadowMap();
-		RenderScene(depthShader, RENDER_MODE::DEPTH);
+	RCRD_DEBUG("Batches size: " << batches.size());
+	glUseProgram(mainShader->program);
 
-		RCRD_DEBUG("Batches size: " << batches.size());
-		glUseProgram(mainShader->program);
+	glDisable(GL_CULL_FACE);
+	RenderScene(mainShader, RENDER_MODE::FRAGMENT);
+	glEnable(GL_CULL_FACE);
 
-		glDisable(GL_CULL_FACE);
-		RenderScene(mainShader, RENDER_MODE::FRAGMENT);
-		glEnable(GL_CULL_FACE);
-
-		inputSystem->Update(window, camera);
-		glfwSwapBuffers(window);
-		RCRD_DEBUG("Finished the draw method!");
-		RCRD_DEBUG("GL ERRORS:" << glGetError());
-	}
+	glfwSwapBuffers(window);
+	RCRD_DEBUG("Finished the draw method!");
+	RCRD_DEBUG("GL ERRORS:" << glGetError());
 }
 
 void GraphicsSystem::ClearBuffer()
